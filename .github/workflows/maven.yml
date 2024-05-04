@@ -31,9 +31,3 @@ jobs:
       run: |
         cd sample-management
         mvn -B package
-
-    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
-    - name: Update dependency graph
-      run: |
-        cd sample-management
-        mvn com.github.ferstl:depgraph-maven-plugin:4.0.1:graph
