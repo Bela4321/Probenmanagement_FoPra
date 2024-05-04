@@ -8,6 +8,5 @@ public class Demopage extends VerticalLayout {
 
         public Demopage() {
             add("Hello, World!");
-
         }
 }
