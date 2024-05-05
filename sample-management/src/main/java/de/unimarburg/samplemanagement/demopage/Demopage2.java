@@ -3,10 +3,10 @@ package de.unimarburg.samplemanagement.demopage;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
-@Route("/")
-public class Demopage extends VerticalLayout {
+@Route("/demopage")
+public class Demopage2 extends VerticalLayout {
 
-        public Demopage() {
-            add("Hello, World!");
+        public Demopage2() {
+            add("Hello, World2!");
         }
 }
