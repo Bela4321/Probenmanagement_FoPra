@@ -39,6 +39,9 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
+      env:
+        DB_USER: postgres
+        DB_PASSWORD: postgres
       run: |
         cd sample-management
         mvn -B package
