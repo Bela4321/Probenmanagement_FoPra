@@ -56,7 +56,7 @@ public class ExcelParser {
             int id = getNumericValue(idDouble);
 
             double visitDouble = (Double) getCellValue(currentRow.getCell(2), cellType.NUMERIC);
-            int visit = getNumericValue(idDouble);
+            int visit = getNumericValue(visitDouble);
             sample.setVisits(visit);
 
             Date date = (Date) getCellValue(currentRow.getCell(3), cellType.DATE);
@@ -71,6 +71,7 @@ public class ExcelParser {
 
             String barcode = (String) getCellValue(currentRow.getCell(6), cellType.STRING);
             sample.setSample_barcode(barcode);
+            System.out.println(barcode);
 
             sampleList.add(sample);
         }
