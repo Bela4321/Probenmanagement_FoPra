@@ -36,5 +36,14 @@ public class Sample {
     private List<Analysis> listOfAnalysis;
 
     // Constructors, getters, and setters
+
+    public Sample(Subject subject, String coordinates, int visits, Date sampleDate, String sample_amount, String sample_barcode) {
+        this.subject = subject;
+        this.coordinates = coordinates;
+        this.visits = visits;
+        this.sampleDate = sampleDate;
+        this.sample_amount = sample_amount;
+        this.sample_barcode = sample_barcode;
+    }
 }
 
