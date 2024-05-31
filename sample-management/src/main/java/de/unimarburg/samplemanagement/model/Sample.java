@@ -31,6 +31,7 @@ public class Sample {
     private Date sampleDate;
     private String sample_amount;
     private String sample_barcode;
+    private String sample_type;
 
     @OneToMany(mappedBy = "sample", cascade = CascadeType.ALL)
     private List<Analysis> listOfAnalysis;

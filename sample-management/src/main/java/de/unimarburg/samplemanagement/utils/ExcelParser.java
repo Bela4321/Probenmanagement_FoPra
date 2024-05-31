@@ -21,7 +21,7 @@ public class ExcelParser {
     public static Study readExcelFile(FileInputStream inputStream) throws IOException {
 
         Workbook workbook = new XSSFWorkbook(inputStream);
-        Sheet sheet = workbook.getSheetAt(0); // Daten sind im ersten Blatt
+        Sheet sheet = workbook.getSheetAt(0);
         Iterator<Row> iterator = sheet.iterator();
 
         String studyName;
@@ -36,11 +36,11 @@ public class ExcelParser {
                 iterator.next();
             }
             else {
-                throw new IOException("Wrong file format");
+                throw new IOException("Only Study Name is available, no data");
             }
         }
         else {
-            throw new IOException("Wrong file format");
+            throw new IOException("Empty Excel File");
         }
 
         while (iterator.hasNext()) {
@@ -51,7 +51,7 @@ public class ExcelParser {
             String coordinates = (String) getCellValue(currentRow.getCell(0), cellType.STRING);
             sample.setCoordinates(coordinates);
 
-            //TODO: ID vom subject ist auto-generated?
+            //TODO: ID vom subject und Studie unique -> Abfragen
             double idDouble = (Double) getCellValue(currentRow.getCell(1), cellType.NUMERIC);
             int id = getNumericValue(idDouble);
 
@@ -65,13 +65,11 @@ public class ExcelParser {
             String amount = (String) getCellValue(currentRow.getCell(4), cellType.STRING);
             sample.setSample_amount(amount);
 
-            //TODO: Not in Sample Class
             String sampleType = (String) getCellValue(currentRow.getCell(5), cellType.STRING);
-            sample.setCoordinates(coordinates);
+            sample.setSample_type(sampleType);
 
             String barcode = (String) getCellValue(currentRow.getCell(6), cellType.STRING);
             sample.setSample_barcode(barcode);
-            System.out.println(barcode);
 
             sampleList.add(sample);
         }
@@ -79,8 +77,8 @@ public class ExcelParser {
         workbook.close();
         inputStream.close();
 
-        //TODO: Auto-generated ID -> NULL??   Date nicht in Tabelle (aktuelles Date nehmen?)
-        Study study = new Study(null, studyName, null, sampleList);
+        //TODO: Objekt anders erstellen
+        Study study = new Study(null, studyName, new Date(), sampleList);
 
         return study;
     }
