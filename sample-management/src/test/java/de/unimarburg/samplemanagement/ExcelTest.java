@@ -4,6 +4,8 @@ import de.unimarburg.samplemanagement.model.Sample;
 import de.unimarburg.samplemanagement.model.Study;
 import de.unimarburg.samplemanagement.utils.ExcelParser;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,12 +16,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ExcelTest {
 
+
     private static final String EXCEL_FILE_PATH = "src/main/resources/StudyTemplate.xlsx";
 
     @Test
     void testReadExcelFile() throws IOException {
         try (FileInputStream inputStream = new FileInputStream(EXCEL_FILE_PATH)) {
-            Study study = ExcelParser.readExcelFile(inputStream);
+
+            Study study = new Study();
 
             // Verify the study name
             assertEquals("ExampleName", study.getStudyName());

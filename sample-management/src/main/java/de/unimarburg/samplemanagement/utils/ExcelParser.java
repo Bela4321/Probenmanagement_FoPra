@@ -2,23 +2,40 @@ package de.unimarburg.samplemanagement.utils;
 
 import de.unimarburg.samplemanagement.model.Sample;
 import de.unimarburg.samplemanagement.model.Study;
+import de.unimarburg.samplemanagement.model.Subject;
+import de.unimarburg.samplemanagement.repository.SampleRepository;
+import de.unimarburg.samplemanagement.repository.StudyRepository;
+import de.unimarburg.samplemanagement.repository.SubjectRepository;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
+@Component
 public class ExcelParser {
+
+    @Autowired
+    private SampleRepository sampleRepository;
+    @Autowired
+    private SubjectRepository subjectRepository;
+    @Autowired
+    private StudyRepository studyRepository;
+
+    public ExcelParser(SampleRepository sampleRepository, SubjectRepository subjectRepository, StudyRepository studyRepository) {
+        this.sampleRepository = sampleRepository;
+        this.subjectRepository = subjectRepository;
+        this.studyRepository = studyRepository;
+    }
 
     public enum cellType {
         STRING, NUMERIC, DATE, BOOLEAN
     }
 
-    public static Study readExcelFile(FileInputStream inputStream) throws IOException {
+    public void readExcelFile(FileInputStream inputStream) throws IOException {
 
         Workbook workbook = new XSSFWorkbook(inputStream);
         Sheet sheet = workbook.getSheetAt(0);
@@ -26,6 +43,7 @@ public class ExcelParser {
 
         String studyName;
         List<Sample> sampleList = new ArrayList<>();
+        List<Subject> subjectList = new ArrayList<>();
 
         // Reading first line
         if (iterator.hasNext()) {
@@ -51,9 +69,14 @@ public class ExcelParser {
             String coordinates = (String) getCellValue(currentRow.getCell(0), cellType.STRING);
             sample.setCoordinates(coordinates);
 
-            //TODO: ID vom subject und Studie unique -> Abfragen
+
             double idDouble = (Double) getCellValue(currentRow.getCell(1), cellType.NUMERIC);
             int id = getNumericValue(idDouble);
+            Subject sub = new Subject();
+            sub.setIdByStudy(id);
+            sub.setStudyName(studyName);
+            subjectList.add(sub);
+            sample.setSubject(sub);
 
             double visitDouble = (Double) getCellValue(currentRow.getCell(2), cellType.NUMERIC);
             int visit = getNumericValue(visitDouble);
@@ -77,10 +100,23 @@ public class ExcelParser {
         workbook.close();
         inputStream.close();
 
-        //TODO: Objekt anders erstellen
-        Study study = new Study(null, studyName, new Date(), sampleList);
+        Study study = new Study();
+        study.setStudyDate(new Date());
+        study.setStudyName(studyName);
 
-        return study;
+
+        studyRepository.save(study);
+
+        for (Subject subject : subjectList) {
+            subjectRepository.save(subject);
+        }
+
+        for (Sample sample : sampleList) {
+            sample.setStudy(study);
+            sampleRepository.save(sample);
+        }
+
+        study.setListOfSamples(sampleList);
     }
 
     public static Object getCellValue(Cell cell, cellType expectedType) throws IOException {
