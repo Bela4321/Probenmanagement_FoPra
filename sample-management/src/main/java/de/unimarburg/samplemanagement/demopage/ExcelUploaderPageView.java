@@ -10,10 +10,12 @@ public class ExcelUploaderPageView extends VerticalLayout {
     public ExcelUploaderPageView() {
         File uploadFolder = getUploadFolder();
         Exceluploader uploadArea = new Exceluploader(uploadFolder);
+        DownloadLinksArea linksArea = new DownloadLinksArea(uploadFolder);
         uploadArea.getUploadField().addSucceededListener(e -> {
             uploadArea.hideErrorField();
+            linksArea.refreshFileLinks();
         });
-        add(uploadArea);
+        add(uploadArea, linksArea);
     }
 
     private static File getUploadFolder() {
