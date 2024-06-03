@@ -6,7 +6,7 @@ import com.vaadin.flow.router.Route;
 @Route("/")
 public class Demopage extends VerticalLayout {
 
-        public Demopage() {
+    public Demopage() {
             add("Hello, World!");
         }
 }

@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Probenmanagement_FoPra.iml" filepath="$PROJECT_DIR$/.idea/Probenmanagement_FoPra.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sample-management/sample-management.iml" filepath="$PROJECT_DIR$/sample-management/sample-management.iml" />
     </modules>
   </component>
 </project>
