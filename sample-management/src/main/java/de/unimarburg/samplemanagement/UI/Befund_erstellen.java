@@ -18,6 +18,7 @@ public class Befund_erstellen extends VerticalLayout {
 
     private final StudyService studyService;
     private Grid<Study> studyGrid;
+
     private Study selectedStudy;
 
     @Autowired
@@ -39,7 +40,7 @@ public class Befund_erstellen extends VerticalLayout {
 
         // Create and configure the grid to display study data
         studyGrid = new Grid<>(Study.class);
-        studyGrid.setColumns("studyName", "studyDate");
+        studyGrid.setColumns("id", "studyName", "studyDate");
         add(studyGrid);
 
         // Add selection listener to the grid
@@ -72,14 +73,9 @@ public class Befund_erstellen extends VerticalLayout {
     }
 
     private void handleStudySelection(Study study) {
-        // Display a notification with the study details
         Notification.show("Selected Study: " + study.getStudyName());
 
         selectedStudy = study;
-
-        // You can also navigate to another view or perform other actions here
-        // For example:
-        // getUI().ifPresent(ui -> ui.navigate("study-details/" + selectedStudy.getId()));
     }
 }
 
