@@ -16,7 +16,6 @@ public class Exceluploader extends VerticalLayout{
     private final Upload uploadField;
     private final Span errorField;
     public Exceluploader(File uploadFile) {
-        add("Add File Here");
         H4 title = new H4("Upload spreadsheet");
         Paragraph hint = new Paragraph(
                 "File size must be less than or equal to 1 MB. Only Excel and CSV files are accepted.");

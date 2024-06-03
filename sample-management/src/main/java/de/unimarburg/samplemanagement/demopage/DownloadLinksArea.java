@@ -1,4 +1,5 @@
 package de.unimarburg.samplemanagement.demopage;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -21,19 +22,23 @@ public class DownloadLinksArea extends VerticalLayout {
 
     public void refreshFileLinks() {
         removeAll();
-        add(new H4("Previosly uploaded files:"));
-
+        add(new H4("Previously uploaded files:"));
         for (File file : uploadFolder.listFiles()) {
             addLinkToFile(file);
         }
+        //Add Button to delete all files from the folder
+        add(new Button("Delete old files", e -> {
+            for (File file : uploadFolder.listFiles()) {
+                file.delete();
+            }
+            refreshFileLinks();
+        }));
     }
-
     private void addLinkToFile(File file) {
         StreamResource streamResource = new StreamResource(file.getName(), () -> getStream(file));
         Anchor link = new Anchor(streamResource, String.format("%s (%d KB)", file.getName(),
                 (int) file.length() / 1024));
         link.getElement().setAttribute("download", true);
-
         add(link);
     }
 
@@ -44,7 +49,6 @@ public class DownloadLinksArea extends VerticalLayout {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
         return stream;
     }
 }

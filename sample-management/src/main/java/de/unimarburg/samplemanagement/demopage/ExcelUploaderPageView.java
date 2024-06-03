@@ -2,6 +2,8 @@ package de.unimarburg.samplemanagement.demopage;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
+
 import java.io.File;
 
 @Route("upload-excel")
@@ -16,6 +18,8 @@ public class ExcelUploaderPageView extends VerticalLayout {
             linksArea.refreshFileLinks();
         });
         add(uploadArea, linksArea);
+        // Add a link to the main view
+        add(new RouterLink("Back to the main view", Demopage.class));
     }
 
     private static File getUploadFolder() {
