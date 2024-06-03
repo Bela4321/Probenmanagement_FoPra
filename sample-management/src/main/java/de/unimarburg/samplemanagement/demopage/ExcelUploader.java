@@ -11,11 +11,11 @@ import com.vaadin.flow.component.upload.Upload;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-public class Exceluploader extends VerticalLayout{
+public class ExcelUploader extends VerticalLayout{
 
     private final Upload uploadField;
     private final Span errorField;
-    public Exceluploader(File uploadFile) {
+    public ExcelUploader(File uploadFile) {
         H4 title = new H4("Upload spreadsheet");
         Paragraph hint = new Paragraph(
                 "File size must be less than or equal to 1 MB. Only Excel and CSV files are accepted.");
@@ -30,7 +30,6 @@ public class Exceluploader extends VerticalLayout{
                 "text/csv", ".csv");
         uploadField.setMaxFiles(100);
         uploadField.setMaxFileSize(1024 * 1024);
-        add("(max 1MB)");
         errorField = new Span();
         errorField.setVisible(false);
         errorField.getStyle().set("color", "red");
