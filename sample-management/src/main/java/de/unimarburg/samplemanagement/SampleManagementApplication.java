@@ -3,12 +3,17 @@ package de.unimarburg.samplemanagement;
 import de.unimarburg.samplemanagement.model.*;
 import de.unimarburg.samplemanagement.repository.*;
 import de.unimarburg.samplemanagement.service.MyUserService;
+import de.unimarburg.samplemanagement.utils.ExcelParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
@@ -18,6 +23,7 @@ public class SampleManagementApplication {
 
 	@Autowired
 	private MyUserService myUserService;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(SampleManagementApplication.class, args);
@@ -122,6 +128,24 @@ public class SampleManagementApplication {
 
 			Analysis fetchedAnalysis2 = analysisRepository.findById(analysis2.getId()).orElse(null);
 			System.out.println("Fetched Analysis 2: " + fetchedAnalysis2);
+
+
+			// Testing Excel File input
+			String EXCEL_FILE_PATH = "StudyTemplate.xlsx";
+			URL resourceUrl = getClass().getClassLoader().getResource(EXCEL_FILE_PATH);
+			if (resourceUrl == null) {
+				throw new FileNotFoundException("File not found: " + EXCEL_FILE_PATH);
+			}
+
+			File file = new File(resourceUrl.getFile());
+			FileInputStream inputStream = new FileInputStream(file);
+
+			ExcelParser parser = new ExcelParser(sampleRepository, subjectRepository, studyRepository);
+			parser.readExcelFile(inputStream);
+
+			inputStream.close();
+
+
 		};
 	}
 }

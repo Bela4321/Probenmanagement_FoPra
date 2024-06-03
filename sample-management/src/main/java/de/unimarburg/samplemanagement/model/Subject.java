@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 @Setter
 @Getter
@@ -15,9 +16,11 @@ public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String studyName;
+    private int idByStudy;
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
-    private List<Sample> listOfSamples;
+    private List<Sample> listOfSamples = new ArrayList<>();
 
     // Constructors
     public Subject() {
