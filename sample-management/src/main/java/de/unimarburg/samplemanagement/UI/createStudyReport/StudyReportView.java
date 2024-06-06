@@ -1,4 +1,4 @@
-package de.unimarburg.samplemanagement.UI;
+package de.unimarburg.samplemanagement.UI.createStudyReport;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Route("/Befund_erstellen")
-public class Befund_erstellen extends VerticalLayout {
+public class StudyReportView extends VerticalLayout {
 
 
     private final StudyService studyService;
@@ -22,7 +22,7 @@ public class Befund_erstellen extends VerticalLayout {
     private Study selectedStudy;
 
     @Autowired
-    public Befund_erstellen(StudyService studyService) {
+    public StudyReportView(StudyService studyService) {
         this.studyService = studyService;
         initLayout();
         loadData();
@@ -56,11 +56,11 @@ public class Befund_erstellen extends VerticalLayout {
 
     private void studyConfirmed() {
         if (selectedStudy != null) {
-            Notification.show("Creating Einzelbefund for: " + selectedStudy.getStudyName());
+            Notification.show("Ausgewählte Studie: " + selectedStudy.getStudyName());
             getUI().ifPresent(ui -> ui.navigate("create_study_report/" + selectedStudy.getId()));
 
         } else {
-            Notification.show("Please select a study first.");
+            Notification.show("Bitte eine Studie auswählen!");
         }
     }
 
@@ -73,8 +73,6 @@ public class Befund_erstellen extends VerticalLayout {
     }
 
     private void handleStudySelection(Study study) {
-        Notification.show("Selected Study: " + study.getStudyName());
-
         selectedStudy = study;
     }
 }

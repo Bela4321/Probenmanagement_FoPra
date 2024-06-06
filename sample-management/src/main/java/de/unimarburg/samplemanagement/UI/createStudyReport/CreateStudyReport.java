@@ -1,4 +1,4 @@
-package de.unimarburg.samplemanagement.UI;
+package de.unimarburg.samplemanagement.UI.createStudyReport;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -19,7 +19,6 @@ import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Route("/create_study_report")
 public class CreateStudyReport extends VerticalLayout implements HasUrlParameter<String> {
@@ -37,6 +36,7 @@ public class CreateStudyReport extends VerticalLayout implements HasUrlParameter
         studyID = null;
     }
 
+    // Set the selected study
     @Override
     public void setParameter(BeforeEvent beforeEvent, String s) {
         try {
@@ -74,15 +74,13 @@ public class CreateStudyReport extends VerticalLayout implements HasUrlParameter
                         List<Analysis> analyses = sample.getListOfAnalysis();
                         return analyses != null ? analyses.stream() : null;
                     })
-                    .collect(Collectors.toList());
+                    .toList();
 
             // Collect all unique parameters from the analyses
             List<Parameter> uniqueParameters = allAnalyses.stream()
                     .map(Analysis::getParameter)
                     .distinct()
-                    .collect(Collectors.toList());
-
-            System.out.println(uniqueParameters);
+                    .toList();
 
 
             // Add columns for each unique analysis parameter
@@ -132,12 +130,17 @@ public class CreateStudyReport extends VerticalLayout implements HasUrlParameter
 
 
     private String getAnalysisParameterForSample(Sample sample, Long parameterID) {
-        return sample.getListOfAnalysis().stream()
-                .filter(analysis -> parameterID.equals(analysis.getParameter().getId()))
-                .map(Analysis::getAnalysisResult)
-                .findFirst()
-                .orElse("");
+        try {
+            return sample.getListOfAnalysis().stream()
+                    .filter(analysis -> parameterID.equals(analysis.getParameter().getId()))
+                    .map(Analysis::getAnalysisResult)
+                    .findFirst()
+                    .orElse("");
+        } catch (Exception e) {
+            return "Kein Analyseergebnis vorhanden";
+        }
     }
+
 
 
     private void createReport() {
@@ -174,10 +177,10 @@ public class CreateStudyReport extends VerticalLayout implements HasUrlParameter
                 // Check if the analysis parameter ID is in idList
                 if (idList.contains(analysis.getParameter().getId())) {
                     // Print information about the analysis
-                    System.out.println("Sample Barcode: " + sample.getSample_barcode());
-                    System.out.println("Parameter Name: " + analysis.getParameter().getParameterName());
-                    System.out.println("Analysis Result: " + analysis.getAnalysisResult());
-                    System.out.println("Analysis Date: " + analysis.getAnalysisDate());
+                    System.out.println("Barcode: " + sample.getSample_barcode());
+                    System.out.println("Parameter: " + analysis.getParameter().getParameterName());
+                    System.out.println("Analyseergebnis: " + analysis.getAnalysisResult());
+                    System.out.println("Analysedatum: " + analysis.getAnalysisDate());
                     // You can add more information if needed
 
                     // Add a separator between analyses for clarity
