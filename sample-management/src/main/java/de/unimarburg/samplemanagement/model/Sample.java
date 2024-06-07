@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class Sample {
     private String sample_barcode;
     private String sample_type;
 
-    @OneToMany(mappedBy = "sample", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "sample", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Analysis> listOfAnalysis;
 
     // Constructors, getters, and setters

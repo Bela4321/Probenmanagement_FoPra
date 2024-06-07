@@ -29,7 +29,7 @@ public class SampleManagementApplication {
 		SpringApplication.run(SampleManagementApplication.class, args);
 	}
 
-	@Bean
+	/*@Bean
 	public CommandLineRunner demo(StudyRepository studyRepository,
 								  SampleRepository sampleRepository,
 								  ParameterRepository parameterRepository,
@@ -146,6 +146,6 @@ public class SampleManagementApplication {
 			inputStream.close();
 
 
-		};
+		};*/
 	}
-}
+

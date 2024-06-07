@@ -16,7 +16,9 @@ public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String studyName;
+
     private int idByStudy;
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
@@ -29,5 +31,11 @@ public class Subject {
     public Subject(Long id, List<Sample> listOfSamples) {
         this.id = id;
         this.listOfSamples = listOfSamples;
+    }
+
+    public Subject(Long id, String studyName, int idByStudy) {
+        this.id = id;
+        this.studyName = studyName;
+        this.idByStudy = idByStudy;
     }
 }

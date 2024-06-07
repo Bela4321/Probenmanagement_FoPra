@@ -20,8 +20,8 @@ public class Main extends VerticalLayout {
         button6.addClickListener(e-> UI.getCurrent().navigate("/Probe_Zuordnen"));
         Button button7 = new Button("Befund_erstellen");
         button7.addClickListener(e-> UI.getCurrent().navigate("/Befund_erstellen"));
-        Button button10 = new Button("Search_with_Barcode_ID");
-        button10.addClickListener(e-> UI.getCurrent().navigate("/Search_with_Barcode_ID"));
+        Button button10 = new Button("Sample_View");
+        button10.addClickListener(e-> UI.getCurrent().navigate("/Sample_View"));
         Button button11 = new Button("Excel_Vorlage");
         button11.addClickListener(e-> UI.getCurrent().navigate("/Excel_Vorlage"));
         Button button12 = new Button("Check_Barcode_Numbers");
