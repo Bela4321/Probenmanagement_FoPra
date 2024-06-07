@@ -94,7 +94,7 @@ public class CreateStudyReport extends VerticalLayout implements HasUrlParameter
             }
 
             if (!param) {
-                add("No Analysis availiable for Study: " + study.getStudyName());
+                add("Keine Analysen vorhanden für Studie: " + study.getStudyName());
                 return;
             }
 
@@ -181,9 +181,7 @@ public class CreateStudyReport extends VerticalLayout implements HasUrlParameter
                     System.out.println("Parameter: " + analysis.getParameter().getParameterName());
                     System.out.println("Analyseergebnis: " + analysis.getAnalysisResult());
                     System.out.println("Analysedatum: " + analysis.getAnalysisDate());
-                    // You can add more information if needed
 
-                    // Add a separator between analyses for clarity
                     System.out.println("---------------------");
                 }
             }

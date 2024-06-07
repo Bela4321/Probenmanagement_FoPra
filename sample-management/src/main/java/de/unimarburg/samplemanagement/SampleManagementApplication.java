@@ -92,24 +92,24 @@ public class SampleManagementApplication {
 			analysis1.setUser(user);
 			analysis1.setParameterName(parameter.getParameterName());
 			analysis1.setParameter(parameter);
-			//analysis1.setAnalysisResult("7.0");
-			//analysis1.setAnalysisDate(new Date());
+			analysis1.setAnalysisResult("7.0");
+			analysis1.setAnalysisDate(new Date());
 
 			Analysis analysis2 = new Analysis();
 			analysis2.setSample(sample2);
 			analysis2.setUser(user);
 			analysis2.setParameterName(parameter.getParameterName());
 			analysis2.setParameter(parameter);
-			//analysis2.setAnalysisResult("8.0");
-			//analysis2.setAnalysisDate(new Date());
+			analysis2.setAnalysisResult("8.0");
+			analysis2.setAnalysisDate(new Date());
 
 			Analysis analysis3 = new Analysis();
 			analysis3.setSample(sample2);
 			analysis3.setUser(user);
 			analysis3.setParameterName(parameter2.getParameterName());
 			analysis3.setParameter(parameter2);
-			//analysis3.setAnalysisResult("100");
-			//analysis3.setAnalysisDate(new Date());
+			analysis3.setAnalysisResult("100");
+			analysis3.setAnalysisDate(new Date());
 
 			parameter.setListOfAnalysis(Arrays.asList(analysis1));
 			parameter2.setListOfAnalysis(Arrays.asList(analysis2, analysis3));
