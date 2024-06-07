@@ -20,7 +20,7 @@ public class Study {
 
     private Date studyDate;
 
-    @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "study", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Sample> listOfSamples;
 
     // Constructors

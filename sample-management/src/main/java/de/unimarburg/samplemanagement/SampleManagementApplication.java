@@ -83,10 +83,15 @@ public class SampleManagementApplication {
 			parameter.setParameterName("pH");
 			parameterRepository.save(parameter);
 
+			Parameter parameter2 = new Parameter();
+			parameter2.setParameterName("pH2");
+			parameterRepository.save(parameter2);
+
 			Analysis analysis1 = new Analysis();
 			analysis1.setSample(sample1);
 			analysis1.setUser(user);
 			analysis1.setParameterName(parameter.getParameterName());
+			analysis1.setParameter(parameter);
 			analysis1.setAnalysisResult("7.0");
 			analysis1.setAnalysisDate(new Date());
 
@@ -94,15 +99,25 @@ public class SampleManagementApplication {
 			analysis2.setSample(sample2);
 			analysis2.setUser(user);
 			analysis2.setParameterName(parameter.getParameterName());
+			analysis2.setParameter(parameter);
 			analysis2.setAnalysisResult("8.0");
 			analysis2.setAnalysisDate(new Date());
 
-			parameter.setListOfAnalysis(Arrays.asList(analysis1, analysis2));
+			Analysis analysis3 = new Analysis();
+			analysis3.setSample(sample2);
+			analysis3.setUser(user);
+			analysis3.setParameterName(parameter2.getParameterName());
+			analysis3.setParameter(parameter2);
+			analysis3.setAnalysisResult("100");
+			analysis3.setAnalysisDate(new Date());
+
+			parameter.setListOfAnalysis(Arrays.asList(analysis1));
+			parameter2.setListOfAnalysis(Arrays.asList(analysis2, analysis3));
 			sample1.setListOfAnalysis(Arrays.asList(analysis1));
-			sample2.setListOfAnalysis(Arrays.asList(analysis2));
+			sample2.setListOfAnalysis(Arrays.asList(analysis2, analysis3));
 
 			sampleRepository.saveAll(Arrays.asList(sample1, sample2));
-			analysisRepository.saveAll(Arrays.asList(analysis1, analysis2));
+			analysisRepository.saveAll(Arrays.asList(analysis1, analysis2, analysis3));
 
 			// Fetch and verify
 			Study fetchedStudy = studyRepository.findById(study.getId()).orElse(null);
@@ -130,20 +145,20 @@ public class SampleManagementApplication {
 			System.out.println("Fetched Analysis 2: " + fetchedAnalysis2);
 
 
-			// Testing Excel File input
-			String EXCEL_FILE_PATH = "StudyTemplate.xlsx";
-			URL resourceUrl = getClass().getClassLoader().getResource(EXCEL_FILE_PATH);
-			if (resourceUrl == null) {
-				throw new FileNotFoundException("File not found: " + EXCEL_FILE_PATH);
-			}
-
-			File file = new File(resourceUrl.getFile());
-			FileInputStream inputStream = new FileInputStream(file);
-
-			ExcelParser parser = new ExcelParser(sampleRepository, subjectRepository, studyRepository);
-			parser.readExcelFile(inputStream);
-
-			inputStream.close();
+//			// Testing Excel File input
+//			String EXCEL_FILE_PATH = "StudyTemplate.xlsx";
+//			URL resourceUrl = getClass().getClassLoader().getResource(EXCEL_FILE_PATH);
+//			if (resourceUrl == null) {
+//				throw new FileNotFoundException("File not found: " + EXCEL_FILE_PATH);
+//			}
+//
+//			File file = new File(resourceUrl.getFile());
+//			FileInputStream inputStream = new FileInputStream(file);
+//
+//			ExcelParser parser = new ExcelParser(sampleRepository, subjectRepository, studyRepository);
+//			parser.readExcelFile(inputStream);
+//
+//			inputStream.close();
 
 
 		};

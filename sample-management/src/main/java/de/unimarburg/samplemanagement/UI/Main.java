@@ -26,7 +26,9 @@ public class Main extends VerticalLayout {
         button11.addClickListener(e-> UI.getCurrent().navigate("/Excel_Vorlage"));
         Button button12 = new Button("Check_Barcode_Numbers");
         button12.addClickListener(e-> UI.getCurrent().navigate("/Check_Barcode_Numbers"));
-        add(button,button4,button5,button6,button7,button10,button11,button12);
+        Button button13 = new Button("Analyseergebnisse eintragen");
+        button13.addClickListener(e-> UI.getCurrent().navigate("/analysis_result"));
+        add(button,button4,button5,button6,button7,button10,button11,button12,button13);
         setVisible(true);
     }
 }
