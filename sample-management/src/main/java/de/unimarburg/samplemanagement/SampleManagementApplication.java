@@ -30,7 +30,7 @@ public class SampleManagementApplication {
 								  AnalysisRepository analysisRepository,
 								  SubjectRepository subjectRepository) {
 		return (args) -> {
-			// Create instances and set relationships
+//			 Create instances and set relationships
 			Study study = new Study();
 			study.setStudyName("Sample Study");
 			study.setStudyDate(new Date());
