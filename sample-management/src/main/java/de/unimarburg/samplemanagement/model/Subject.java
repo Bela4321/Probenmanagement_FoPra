@@ -4,22 +4,23 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 @Setter
 @Getter
 @Entity
-
 @Table(name = "subject")
+@IdClass(SubjectCompositeKey.class)
 public class Subject {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String studyName;
-    private int idByStudy;
+    @Id
+    private Long studyId;
 
-    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Sample> listOfSamples = new ArrayList<>();
 
     // Constructors

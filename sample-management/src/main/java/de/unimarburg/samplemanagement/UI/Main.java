@@ -2,18 +2,21 @@ package de.unimarburg.samplemanagement.UI;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
 
 @Route("/")
-public class Main extends VerticalLayout {
-    public Main() {
+public class Main extends HorizontalLayout {
+    public Main(SidebarFactory sidebarFactory) {
+        add(sidebarFactory.getSidebar());
+        VerticalLayout verticalLayout = new VerticalLayout();
         Button button = new Button("Read Probe_ID");
         button.addClickListener(e-> UI.getCurrent().navigate("/Read_Probe_ID"));
 
-        Button button4 = new Button("Studie_Anlegen");
-        button4.addClickListener(e-> UI.getCurrent().navigate("/Studie_Anlegen"));
+        Button button4 = new Button("Create_Study");
+        button4.addClickListener(e-> UI.getCurrent().navigate("/create_Study"));
         Button button5 = new Button("Einsender_Anlegen");
         button5.addClickListener(e-> UI.getCurrent().navigate("/Einsender_Anlegen"));
         Button button6 = new Button("Probe_Zuordnen");
@@ -28,7 +31,8 @@ public class Main extends VerticalLayout {
         button12.addClickListener(e-> UI.getCurrent().navigate("/Check_Barcode_Numbers"));
         Button button13 = new Button("Analyseergebnisse eintragen");
         button13.addClickListener(e-> UI.getCurrent().navigate("/analysis_result"));
-        add(button,button4,button5,button6,button7,button10,button11,button12,button13);
-        setVisible(true);
+
+        verticalLayout.add(button, button4, button5, button6, button7, button10, button11, button12, button13);
+        add(verticalLayout);
     }
 }

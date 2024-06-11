@@ -17,7 +17,7 @@ import java.util.List;
 
         private String parameterName;
 
-        @OneToMany(mappedBy = "parameter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+        @OneToMany(mappedBy = "parameter", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
         private List<Analysis> listOfAnalysis;
 
         public Parameter() {

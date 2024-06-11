@@ -73,8 +73,9 @@ public class ExcelParser {
             double idDouble = (Double) getCellValue(currentRow.getCell(1), cellType.NUMERIC);
             int id = getNumericValue(idDouble);
             Subject sub = new Subject();
-            sub.setIdByStudy(id);
-            sub.setStudyName(studyName);
+            sub.setId((long) id);
+
+            sub.setStudyId(studyRepository.getIdFromName(studyName));
             subjectList.add(sub);
             sample.setSubject(sub);
 

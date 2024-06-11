@@ -18,7 +18,10 @@ public class Sample {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subject_id", referencedColumnName = "id")
+    @JoinColumns({
+            @JoinColumn(name = "subject_id", referencedColumnName = "id"),
+            @JoinColumn(name = "subject_study_id", referencedColumnName = "studyId")
+    })
     private Subject subject;
 
 
@@ -33,7 +36,7 @@ public class Sample {
     private String sample_barcode;
     private String sample_type;
 
-    @OneToMany(mappedBy = "sample", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sample", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Analysis> listOfAnalysis;
 
     // Constructors, getters, and setters
