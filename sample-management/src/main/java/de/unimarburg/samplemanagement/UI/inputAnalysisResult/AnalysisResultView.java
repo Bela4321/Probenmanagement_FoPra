@@ -1,78 +1,55 @@
 package de.unimarburg.samplemanagement.UI.inputAnalysisResult;
 
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.notification.Notification;
-import de.unimarburg.samplemanagement.model.Study;
-import de.unimarburg.samplemanagement.service.StudyService;
-
-import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import de.unimarburg.samplemanagement.model.AnalysisType;
+import de.unimarburg.samplemanagement.model.Sample;
+import de.unimarburg.samplemanagement.model.Study;
+import de.unimarburg.samplemanagement.service.ClientStateService;
+import de.unimarburg.samplemanagement.utils.GENERAL_UTIL;
+import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-@Route("/analysis_result")
-public class AnalysisResultView extends VerticalLayout {
-
-    private final StudyService studyService;
-    private Grid<Study> studyGrid;
-
-    private Study selectedStudy;
+@Route("/ViewSampleAnalysis")
+public class AnalysisResultView extends HorizontalLayout {
+    private ClientStateService clientStateService;
 
     @Autowired
-    public AnalysisResultView(StudyService studyService) {
-        this.studyService = studyService;
-        initLayout();
-        loadData();
+    public AnalysisResultView(ClientStateService clientStateService) {
+        this.clientStateService = clientStateService;
+        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getUserState().getSelectedStudy()));
+
+
+        add(loadData());
     }
 
-    private void initLayout() {
-        // Add a description label
-        add("Studie auswählen für das Eintragen der Analyseergebnisse");
+    private VerticalLayout loadData() {
+        VerticalLayout body = new VerticalLayout();
 
-        // Create buttons for creating individual or collective reports
-        Button studySelectButton = new Button("Studie auswählen");
+        Study study = clientStateService.getUserState().getSelectedStudy();
 
-        // Add buttons to the layout
-        add(studySelectButton);
-
-        // Create and configure the grid to display study data
-        studyGrid = new Grid<>(Study.class);
-        studyGrid.setColumns("id", "studyName", "studyDate");
-        add(studyGrid);
-
-        // Add selection listener to the grid
-        studyGrid.asSingleSelect().addValueChangeListener(event -> {
-            Study selectedStudy = event.getValue();
-            if (selectedStudy != null) {
-                handleStudySelection(selectedStudy);
-            }
-        });
-
-        studySelectButton.addClickListener(event -> studyConfirmed());
-    }
-
-    private void studyConfirmed() {
-        if (selectedStudy != null) {
-            Notification.show("Ausgewählte Studie: " + selectedStudy.getStudyName());
-            getUI().ifPresent(ui -> ui.navigate("input_analysis/" + selectedStudy.getId()));
-
-        } else {
-            Notification.show("Bitte eine Studie auswählen!");
+        if (study == null) {
+            body.add("Bitte eine Studie auswählen");
+            return body;
         }
-    }
 
-    private void loadData() {
-        // Fetch the list of studies from the service
-        List<Study> studies = studyService.getAllStudies();
+        List<Sample> samples = study.getListOfSamples();
+        Grid<Sample> sampleGrid = new Grid<>();
+        sampleGrid.setItems(samples);
+        List<AnalysisType> uniqueAnalysisTypes = study.getAnalysisTypes();
+        sampleGrid.addColumn(Sample::getSample_barcode).setHeader("Sample Barcode");
 
-        // Set the fetched data to the grid
-        studyGrid.setItems(studies);
-    }
+        for (AnalysisType analysisType : uniqueAnalysisTypes) {
+            sampleGrid.addColumn(sample -> GENERAL_UTIL.getAnalysisForSample(sample, analysisType.getId()))
+                    .setHeader(analysisType.getAnalysisName());
+        }
+        body.add(sampleGrid);
 
-    private void handleStudySelection(Study study) {
-        selectedStudy = study;
+        return body;
     }
 }
 

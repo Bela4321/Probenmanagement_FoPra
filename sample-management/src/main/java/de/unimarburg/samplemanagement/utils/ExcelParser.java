@@ -13,7 +13,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 @Component
 public class ExcelParser {
@@ -73,8 +76,9 @@ public class ExcelParser {
             double idDouble = (Double) getCellValue(currentRow.getCell(1), cellType.NUMERIC);
             int id = getNumericValue(idDouble);
             Subject sub = new Subject();
-            sub.setIdByStudy(id);
-            sub.setStudyName(studyName);
+            sub.setId((long) id);
+
+            sub.setStudyId(studyRepository.getIdFromName(studyName));
             subjectList.add(sub);
             sample.setSubject(sub);
 
