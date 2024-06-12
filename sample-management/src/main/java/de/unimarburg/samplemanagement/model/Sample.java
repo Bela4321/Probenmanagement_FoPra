@@ -1,6 +1,7 @@
 package de.unimarburg.samplemanagement.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,11 +23,13 @@ public class Sample {
             @JoinColumn(name = "subject_id", referencedColumnName = "id"),
             @JoinColumn(name = "subject_study_id", referencedColumnName = "studyId")
     })
+    @NotNull
     private Subject subject;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "study_id", referencedColumnName = "id")
+    @NotNull
     private Study study; // Change here to relate to Study
 
     private String coordinates;
@@ -39,6 +42,6 @@ public class Sample {
     @OneToMany(mappedBy = "sample", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Analysis> listOfAnalysis;
 
-    // Constructors, getters, and setters
+
 }
 

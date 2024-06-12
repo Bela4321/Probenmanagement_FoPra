@@ -1,6 +1,7 @@
 package de.unimarburg.samplemanagement.UI.inputAnalysisResult;
 
 import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -10,181 +11,100 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.binder.ValidationException;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.textfield.TextField;
 import de.unimarburg.samplemanagement.model.Analysis;
-import de.unimarburg.samplemanagement.model.Parameter;
+import de.unimarburg.samplemanagement.model.AnalysisType;
 import de.unimarburg.samplemanagement.model.Sample;
 import de.unimarburg.samplemanagement.model.Study;
-import de.unimarburg.samplemanagement.service.AnalysisService;
-import de.unimarburg.samplemanagement.service.ParameterService;
+import de.unimarburg.samplemanagement.repository.SampleRepository;
+import de.unimarburg.samplemanagement.service.ClientStateService;
 import de.unimarburg.samplemanagement.service.StudyService;
+import de.unimarburg.samplemanagement.utils.DISPLAY_UTILS;
+import de.unimarburg.samplemanagement.utils.GENERAL_UTIL;
+import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
+import org.apache.xmlbeans.impl.store.Saaj;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-@Route("/input_analysis")
-public class InputAnalysisResult extends VerticalLayout implements HasUrlParameter<String> {
-
-    private final StudyService studyService;
-    private final AnalysisService analysisService;
-    private final ParameterService parameterService;
-    private Grid<Sample> sampleGrid = new Grid<>(Sample.class);
-    private Long studyID;
-    private Map<Analysis, String> changes = new HashMap<>();
-    private Parameter selectedParameter = null;
-    private Grid<Analysis> grid;
-    private HorizontalLayout buttonLayout;
+@Route("/EnterSampleAnalysis")
+public class InputAnalysisResult extends HorizontalLayout{
+    private final SampleRepository sampleRepository;
+    private ClientStateService clientStateService;
+    private Study study;
+    private AnalysisType selectedAnalysisType = null;
 
 
     @Autowired
-    public InputAnalysisResult(StudyService studyService, AnalysisService analysisService, ParameterService parameterService) {
-        this.studyService = studyService;
-        this.analysisService = analysisService;
-        this.parameterService = parameterService;
-        studyID = null;
+    public InputAnalysisResult(ClientStateService clientStateService, SampleRepository sampleRepository) {
+        this.clientStateService = clientStateService;
+        this.sampleRepository = sampleRepository;
+        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getUserState().getSelectedStudy()));
+        study = clientStateService.getUserState().getSelectedStudy();
+        if (clientStateService.getUserState().getSelectedStudy() == null) {
+            add("Bitte eine Studie auswählen");
+            return;
+        }
+        add(loadContent());
     }
 
-    // Set the selected study
-    @Override
-    public void setParameter(BeforeEvent beforeEvent, String s) {
-        try {
-            studyID = Long.valueOf(s);
-        } catch (NumberFormatException e) {
-            studyID = null;
-            Notification.show("Ungültige Studien-ID. Bitte überprüfen Sie die URL.");
-        }
-        if (studyID != null) {
-            loadParameters();
-        } else {
-            add("Keine Studie ausgewählt. Bitte noch ein Mal versuchen.");
-        }
-    }
-
-    // Read all available parameters for selected study and display them
-    private void loadParameters() {
-        if (studyID != null) {
-            add("Parameter auswählen zum Eintragen der Analyseergebnisse");
-            Study study = studyService.getStudyWithSamples(studyID);
-            List<Sample> samples = study.getListOfSamples();
-            HorizontalLayout parameterLayout = new HorizontalLayout();
-            boolean param = false;
-
-            // Handle samples with no analyses
-            List<Analysis> allAnalyses = samples.stream()
-                    .flatMap(sample -> {
-                        List<Analysis> analyses = sample.getListOfAnalysis();
-                        return analyses != null ? analyses.stream() : null;
-                    })
-                    .toList();
-
-            // Collect all unique parameters from the analyses
-            List<Parameter> uniqueParameters = allAnalyses.stream()
-                    .map(Analysis::getParameter)
-                    .distinct()
-                    .collect(Collectors.toList());
-
-            RadioButtonGroup<Parameter> radioButtonGroup = new RadioButtonGroup<>();
-            radioButtonGroup.setLabel("Parameter");
-
-            radioButtonGroup.setItems(uniqueParameters);
-            radioButtonGroup.setItemLabelGenerator(Parameter::getParameterName);
-
-            radioButtonGroup.addValueChangeListener((HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<RadioButtonGroup<Parameter>, Parameter>>) event -> {
-                selectedParameter = event.getValue();
-                loadEditView();
+    private VerticalLayout loadContent() {
+        VerticalLayout body = new VerticalLayout();
+        List<Button> analysisSelectionButtons = study.getAnalysisTypes().stream()
+                .map(analysisType -> {
+            Button button = new Button(analysisType.getAnalysisName());
+            button.addClickListener(e -> {
+                selectedAnalysisType = analysisType;
+                body.removeAll();
+                body.add(loadAnalysisTypeContent());
             });
-
-            for (Parameter par : uniqueParameters) {
-                if (par != null) {
-                    param = true;
-                }
-            }
-            if (!param) {
-                add("Keine Analysen vorhanden für Studie: " + study.getStudyName());
-                return;
-            }
-            parameterLayout.add(radioButtonGroup);
-            add(parameterLayout);
-        }
+            return button;
+        }).toList();
+        body.add(DISPLAY_UTILS.geBoxAlignment(analysisSelectionButtons.toArray(new Button[0])));
+        return body;
     }
 
-    // Load the UI elements for editing analysis parameters
-    private void loadEditView() {
-        changes.clear();
-        List<Analysis> analysisList = parameterService.getParameterWithAnalysis(selectedParameter.getId()).getListOfAnalysis();
+    private Component loadAnalysisTypeContent() {
+        Grid<Sample> sampleGrid = new Grid<>();
+        sampleGrid.setItems(study.getListOfSamples());
 
-        // Delete Layouts for updating View
-        if (grid != null) {
-            remove(grid);
-        }
-        if (buttonLayout != null) {
-            remove(buttonLayout);
-        }
-
-        // Create a new grid to display the data
-        grid = new Grid<>();
-        grid.setItems(analysisList);
-        grid.addColumn(analysis -> analysis.getSample().getSample_barcode()).setHeader("Barcode");
-        Grid.Column<Analysis> resultColumn = grid.addColumn(Analysis::getAnalysisResult).setHeader("Ergebnis");
-
-        // Setup the editor
-        Editor<Analysis> editor = grid.getEditor();
-        editor.setBuffered(false);
-
-        // Editor for Analysis Result
-        TextField resultField = new TextField();
-        Binder<Analysis> binder = new Binder<>(Analysis.class);
-        binder.forField(resultField)
-                .withValidator(value -> value != null, "Result cannot be null")
-                .bind(Analysis::getAnalysisResult, (analysis, value) -> {
-                    String newValue = value.isEmpty() ? null : value;
-                    changes.put(analysis, newValue); // Track changes
-                    analysis.setAnalysisResult(newValue);
-                });
-
-        resultColumn.setEditorComponent(resultField);
-        editor.setBinder(binder);
-
-        // Start editing on double-click
-        grid.addItemDoubleClickListener(event -> {
-            editor.editItem(event.getItem());
-            resultField.focus();
+        sampleGrid.addColumn(Sample::getSample_barcode).setHeader("Sample Barcode");
+        sampleGrid.addColumn(sample -> {
+                    TextField resultField = new TextField();
+                    resultField.setValue(GENERAL_UTIL.getAnalysisForSample(sample, selectedAnalysisType.getId()));
+                    resultField.addValueChangeListener(e -> saveNewAnalysisResult(sample, e.getValue()));
+                    return resultField;
+                }).setHeader("Ergebnis");
+        Button saveToDBButton = new Button("Speichern");
+        saveToDBButton.addClickListener(e -> {
+            saveAnalysesToDB();
+            Notification.show("Daten gespeichert");
         });
-
-        // Add the new grid to the layout
-        add(grid);
-
-        // Add save and cancel buttons
-        Button saveButton = new Button("Speichern", e -> saveChanges());
-
-        Button cancelButton = new Button("Abbrechen", e -> {
-            editor.cancel();
-            loadEditView();
-        });
-
-        buttonLayout = new HorizontalLayout();
-        buttonLayout.add(saveButton, cancelButton);
-        add(buttonLayout);
+        return sampleGrid;
     }
 
-    // Save changes to Database
-    // TODO: Date is set when the user clicks the save button. Change?
-    private void saveChanges() {
-        changes.forEach((analysis, value) -> {
-            analysis.setAnalysisResult(value);
-            analysis.setAnalysisDate(new Date());
-            analysisService.saveAnalysis(analysis);
-        });
-        Notification.show("Alle Änderungen in Datenbank gespeichert");
-        loadEditView(); // Refresh the view
+    private void saveAnalysesToDB() {
+        sampleRepository.saveAll(study.getListOfSamples());
     }
+
+    private void saveNewAnalysisResult(Sample sample, String value) {
+        Analysis analysis = new Analysis();
+        analysis.setAnalysisType(selectedAnalysisType);
+        analysis.setAnalysisResult(value);
+        analysis.setAnalysisDate(new Date());
+        //is an old analysis result present?
+        Analysis oldAnalysis = sample.getListOfAnalysis().stream()
+                .filter(a -> Objects.equals(a.getAnalysisType().getId(), selectedAnalysisType.getId()))
+                .findFirst().orElse(null);
+        if (oldAnalysis != null) {
+            sample.getListOfAnalysis().remove(oldAnalysis);
+            //todo: save old analysis result to history?
+        }
+        sample.getListOfAnalysis().add(analysis);
+    }
+
 }

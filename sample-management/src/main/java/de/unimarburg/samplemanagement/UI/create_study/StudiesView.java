@@ -5,10 +5,13 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import de.unimarburg.samplemanagement.UI.SidebarFactory;
+import de.unimarburg.samplemanagement.service.ClientStateService;
+import de.unimarburg.samplemanagement.utils.ClientState;
+import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 import de.unimarburg.samplemanagement.model.Study;
 import de.unimarburg.samplemanagement.repository.StudyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -17,21 +20,20 @@ public class StudiesView extends HorizontalLayout {
     List<Study> studies;
     Grid<Study> studyGrid;
     StudyRepository studyRepository;
+    ClientStateService clientStateService;
 
 
     @Autowired
-    public StudiesView(StudyRepository studyRepository, SidebarFactory sidebar) {
+    public StudiesView(StudyRepository studyRepository, ClientStateService clientStateService) {
         this.studyRepository = studyRepository;
-        add(sidebar.getSidebar());
+        this.clientStateService = clientStateService;
+
+        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getUserState().getSelectedStudy()));
         VerticalLayout mainContent = new VerticalLayout();
         loadStudies();
-        Button button = new Button("refesh");
-        button.addClickListener(e->{
-            loadStudies();
-        });
-        Button button2 = new Button("Create Study");
-        button2.addClickListener(e-> button2.getUI().ifPresent(ui -> ui.navigate("create_Study")));
-        mainContent.add(studyGrid,new HorizontalLayout(button,button2));
+        Button button = new Button("Create Study");
+        button.addClickListener(e-> button.getUI().ifPresent(ui -> ui.navigate("create_Study")));
+        mainContent.add(studyGrid,button);
         add(mainContent);
     }
 
@@ -44,6 +46,12 @@ public class StudiesView extends HorizontalLayout {
         grid.addColumn(Study::getStudyName).setHeader("Name");
         grid.addColumn(Study::getStudyDate).setHeader("Date of creation");
         grid.addColumn((study -> study.getListOfSamples().size())).setHeader("Number of samples");
+
+        //allow selection of a study
+        grid.addItemClickListener(e->{
+            clientStateService.getUserState().setSelectedStudy(e.getItem());
+            grid.getUI().ifPresent(ui -> ui.navigate("StudyOverview"));
+        });
 
         studyGrid = grid;
     }

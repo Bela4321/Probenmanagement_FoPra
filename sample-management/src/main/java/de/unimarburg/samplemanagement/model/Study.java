@@ -26,6 +26,9 @@ public class Study {
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Sample> listOfSamples;
 
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<AnalysisType> analysisTypes;
+
     // Constructors
     public Study() {
     }

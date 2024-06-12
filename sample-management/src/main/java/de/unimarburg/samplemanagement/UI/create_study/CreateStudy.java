@@ -7,7 +7,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
-import de.unimarburg.samplemanagement.UI.SidebarFactory;
+import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 import de.unimarburg.samplemanagement.model.Study;
 import de.unimarburg.samplemanagement.repository.StudyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,18 +16,17 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Locale;
 
 @Route("/create_Study")
-public class Create_Study extends HorizontalLayout {
+public class CreateStudy extends HorizontalLayout {
 
     @Autowired
     StudyRepository studyRepository;
 
-    public Create_Study(SidebarFactory sidebarFactory) {
+    public CreateStudy() {
         add("Studien und Einsender in der Software mit den relevanten Daten „anlegen");
         setVisible(true);
-        add(sidebarFactory.getSidebar());
+        add(SIDEBAR_FACTORY.getSidebar(null));
         VerticalLayout vl = new VerticalLayout();
         TextField studyname = new TextField("Studienname");
         DatePicker startdate = new DatePicker("Startdatum");

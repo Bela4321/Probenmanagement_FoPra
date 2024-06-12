@@ -40,7 +40,7 @@ public class StudyService {
                 for (Analysis analysis : analysisList) {
                     Hibernate.initialize(analysis.getSample());
                     Hibernate.initialize(analysis.getUser());
-                    Hibernate.initialize(analysis.getParameter());
+                    Hibernate.initialize(analysis.getAnalysisType());
                 }
             }
             return study;
