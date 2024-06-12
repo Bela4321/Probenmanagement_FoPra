@@ -33,7 +33,7 @@ public class CreateStudyReport extends HorizontalLayout {
 
         this.clientStateService = clientStateService;
 
-        sampleGrid = new Grid<>(Sample.class);
+        sampleGrid = new Grid<>();
         if (clientStateService == null || clientStateService.getUserState().getSelectedStudy() == null) {
             add("Bitte eine Studie auswählen");
             return;

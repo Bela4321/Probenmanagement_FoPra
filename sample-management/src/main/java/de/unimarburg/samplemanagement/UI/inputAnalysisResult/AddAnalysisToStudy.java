@@ -75,7 +75,7 @@ public class AddAnalysisToStudy extends HorizontalLayout {
                 }
             }
         }
-        Grid<AnalysisType> analysisTypeGrid = new Grid<>(AnalysisType.class);
+        Grid<AnalysisType> analysisTypeGrid = new Grid<>();
         analysisTypeGrid.setItems(unusedAnalysisTypes);
         analysisTypeGrid.addColumn(AnalysisType::getAnalysisName).setHeader("Analysis Name");
         analysisTypeGrid.addColumn(AnalysisType::getAnalysisDescription).setHeader("Analysis Description");

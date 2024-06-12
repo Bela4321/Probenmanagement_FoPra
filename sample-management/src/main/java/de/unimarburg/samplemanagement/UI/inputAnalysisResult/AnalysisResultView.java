@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-@Route("/EditSampleAnalysis")
+@Route("/ViewSampleAnalysis")
 public class AnalysisResultView extends HorizontalLayout {
 
     private final StudyService studyService;
@@ -50,9 +50,10 @@ public class AnalysisResultView extends HorizontalLayout {
         }
 
         List<Sample> samples = study.getListOfSamples();
-        Grid<Sample> sampleGrid = new Grid<>(Sample.class);
+        Grid<Sample> sampleGrid = new Grid<>();
         sampleGrid.setItems(samples);
         List<AnalysisType> uniqueAnalysisTypes = study.getAnalysisTypes();
+        sampleGrid.addColumn(Sample::getSample_barcode).setHeader("Sample Barcode");
 
         for (AnalysisType analysisType : uniqueAnalysisTypes) {
             sampleGrid.addColumn(sample -> GENERAL_UTIL.getAnalysisForSample(sample, analysisType.getId()))

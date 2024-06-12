@@ -69,42 +69,39 @@ public class InputAnalysisResult extends HorizontalLayout{
     }
 
     private Component loadAnalysisTypeContent() {
-        Grid<Sample> sampleGrid = new Grid<>();
-        sampleGrid.setItems(study.getListOfSamples());
+        Grid<Analysis> analysisGrid = new Grid<>();
+        List<Analysis> relevantAnalyses = study.getListOfSamples().stream()
+                        .flatMap(sample -> sample.getListOfAnalysis().stream())
+                                .filter(analysis -> analysis.getAnalysisType().getId().equals(selectedAnalysisType.getId()))
+                                        .toList();
 
-        sampleGrid.addColumn(Sample::getSample_barcode).setHeader("Sample Barcode");
-        sampleGrid.addColumn(sample -> {
-                    TextField resultField = new TextField();
-                    resultField.setValue(GENERAL_UTIL.getAnalysisForSample(sample, selectedAnalysisType.getId()));
-                    resultField.addValueChangeListener(e -> saveNewAnalysisResult(sample, e.getValue()));
-                    return resultField;
-                }).setHeader("Ergebnis");
-        Button saveToDBButton = new Button("Speichern");
-        saveToDBButton.addClickListener(e -> {
-            saveAnalysesToDB();
-            Notification.show("Daten gespeichert");
-        });
-        return sampleGrid;
+        analysisGrid.setItems(relevantAnalyses);
+
+        analysisGrid.addColumn(analysis -> analysis.getSample().getSample_barcode()).setHeader("Sample Barcode");
+        //editable result column
+        analysisGrid.addComponentColumn(analysis -> {
+            TextField textField = new TextField();
+            String analysisResult = analysis.getAnalysisResult();
+            if (analysisResult==null) {
+                analysisResult = "";
+            }
+            textField.setValue(analysisResult);
+            textField.addValueChangeListener(e -> {
+                saveNewAnalysisResult(analysis, e.getValue());
+            });
+            return textField;
+        }).setHeader(selectedAnalysisType.getAnalysisName());
+
+
+
+        return analysisGrid;
     }
 
-    private void saveAnalysesToDB() {
-        sampleRepository.saveAll(study.getListOfSamples());
-    }
 
-    private void saveNewAnalysisResult(Sample sample, String value) {
-        Analysis analysis = new Analysis();
-        analysis.setAnalysisType(selectedAnalysisType);
+    private void saveNewAnalysisResult(Analysis analysis, String value) {
         analysis.setAnalysisResult(value);
-        analysis.setAnalysisDate(new Date());
-        //is an old analysis result present?
-        Analysis oldAnalysis = sample.getListOfAnalysis().stream()
-                .filter(a -> Objects.equals(a.getAnalysisType().getId(), selectedAnalysisType.getId()))
-                .findFirst().orElse(null);
-        if (oldAnalysis != null) {
-            sample.getListOfAnalysis().remove(oldAnalysis);
-            //todo: save old analysis result to history?
-        }
-        sample.getListOfAnalysis().add(analysis);
+        sampleRepository.save(analysis.getSample());
+        Notification.show("Ergebnis gespeichert");
     }
 
 }

@@ -3,6 +3,7 @@ package de.unimarburg.samplemanagement.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "analysis")
 public class Analysis {
     @Id
@@ -17,7 +19,7 @@ public class Analysis {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "analysis_id", referencedColumnName = "id")
+    @JoinColumn(name = "analysisType_id", referencedColumnName = "id")
     @NotNull
     private AnalysisType analysisType;
 
@@ -35,4 +37,9 @@ public class Analysis {
     private String analysisResult;
 
     private String Comments;
+
+    public Analysis(AnalysisType analysisType, Sample sample) {
+        this.analysisType = analysisType;
+        this.sample = sample;
+    }
 }

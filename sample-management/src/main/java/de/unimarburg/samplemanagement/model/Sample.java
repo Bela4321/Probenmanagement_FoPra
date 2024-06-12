@@ -18,7 +18,7 @@ public class Sample {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns({
             @JoinColumn(name = "subject_id", referencedColumnName = "id"),
             @JoinColumn(name = "subject_study_id", referencedColumnName = "studyId")
@@ -27,7 +27,7 @@ public class Sample {
     private Subject subject;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "study_id", referencedColumnName = "id")
     @NotNull
     private Study study; // Change here to relate to Study

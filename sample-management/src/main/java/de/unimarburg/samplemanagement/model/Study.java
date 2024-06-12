@@ -3,6 +3,7 @@ package de.unimarburg.samplemanagement.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.Date;
 import java.util.List;
@@ -27,6 +28,7 @@ public class Study {
     private List<Sample> listOfSamples;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @UniqueElements
     private List<AnalysisType> analysisTypes;
 
     // Constructors

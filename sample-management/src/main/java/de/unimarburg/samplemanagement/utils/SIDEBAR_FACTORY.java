@@ -6,7 +6,9 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import de.unimarburg.samplemanagement.model.Study;
 import org.springframework.stereotype.Component;
+import oshi.util.tuples.Pair;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -27,10 +29,10 @@ public class SIDEBAR_FACTORY extends VerticalLayout {
         sidebar.add(new Text("Study: " + study.getStudyName()));
         sidebar.add(new Text("-----------------"));
 
-        Map<String,String> studyActions = ACTION_LISTS.getStudySpecificActions();
-        for (Map.Entry<String, String> entry : studyActions.entrySet()) {
-            Button button = new Button(entry.getKey());
-            button.addClickListener(e-> UI.getCurrent().navigate(entry.getValue()));
+        List<Pair<String, String>> studyActions = ACTION_LISTS.getStudySpecificActions();
+        for (Pair<String, String> entry : studyActions) {
+            Button button = new Button(entry.getA());
+            button.addClickListener(e-> UI.getCurrent().navigate(entry.getB()));
             sidebar.add(button);
         }
 

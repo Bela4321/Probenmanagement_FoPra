@@ -14,6 +14,7 @@ import de.unimarburg.samplemanagement.utils.ACTION_LISTS;
 import de.unimarburg.samplemanagement.utils.DISPLAY_UTILS;
 import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 import org.springframework.beans.factory.annotation.Autowired;
+import oshi.util.tuples.Pair;
 
 import java.util.*;
 
@@ -60,11 +61,11 @@ public class StudyOverview extends HorizontalLayout {
     private Component getStudyActions(Study study) {
         List<Button> buttons = new ArrayList<>();
 
-        Map<String,String> studyActions = ACTION_LISTS.getStudySpecificActions();
+        List<Pair<String, String>> studyActions = ACTION_LISTS.getStudySpecificActions();
 
-        studyActions.forEach((actionName,actionURL)->{
-            Button button = new Button(actionName);
-            button.addClickListener(e-> UI.getCurrent().navigate(actionURL));
+        studyActions.forEach(pair->{
+            Button button = new Button(pair.getA());
+            button.addClickListener(e-> UI.getCurrent().navigate(pair.getB()));
             buttons.add(button);
         });
 
