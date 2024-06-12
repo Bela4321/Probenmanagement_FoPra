@@ -42,7 +42,6 @@ public class Studie_Anlegen extends VerticalLayout {
         List<Grid.Column> columns = grid.getColumns();
         columns.forEach(x -> x.setAutoWidth(true));
         grid.asSingleSelect().addValueChangeListener(e -> editStudy((Study) e.getValue()));
-
     }
     private void addStudy() {
         grid.asSingleSelect().clear();
