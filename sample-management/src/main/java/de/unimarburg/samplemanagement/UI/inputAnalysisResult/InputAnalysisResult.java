@@ -1,35 +1,23 @@
 package de.unimarburg.samplemanagement.UI.inputAnalysisResult;
 
-import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
-import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.Route;
 import de.unimarburg.samplemanagement.model.Analysis;
 import de.unimarburg.samplemanagement.model.AnalysisType;
-import de.unimarburg.samplemanagement.model.Sample;
 import de.unimarburg.samplemanagement.model.Study;
 import de.unimarburg.samplemanagement.repository.SampleRepository;
 import de.unimarburg.samplemanagement.service.ClientStateService;
-import de.unimarburg.samplemanagement.service.StudyService;
 import de.unimarburg.samplemanagement.utils.DISPLAY_UTILS;
-import de.unimarburg.samplemanagement.utils.GENERAL_UTIL;
 import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
-import org.apache.xmlbeans.impl.store.Saaj;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Route("/EnterSampleAnalysis")
 public class InputAnalysisResult extends HorizontalLayout{

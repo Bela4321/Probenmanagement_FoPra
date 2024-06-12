@@ -14,8 +14,6 @@ import de.unimarburg.samplemanagement.service.ClientStateService;
 import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-
 @Route("/AddAnalysisToSample")
 public class AddAnalysisToSamples extends HorizontalLayout {
     private final SampleRepository sampleRepository;

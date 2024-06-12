@@ -16,7 +16,9 @@ import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 import org.springframework.beans.factory.annotation.Autowired;
 import oshi.util.tuples.Pair;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 @Route("/StudyOverview")

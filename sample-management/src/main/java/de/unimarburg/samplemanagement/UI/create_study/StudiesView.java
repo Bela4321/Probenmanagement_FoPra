@@ -5,13 +5,11 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import de.unimarburg.samplemanagement.service.ClientStateService;
-import de.unimarburg.samplemanagement.utils.ClientState;
-import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 import de.unimarburg.samplemanagement.model.Study;
 import de.unimarburg.samplemanagement.repository.StudyRepository;
+import de.unimarburg.samplemanagement.service.ClientStateService;
+import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 

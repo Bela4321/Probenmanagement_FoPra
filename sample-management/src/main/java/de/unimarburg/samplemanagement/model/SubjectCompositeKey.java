@@ -1,6 +1,5 @@
 package de.unimarburg.samplemanagement.model;
 
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor

@@ -6,34 +6,33 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import de.unimarburg.samplemanagement.model.*;
-import de.unimarburg.samplemanagement.service.ClientStateService;
-import de.unimarburg.samplemanagement.service.StudyService;
-
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import de.unimarburg.samplemanagement.model.Analysis;
+import de.unimarburg.samplemanagement.model.AnalysisType;
+import de.unimarburg.samplemanagement.model.Sample;
+import de.unimarburg.samplemanagement.model.Study;
+import de.unimarburg.samplemanagement.service.ClientStateService;
 import de.unimarburg.samplemanagement.utils.GENERAL_UTIL;
 import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Route("/CreateReport")
 public class CreateStudyReport extends HorizontalLayout {
 
-
-    private Grid<Sample> sampleGrid;
     private Study study;
     private Map<Long, Boolean> analysisCheckboxMap = new HashMap<>();
     private ClientStateService clientStateService;
 
     @Autowired
     public CreateStudyReport(ClientStateService clientStateService) {
-        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getUserState().getSelectedStudy()));
-
         this.clientStateService = clientStateService;
-
-        sampleGrid = new Grid<>();
+        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getUserState().getSelectedStudy()));
         if (clientStateService == null || clientStateService.getUserState().getSelectedStudy() == null) {
             add("Bitte eine Studie auswählen");
             return;
@@ -49,6 +48,8 @@ public class CreateStudyReport extends HorizontalLayout {
     private VerticalLayout loadContent() {
         VerticalLayout body = new VerticalLayout();
         List<Sample> samples = study.getListOfSamples();
+
+        Grid<Sample> sampleGrid = new Grid<>();
 
         sampleGrid.addColumn(Sample::getSample_barcode).setHeader("Sample Barcode");
 

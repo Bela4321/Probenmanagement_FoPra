@@ -28,10 +28,7 @@ public class Analysis {
     @NotNull
     private Sample sample;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private MyUser user;
-
+    @Temporal(TemporalType.TIMESTAMP)
     private Date analysisDate;
 
     private String analysisResult;

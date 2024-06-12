@@ -3,9 +3,7 @@ package de.unimarburg.samplemanagement.utils;
 import oshi.util.tuples.Pair;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ACTION_LISTS {
 

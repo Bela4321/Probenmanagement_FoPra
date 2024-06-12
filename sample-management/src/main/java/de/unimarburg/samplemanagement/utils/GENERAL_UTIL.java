@@ -1,11 +1,7 @@
 package de.unimarburg.samplemanagement.utils;
 
 import de.unimarburg.samplemanagement.model.Analysis;
-import de.unimarburg.samplemanagement.model.AnalysisType;
 import de.unimarburg.samplemanagement.model.Sample;
-import de.unimarburg.samplemanagement.model.Study;
-
-import java.util.List;
 
 public class GENERAL_UTIL {
 
