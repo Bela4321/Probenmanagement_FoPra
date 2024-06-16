@@ -1,7 +1,9 @@
 package de.unimarburg.samplemanagement.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
@@ -9,27 +11,32 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "analysis")
 public class Analysis {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "analysisType_id", referencedColumnName = "id")
+    @NotNull
+    private AnalysisType analysisType;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sample_id", referencedColumnName = "id")
+    @NotNull
     private Sample sample;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private MyUser user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parameter_id", referencedColumnName = "id")
-    private Parameter parameter;
-
-    private String parameterName;
-    private String analysisResult;
+    @Temporal(TemporalType.TIMESTAMP)
     private Date analysisDate;
 
-    // Constructors, getters, and setters
+    private String analysisResult;
+
+    private String Comments;
+
+    public Analysis(AnalysisType analysisType, Sample sample) {
+        this.analysisType = analysisType;
+        this.sample = sample;
+    }
 }

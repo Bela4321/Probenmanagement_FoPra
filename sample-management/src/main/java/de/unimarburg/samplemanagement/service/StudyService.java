@@ -4,7 +4,6 @@ import de.unimarburg.samplemanagement.repository.StudyRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import de.unimarburg.samplemanagement.model.Analysis;
-import de.unimarburg.samplemanagement.model.MyUser;
 import de.unimarburg.samplemanagement.model.Sample;
 import de.unimarburg.samplemanagement.model.Study;
 import de.unimarburg.samplemanagement.repository.StudyRepository;
@@ -51,35 +50,4 @@ public class StudyService {
             return studyRepository.findAll();
         }
     }
-
-
-    public List<Study> getAllStudies() {
-        return studyRepository.findAll();
-    }
-
-    @Transactional
-    public Study getStudyWithSamples(Long studyId) {
-        Optional<Study> studyOpt = studyRepository.findById(studyId);
-        if (studyOpt.isPresent()) {
-            Study study = studyOpt.get();
-            Hibernate.initialize(study.getListOfSamples());
-            List<Sample> sampleList= study.getListOfSamples();
-            for (Sample sample : sampleList) {
-                Hibernate.initialize(sample.getListOfAnalysis());
-                Hibernate.initialize(sample.getStudy());
-                Hibernate.initialize(sample.getSubject());
-                List<Analysis> analysisList = sample.getListOfAnalysis();
-                for (Analysis analysis : analysisList) {
-                    Hibernate.initialize(analysis.getSample());
-                    Hibernate.initialize(analysis.getUser());
-                    Hibernate.initialize(analysis.getParameter());
-                }
-            }
-            return study;
-        }
-        throw new EntityNotFoundException("No Samples in selected Study" + studyId);
-    }
-
-
-
 }
