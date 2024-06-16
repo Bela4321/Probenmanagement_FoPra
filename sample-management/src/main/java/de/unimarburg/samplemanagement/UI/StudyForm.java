@@ -4,6 +4,7 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -11,24 +12,26 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.shared.Registration;
 import de.unimarburg.samplemanagement.model.Study;
+import de.unimarburg.samplemanagement.repository.StudyRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class StudyForm extends FormLayout {
     BeanValidationBinder<Study> binder = new BeanValidationBinder<>(Study.class);
     TextField studyName = new TextField("Study Name");
-    TextField studyDate = new TextField("Study Date");
-
+    //TextField studyDate = new TextField("Study Date");
+    DatePicker studyDate = new DatePicker("Startdatum");
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
     private Study study;
-
+    @Autowired
+    StudyRepository studyRepository;
     public StudyForm() {
         binder.bindInstanceFields(this);
         // Add a label to show the date format pattern
-        Span datePatternInfo = new Span("Enter date in format: Month dd,yyyy,HH:MM:SS AM/PM");
+
         add(studyName,
                 studyDate,
-                datePatternInfo,
                 createButtonsLayout());
     }
     public void setStudy(Study study) {
