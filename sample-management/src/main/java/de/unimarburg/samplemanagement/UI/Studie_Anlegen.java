@@ -15,7 +15,7 @@ import de.unimarburg.samplemanagement.service.StudyService;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Route("/Studie_Anlegen")
+@Route(value = "Studies", layout = MainLayout.class)
 @CssImport("./Components/Styles.css")
 public class Studie_Anlegen extends VerticalLayout {
     Grid grid = new Grid(Study.class);
@@ -24,7 +24,6 @@ public class Studie_Anlegen extends VerticalLayout {
     private StudyService studyService;
     StudyForm studyForm;
     public Studie_Anlegen(StudyService studyService) {
-//        add("Studien und Einsender in der Software mit den relevanten Daten „anlegen");
         this.studyService = studyService;
         addClassName("list-view");
         setSizeFull();

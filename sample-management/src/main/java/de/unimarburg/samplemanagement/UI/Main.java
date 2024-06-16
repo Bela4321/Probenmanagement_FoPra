@@ -5,13 +5,12 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 
 
-@Route("/")
+@Route(value = "", layout = MainLayout.class)
 public class Main extends HorizontalLayout {
     public Main() {
-        add(SIDEBAR_FACTORY.getSidebar(null));
+        //add(SIDEBAR_FACTORY.getSidebar(null));
         VerticalLayout verticalLayout = new VerticalLayout();
         Button button = new Button("Read Probe_ID");
         button.addClickListener(e-> UI.getCurrent().navigate("/Read_Probe_ID"));

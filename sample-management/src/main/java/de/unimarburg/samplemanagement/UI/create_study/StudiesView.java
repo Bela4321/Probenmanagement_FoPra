@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-@Route("/Studies")
+@Route("/Stud")
 public class StudiesView extends HorizontalLayout {
     List<Study> studies;
     Grid<Study> studyGrid;
