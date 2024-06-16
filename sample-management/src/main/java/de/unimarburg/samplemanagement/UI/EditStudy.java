@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Route("/edit_study")
 @CssImport("./Components/Styles.css")
 public class EditStudy extends HorizontalLayout {
-    Grid grid = new Grid(Study.class);
+    Grid<Study> grid = new Grid();
     TextField filterName = new TextField();
     TextField filterDate = new TextField();
     private StudyService studyService;
@@ -50,18 +50,13 @@ public class EditStudy extends HorizontalLayout {
         setVisible(true);
     }
     private void configureGrid() {
-        grid.setColumns("id","studyName","studyDate");
         grid.setSizeFull();
-        grid.getColumns();
-        List<Grid.Column> columns = grid.getColumns();
-        columns.forEach(x -> x.setAutoWidth(true));
+        grid.addColumn(Study::getStudyName).setHeader("Name");
+        grid.addColumn(Study::getStudyDate).setHeader("Date of creation");
+        grid.addColumn((study -> study.getListOfSamples().size())).setHeader("Number of samples");
         grid.asSingleSelect().addValueChangeListener(e -> editStudy((Study) e.getValue()));
     }
-    private void addStudy() {
-        grid.asSingleSelect().clear();
-        editStudy(new Study());
-        updateList();
-    }
+
     private void closeEditor() {
         studyForm.setStudy(null);
         studyForm.setVisible(false);
@@ -127,10 +122,6 @@ public class EditStudy extends HorizontalLayout {
 
     private void updateList() {
         List<Study> studies = studyService.findByNameAndBirthDate(filterName.getValue(), filterDate.getValue());
-        System.out.println("update list method is called");
-
-        // Apply sorting logic here if necessary to maintain order
-        // For example, if sorting by 'id' or 'studyName':
         studies = studies.stream()
                 .sorted((s1, s2) -> s1.getId().compareTo(s2.getId()))
                 .collect(Collectors.toList());
