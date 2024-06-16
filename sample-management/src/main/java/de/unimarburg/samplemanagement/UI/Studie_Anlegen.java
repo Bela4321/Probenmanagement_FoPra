@@ -1,7 +1,6 @@
 package de.unimarburg.samplemanagement.UI;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -10,7 +9,9 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import de.unimarburg.samplemanagement.model.Study;
+import de.unimarburg.samplemanagement.service.ClientStateService;
 import de.unimarburg.samplemanagement.service.StudyService;
+import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +24,10 @@ public class Studie_Anlegen extends VerticalLayout {
     TextField filterDate = new TextField();
     private StudyService studyService;
     StudyForm studyForm;
-    public Studie_Anlegen(StudyService studyService) {
+    ClientStateService clientStateService;
+    public Studie_Anlegen(StudyService studyService, ClientStateService clientStateService) {
+        this.clientStateService = clientStateService;
+        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getUserState().getSelectedStudy()));
         this.studyService = studyService;
         addClassName("list-view");
         setSizeFull();
@@ -100,10 +104,7 @@ public class Studie_Anlegen extends VerticalLayout {
         filterDate.setValueChangeMode(ValueChangeMode.LAZY);
         filterDate.addValueChangeListener(e -> updateList());
 
-        Button CreateNewStudy = new Button("Create New Study");
-        CreateNewStudy.addClickListener(click -> addStudy());
-
-        var toolbar = new HorizontalLayout(filterName, filterDate,CreateNewStudy);
+        var toolbar = new HorizontalLayout(filterName, filterDate);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
