@@ -5,7 +5,6 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
@@ -25,10 +24,8 @@ public class StudyForm extends FormLayout {
     public StudyForm() {
         binder.bindInstanceFields(this);
         // Add a label to show the date format pattern
-        Span datePatternInfo = new Span("Enter date in format: Month dd,yyyy,HH:MM:SS AM/PM");
         add(studyName,
                 studyDate,
-                datePatternInfo,
                 createButtonsLayout());
     }
     public void setStudy(Study study) {
@@ -56,6 +53,7 @@ public class StudyForm extends FormLayout {
         if (binder.isValid()) {
             fireEvent(new SaveEvent(this, binder.getBean()));
         }
+
     }
 
     // Events
@@ -101,5 +99,4 @@ public class StudyForm extends FormLayout {
     public Registration addCloseListener(ComponentEventListener<CloseEvent> listener) {
         return addListener(CloseEvent.class, listener);
     }
-
 }

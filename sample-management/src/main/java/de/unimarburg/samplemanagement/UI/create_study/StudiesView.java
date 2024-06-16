@@ -1,5 +1,6 @@
 package de.unimarburg.samplemanagement.UI.create_study;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -69,8 +70,10 @@ public class StudiesView extends HorizontalLayout {
         filterDate.setClearButtonVisible(true);
         filterDate.setValueChangeMode(ValueChangeMode.LAZY);
         filterDate.addValueChangeListener(e -> updateList());
+        Button editStudy = new Button("Edit Study");
+        editStudy.addClickListener(e-> UI.getCurrent().navigate("/edit_study"));
 
-        var toolbar = new HorizontalLayout(filterName, filterDate);
+        var toolbar = new HorizontalLayout(filterName, filterDate,editStudy);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
