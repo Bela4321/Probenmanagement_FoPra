@@ -24,7 +24,7 @@ public class CreateStudy extends HorizontalLayout {
     StudyRepository studyRepository;
 
     public CreateStudy() {
-        add("Studien und Einsender in der Software mit den relevanten Daten „anlegen");
+
         setVisible(true);
         add(SIDEBAR_FACTORY.getSidebar(null));
         VerticalLayout vl = new VerticalLayout();

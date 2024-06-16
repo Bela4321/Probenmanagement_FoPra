@@ -15,7 +15,7 @@ import de.unimarburg.samplemanagement.service.StudyService;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Route(value = "Studies", layout = MainLayout.class)
+@Route("/Studie_Anlegen")
 @CssImport("./Components/Styles.css")
 public class Studie_Anlegen extends VerticalLayout {
     Grid grid = new Grid(Study.class);

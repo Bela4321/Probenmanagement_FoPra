@@ -5,12 +5,13 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 
 
-@Route(value = "", layout = MainLayout.class)
+@Route("/")
 public class Main extends HorizontalLayout {
     public Main() {
-        //add(SIDEBAR_FACTORY.getSidebar(null));
+        add(SIDEBAR_FACTORY.getSidebar(null));
         VerticalLayout verticalLayout = new VerticalLayout();
         Button button = new Button("Read Probe_ID");
         button.addClickListener(e-> UI.getCurrent().navigate("/Read_Probe_ID"));
@@ -31,8 +32,10 @@ public class Main extends HorizontalLayout {
         button12.addClickListener(e-> UI.getCurrent().navigate("/Check_Barcode_Numbers"));
         Button button13 = new Button("Analyseergebnisse eintragen");
         button13.addClickListener(e-> UI.getCurrent().navigate("/analysis_result"));
+        Button button14 = new Button("Studie_Anlegen");
+        button14.addClickListener(e-> UI.getCurrent().navigate("/Studie_Anlegen"));
 
-        verticalLayout.add(button, button4, button5, button6, button7, button10, button11, button12, button13);
+        verticalLayout.add(button, button4, button5, button6, button7, button10, button11, button12, button13,button14);
         add(verticalLayout);
     }
 }
