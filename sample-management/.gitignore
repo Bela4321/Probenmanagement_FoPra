@@ -36,3 +36,4 @@ build/
 
 ### vaadin ###
 frontend/
+src/main/bundles
