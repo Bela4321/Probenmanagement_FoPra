@@ -32,10 +32,8 @@ public class Main extends HorizontalLayout {
         button12.addClickListener(e-> UI.getCurrent().navigate("/Check_Barcode_Numbers"));
         Button button13 = new Button("Analyseergebnisse eintragen");
         button13.addClickListener(e-> UI.getCurrent().navigate("/analysis_result"));
-        Button button14 = new Button("Studie_Anlegen");
-        button14.addClickListener(e-> UI.getCurrent().navigate("/Studie_Anlegen"));
 
-        verticalLayout.add(button, button4, button5, button6, button7, button10, button11, button12, button13,button14);
+        verticalLayout.add(button, button4, button5, button6, button7, button10, button11, button12, button13);
         add(verticalLayout);
     }
 }
