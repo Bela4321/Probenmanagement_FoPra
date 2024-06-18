@@ -43,5 +43,11 @@ public class Sample {
     private List<Analysis> listOfAnalysis;
 
 
+    public Long getSubjectId() {
+        if (this.subject == null) {
+            return null;
+        }
+        return this.subject.getId();
+    }
 }
 

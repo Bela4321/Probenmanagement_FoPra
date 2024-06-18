@@ -13,6 +13,7 @@ import de.unimarburg.samplemanagement.model.Study;
 import de.unimarburg.samplemanagement.repository.StudyRepository;
 import de.unimarburg.samplemanagement.service.ClientStateService;
 import de.unimarburg.samplemanagement.service.StudyService;
+import de.unimarburg.samplemanagement.utils.GENERAL_UTIL;
 import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -128,17 +129,11 @@ public class EditStudy extends HorizontalLayout {
 
         grid.setItems(studies);
     }
-    private static Date convertToDate(LocalDate localDate) {
-        // Convert LocalDate to an Instant
-        Instant instant = localDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
 
-        // Create a Date from the Instant
-        return Date.from(instant);
-    }
     private void saveStudy(Study study,String studyname, LocalDate startdate) {
         //save study to database
         study.setStudyName(studyname);
-        study.setStudyDate(convertToDate(startdate));
+        study.setStudyDate(GENERAL_UTIL.convertToDate(startdate));
         studyRepository.save(study);
         Notification.show("Study successfully stored");
     }
