@@ -9,6 +9,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import de.unimarburg.samplemanagement.model.Study;
 import de.unimarburg.samplemanagement.repository.StudyRepository;
+import de.unimarburg.samplemanagement.utils.GENERAL_UTIL;
 import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -51,18 +52,10 @@ public class CreateStudy extends HorizontalLayout {
         }
         Study study = new Study();
         study.setStudyName(studyname);
-        study.setStudyDate(convertToDate(startdate));
+        study.setStudyDate(GENERAL_UTIL.convertToDate(startdate));
         studyRepository.save(study);
         Notification.show("Studie erfolgreich gespeichert");
     }
 
 
-
-    private static Date convertToDate(LocalDate localDate) {
-        // Convert LocalDate to an Instant
-        Instant instant = localDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
-
-        // Create a Date from the Instant
-        return Date.from(instant);
-    }
 }
