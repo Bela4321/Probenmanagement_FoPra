@@ -1,4 +1,4 @@
-package de.unimarburg.samplemanagement.UI.inputAnalysisResult;
+package de.unimarburg.samplemanagement.UI.analyses;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;

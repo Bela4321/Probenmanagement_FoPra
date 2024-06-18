@@ -1,4 +1,4 @@
-package de.unimarburg.samplemanagement.UI.createStudyReport;
+package de.unimarburg.samplemanagement.UI.study;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
