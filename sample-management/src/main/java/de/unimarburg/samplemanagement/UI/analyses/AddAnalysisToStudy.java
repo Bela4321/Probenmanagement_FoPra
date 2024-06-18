@@ -30,9 +30,9 @@ public class AddAnalysisToStudy extends HorizontalLayout {
         this.clientStateService = clientStateService;
         this.analysisTypeRepository = analysisTypeRepository;
         this.studyRepository = studyRepository;
-        study = clientStateService.getUserState().getSelectedStudy();
-        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getUserState().getSelectedStudy()));
-        if (clientStateService.getUserState().getSelectedStudy()== null) {
+        study = clientStateService.getClientState().getSelectedStudy();
+        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getClientState().getSelectedStudy()));
+        if (clientStateService.getClientState().getSelectedStudy()== null) {
             add("Bitte eine Studie auswählen");
             return;
         }

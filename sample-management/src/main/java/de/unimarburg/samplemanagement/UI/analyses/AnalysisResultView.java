@@ -21,7 +21,7 @@ public class AnalysisResultView extends HorizontalLayout {
     @Autowired
     public AnalysisResultView(ClientStateService clientStateService) {
         this.clientStateService = clientStateService;
-        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getUserState().getSelectedStudy()));
+        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getClientState().getSelectedStudy()));
 
 
         add(loadData());
@@ -30,7 +30,7 @@ public class AnalysisResultView extends HorizontalLayout {
     private VerticalLayout loadData() {
         VerticalLayout body = new VerticalLayout();
 
-        Study study = clientStateService.getUserState().getSelectedStudy();
+        Study study = clientStateService.getClientState().getSelectedStudy();
 
         if (study == null) {
             body.add("Bitte eine Studie auswählen");

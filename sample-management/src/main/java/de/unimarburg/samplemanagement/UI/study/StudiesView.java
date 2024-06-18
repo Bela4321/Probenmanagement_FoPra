@@ -33,7 +33,7 @@ public class StudiesView extends HorizontalLayout {
         this.studyRepository = studyRepository;
         this.clientStateService = clientStateService;
         this.studyService = studyService;
-        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getUserState().getSelectedStudy()));
+        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getClientState().getSelectedStudy()));
         VerticalLayout mainContent = new VerticalLayout();
         loadStudies();
         Button button = new Button("Create Study");
@@ -54,7 +54,7 @@ public class StudiesView extends HorizontalLayout {
 
         //allow selection of a study
         grid.addItemClickListener(e->{
-            clientStateService.getUserState().setSelectedStudy(e.getItem());
+            clientStateService.getClientState().setSelectedStudy(e.getItem());
             grid.getUI().ifPresent(ui -> ui.navigate("StudyOverview"));
         });
 

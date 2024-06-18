@@ -2,7 +2,6 @@ package de.unimarburg.samplemanagement;
 
 import com.vaadin.flow.spring.annotation.EnableVaadin;
 import de.unimarburg.samplemanagement.model.*;
-import de.unimarburg.samplemanagement.*;
 import de.unimarburg.samplemanagement.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

@@ -32,12 +32,12 @@ public class CreateStudyReport extends HorizontalLayout {
     @Autowired
     public CreateStudyReport(ClientStateService clientStateService) {
         this.clientStateService = clientStateService;
-        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getUserState().getSelectedStudy()));
-        if (clientStateService == null || clientStateService.getUserState().getSelectedStudy() == null) {
+        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getClientState().getSelectedStudy()));
+        if (clientStateService == null || clientStateService.getClientState().getSelectedStudy() == null) {
             add("Bitte eine Studie auswählen");
             return;
         }
-        this.study = clientStateService.getUserState().getSelectedStudy();
+        this.study = clientStateService.getClientState().getSelectedStudy();
         if (study == null) {
             add("Bitte eine Studie auswählen");
             return;

@@ -31,9 +31,9 @@ public class InputAnalysisResult extends HorizontalLayout{
     public InputAnalysisResult(ClientStateService clientStateService, SampleRepository sampleRepository) {
         this.clientStateService = clientStateService;
         this.sampleRepository = sampleRepository;
-        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getUserState().getSelectedStudy()));
-        study = clientStateService.getUserState().getSelectedStudy();
-        if (clientStateService.getUserState().getSelectedStudy() == null) {
+        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getClientState().getSelectedStudy()));
+        study = clientStateService.getClientState().getSelectedStudy();
+        if (clientStateService.getClientState().getSelectedStudy() == null) {
             add("Bitte eine Studie auswählen");
             return;
         }
