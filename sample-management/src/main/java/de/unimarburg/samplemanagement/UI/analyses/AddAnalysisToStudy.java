@@ -1,4 +1,4 @@
-package de.unimarburg.samplemanagement.UI.inputAnalysisResult;
+package de.unimarburg.samplemanagement.UI.analyses;
 
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-@Route("/AddSampleAnalysis")
+@Route("/AddSampleAnalysisToStudy")
 public class AddAnalysisToStudy extends HorizontalLayout {
     private final AnalysisTypeRepository analysisTypeRepository;
     private final StudyRepository studyRepository;

@@ -1,4 +1,4 @@
-package de.unimarburg.samplemanagement.UI.editAnalyses;
+package de.unimarburg.samplemanagement.UI.analyses;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;

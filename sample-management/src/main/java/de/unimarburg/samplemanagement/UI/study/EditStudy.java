@@ -1,4 +1,4 @@
-package de.unimarburg.samplemanagement.UI;
+package de.unimarburg.samplemanagement.UI.study;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.CssImport;

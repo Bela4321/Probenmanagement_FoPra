@@ -1,4 +1,4 @@
-package de.unimarburg.samplemanagement.UI.create_study;
+package de.unimarburg.samplemanagement.UI.study;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
