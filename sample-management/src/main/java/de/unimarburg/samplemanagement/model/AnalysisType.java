@@ -4,13 +4,14 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Objects;
 
 
 @Entity
 @Getter
 @Setter
-@Table(name = "analysisType")
+@Table(name = "analysis_type")
 public class AnalysisType {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

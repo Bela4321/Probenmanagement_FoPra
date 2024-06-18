@@ -48,7 +48,7 @@ public class StudyOverview extends HorizontalLayout {
         Date studyDate = study.getStudyDate();
         int numberOfSamples = study.getListOfSamples().size();
         int numberofSubjects = study.getListOfSamples().stream().map(Sample::getSubject).distinct().toArray().length;
-        int numberOfAnalysesCompleted = study.getListOfSamples().stream().map(Sample::getListOfAnalysis).flatMap(List::stream).filter(a->a.getAnalysisResult()!=null).toArray().length;
+        int numberOfAnalysesCompleted = study.getListOfSamples().stream().map(Sample::getListOfAnalysis).flatMap(List::stream).filter(a->!(a.getAnalysisResult()==null||a.getAnalysisResult().isBlank())).toArray().length;
         int numberOfTotalAnalyses = study.getListOfSamples().stream().map(Sample::getListOfAnalysis).flatMap(List::stream).toArray().length;
 
         return DISPLAY_UTILS.geBoxAlignment(
