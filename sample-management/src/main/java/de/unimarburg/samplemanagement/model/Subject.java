@@ -1,6 +1,7 @@
 package de.unimarburg.samplemanagement.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,14 +10,21 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
-@Table(name = "subject")
-@IdClass(SubjectCompositeKey.class)
+@Table(name = "subject", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"alias", "study_id"})
+})
 public class Subject {
-
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Id
-    private Long studyId;
+
+    @NotNull
+    private Long alias;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "study_id", referencedColumnName = "id")
+    @NotNull
+    private Study study;
 
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

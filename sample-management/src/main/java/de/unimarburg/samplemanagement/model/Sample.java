@@ -19,10 +19,7 @@ public class Sample {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumns({
-            @JoinColumn(name = "subject_id", referencedColumnName = "id"),
-            @JoinColumn(name = "subject_study_id", referencedColumnName = "studyId")
-    })
+    @JoinColumn(name = "subject_id", referencedColumnName = "id")
     @NotNull
     private Subject subject;
 
@@ -42,6 +39,13 @@ public class Sample {
     @OneToMany(mappedBy = "sample", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Analysis> listOfAnalysis;
 
-
+    /**
+     * Set the subject and study of the sample
+     * @param subject the subject to set (and its study)
+     */
+    public void setSubject(@NotNull Subject subject) {
+        this.subject = subject;
+        this.study = subject.getStudy();
+    }
 }
 

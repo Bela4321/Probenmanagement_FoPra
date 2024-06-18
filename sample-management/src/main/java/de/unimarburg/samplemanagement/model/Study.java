@@ -1,7 +1,9 @@
 package de.unimarburg.samplemanagement.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.UniqueElements;
 
@@ -12,8 +14,9 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "study", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "studyName")
+        @UniqueConstraint(columnNames = "study_name")
 })
 public class Study {
     @Id
@@ -25,21 +28,17 @@ public class Study {
     private Date studyDate;
 
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Sample> listOfSamples;
+    private List<Subject> listOfSubjects;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @UniqueElements
     private List<AnalysisType> analysisTypes;
 
-    // Constructors
-    public Study() {
+
+    public List<Sample> getListOfSamples() {
+        return listOfSubjects.stream()
+                .map(Subject::getListOfSamples)
+                .flatMap(List::stream)
+                .toList();
     }
-
-    public Study(Long id, String studyName, Date studyDate, List<Sample> listOfSamples) {
-        this.id = id;
-        this.studyName = studyName;
-        this.listOfSamples = listOfSamples;
-    }
-
-
 }

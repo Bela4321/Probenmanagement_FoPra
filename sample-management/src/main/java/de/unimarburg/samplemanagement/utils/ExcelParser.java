@@ -78,7 +78,7 @@ public class ExcelParser {
             Subject sub = new Subject();
             sub.setId((long) id);
 
-            sub.setStudyId(studyRepository.getIdFromName(studyName));
+            sub.setStudy(studyRepository.findByStudyName(studyName));
             subjectList.add(sub);
             sample.setSubject(sub);
 
@@ -112,6 +112,8 @@ public class ExcelParser {
         studyRepository.save(study);
 
         for (Subject subject : subjectList) {
+            List<Sample> samples = sampleList.stream().filter(sample -> sample.getSubject()==subject).toList();
+            subject.setListOfSamples(samples);
             subjectRepository.save(subject);
         }
 
@@ -119,8 +121,6 @@ public class ExcelParser {
             sample.setStudy(study);
             sampleRepository.save(sample);
         }
-
-        study.setListOfSamples(sampleList);
     }
 
     public static Object getCellValue(Cell cell, cellType expectedType) throws IOException {
