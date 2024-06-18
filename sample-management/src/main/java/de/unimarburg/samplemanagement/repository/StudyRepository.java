@@ -19,7 +19,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     @Query(value = "SELECT * FROM Study c WHERE " +
             "(LOWER(c.study_Name) LIKE LOWER(CONCAT('%', :name, '%')) " +
-            "AND TO_CHAR(c.study_Date, 'YYYY-MM-DD HH24:MI:SS') LIKE CONCAT('%', :dateText, '%')",
+            "AND TO_CHAR(c.study_Date, 'YYYY-MM-DD HH24:MI:SS') LIKE CONCAT('%', :dateText, '%'))",
             nativeQuery = true)
     List<Study> findByNameAndBirthDate(@Param("name") String name, @Param("dateText") String dateText);
 

@@ -12,7 +12,6 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.LocalDateToDateConverter;
-import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.router.Route;
 import de.unimarburg.samplemanagement.model.Sample;
 import de.unimarburg.samplemanagement.model.Subject;
@@ -22,7 +21,6 @@ import de.unimarburg.samplemanagement.service.ClientStateService;
 import de.unimarburg.samplemanagement.utils.DoubleToLongConverter;
 import de.unimarburg.samplemanagement.utils.GENERAL_UTIL;
 import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -64,7 +62,7 @@ public class ManualSampleEditing extends HorizontalLayout {
         Grid.Column<Sample> typeColumn = sampleGrid.addColumn(Sample::getSample_type).setHeader("Sample Type").setSortable(true);
         Grid.Column<Sample> amountColumn = sampleGrid.addColumn(Sample::getSample_amount).setHeader("Sample Amount").setSortable(true);
         Grid.Column<Sample> dateColumn = sampleGrid.addColumn(Sample::getSampleDate).setHeader("Sample Date").setSortable(true).setRenderer(GENERAL_UTIL.renderDate());
-        Grid.Column<Sample> subjectIdColumn = sampleGrid.addColumn(Sample::getSubjectId).setHeader("Subject ID").setSortable(true);
+        Grid.Column<Sample> subjectIdColumn = sampleGrid.addColumn(sample -> sample.getSubject().getAlias()).setHeader("Subject Alias").setSortable(true);
         Grid.Column<Sample> coordinatesColumn = sampleGrid.addColumn(Sample::getCoordinates).setHeader("Coordinates").setSortable(true);
 
         // Create the editor and its binder
@@ -97,7 +95,7 @@ public class ManualSampleEditing extends HorizontalLayout {
         subjectIdField.setStep(1);
         binder.forField(subjectIdField)
                 .withConverter(new DoubleToLongConverter())
-                .bind(Sample::getSubjectId, this::setSubjectId);
+                .bind(sample -> sample.getSubject().getAlias(), (sample, alias) -> sample.getSubject().setAlias(alias));
         subjectIdColumn.setEditorComponent(subjectIdField);
 
         TextField coordinatesField = new TextField();
@@ -197,14 +195,14 @@ public class ManualSampleEditing extends HorizontalLayout {
             sample.setSubject(null);
             return;
         }
-        Optional<Subject> subject = subjectRepository.getSubjectByIdAndStudyId(subjectId, clientStateService.getUserState().getSelectedStudy().getId());
+        Optional<Subject> subject = subjectRepository.getSubjectByIdAndStudy(subjectId, clientStateService.getUserState().getSelectedStudy());
         if (subject.isPresent()) {
             sample.setSubject(subject.get());
             return;
         }
         Subject subject1 = new Subject();
-        subject1.setId(subjectId);
-        subject1.setStudyId(clientStateService.getUserState().getSelectedStudy().getId());
+        subject1.setAlias(subjectId);
+        subject1.setStudy(clientStateService.getUserState().getSelectedStudy());
         subjectRepository.save(subject1);
         sample.setSubject(subject1);
 
