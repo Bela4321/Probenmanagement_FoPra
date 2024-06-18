@@ -29,13 +29,13 @@ public class StudyOverview extends HorizontalLayout {
     @Autowired
     public StudyOverview(ClientStateService clientStateService) {
         this.clientStateService = clientStateService;
-        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getUserState().getSelectedStudy()));
-        if (clientStateService.getUserState().getSelectedStudy() == null) {
+        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getClientState().getSelectedStudy()));
+        if (clientStateService.getClientState().getSelectedStudy() == null) {
             add(new Text("No study selected"));
             return;
         }
-        Component studystats = getStudyStats(clientStateService.getUserState().getSelectedStudy());
-        Component studyActions = getStudyActions(clientStateService.getUserState().getSelectedStudy());
+        Component studystats = getStudyStats(clientStateService.getClientState().getSelectedStudy());
+        Component studyActions = getStudyActions(clientStateService.getClientState().getSelectedStudy());
         add(new VerticalLayout(
                 new Text("Study Overview"),
                 studystats,

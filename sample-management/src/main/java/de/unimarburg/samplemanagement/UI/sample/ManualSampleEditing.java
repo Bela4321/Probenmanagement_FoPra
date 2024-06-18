@@ -38,8 +38,8 @@ public class ManualSampleEditing extends HorizontalLayout {
         this.subjectRepository = subjectRepository;
         this.clientStateService = clientStateService;
         this.sampleRepository = sampleRepository;
-        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getUserState().getSelectedStudy()));
-        if (clientStateService.getUserState().getSelectedStudy() == null) {
+        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getClientState().getSelectedStudy()));
+        if (clientStateService.getClientState().getSelectedStudy() == null) {
             add("Please select a study");
             return;
         }
@@ -53,7 +53,7 @@ public class ManualSampleEditing extends HorizontalLayout {
     private VerticalLayout getContent() {
         VerticalLayout body = new VerticalLayout();
         Grid<Sample> sampleGrid = new Grid<>();
-        List<Sample> samples = sampleRepository.getSampleByStudyId(clientStateService.getUserState().getSelectedStudy().getId());
+        List<Sample> samples = sampleRepository.getSampleByStudyId(clientStateService.getClientState().getSelectedStudy().getId());
         sampleGrid.setItems(samples);
 
 
@@ -162,7 +162,7 @@ public class ManualSampleEditing extends HorizontalLayout {
 
         Button addButton = new Button("Add Sample", event -> {
             Sample newSample = new Sample();
-            newSample.setStudy(clientStateService.getUserState().getSelectedStudy());
+            newSample.setStudy(clientStateService.getClientState().getSelectedStudy());
             samples.add(0,newSample); // Add the new sample to the list
             sampleGrid.getDataProvider().refreshAll(); // Refresh the grid
 
@@ -195,14 +195,14 @@ public class ManualSampleEditing extends HorizontalLayout {
             sample.setSubject(null);
             return;
         }
-        Optional<Subject> subject = subjectRepository.getSubjectByIdAndStudy(subjectId, clientStateService.getUserState().getSelectedStudy());
+        Optional<Subject> subject = subjectRepository.getSubjectByIdAndStudy(subjectId, clientStateService.getClientState().getSelectedStudy());
         if (subject.isPresent()) {
             sample.setSubject(subject.get());
             return;
         }
         Subject subject1 = new Subject();
         subject1.setAlias(subjectId);
-        subject1.setStudy(clientStateService.getUserState().getSelectedStudy());
+        subject1.setStudy(clientStateService.getClientState().getSelectedStudy());
         subjectRepository.save(subject1);
         sample.setSubject(subject1);
 

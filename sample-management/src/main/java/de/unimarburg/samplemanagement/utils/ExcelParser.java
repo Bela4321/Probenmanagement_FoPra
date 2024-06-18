@@ -63,6 +63,10 @@ public class ExcelParser {
         else {
             throw new IOException("Empty Excel File");
         }
+        Study study = studyRepository.findByStudyName(studyName);
+        if (study == null) {
+            throw new IOException("Study not found");
+        }
 
         while (iterator.hasNext()) {
             Row currentRow = iterator.next();
@@ -74,17 +78,15 @@ public class ExcelParser {
 
 
             double idDouble = (Double) getCellValue(currentRow.getCell(1), cellType.NUMERIC);
-            int id = getNumericValue(idDouble);
-            Subject sub = new Subject();
-            sub.setId((long) id);
+            long id = getNumericValue(idDouble);
+            Subject subject = getSubject(id, study);
 
-            sub.setStudy(studyRepository.findByStudyName(studyName));
-            subjectList.add(sub);
-            sample.setSubject(sub);
+            subjectList.add(subject);
+            sample.setSubject(subject);
 
             double visitDouble = (Double) getCellValue(currentRow.getCell(2), cellType.NUMERIC);
-            int visit = getNumericValue(visitDouble);
-            sample.setVisits(visit);
+            long visit = getNumericValue(visitDouble);
+            sample.setVisits((int) visit);
 
             Date date = (Date) getCellValue(currentRow.getCell(3), cellType.DATE);
             sample.setSampleDate(date);
@@ -100,27 +102,25 @@ public class ExcelParser {
 
             sampleList.add(sample);
         }
-
         workbook.close();
         inputStream.close();
-
-        Study study = new Study();
-        study.setStudyDate(new Date());
-        study.setStudyName(studyName);
-
-
-        studyRepository.save(study);
-
-        for (Subject subject : subjectList) {
-            List<Sample> samples = sampleList.stream().filter(sample -> sample.getSubject()==subject).toList();
-            subject.setListOfSamples(samples);
-            subjectRepository.save(subject);
-        }
 
         for (Sample sample : sampleList) {
             sample.setStudy(study);
             sampleRepository.save(sample);
         }
+    }
+
+    private Subject getSubject(long id, Study study) {
+        Subject subject = subjectRepository.findByAliasAndStudy(id, study);
+        if (subject != null) {
+            return subject;
+        }
+        subject = new Subject();
+        subject.setAlias(id);
+        subject.setStudy(study);
+        subject = subjectRepository.save(subject);
+        return subject;
     }
 
     public static Object getCellValue(Cell cell, cellType expectedType) throws IOException {
@@ -154,9 +154,9 @@ public class ExcelParser {
         throw new IOException("Expected cell type: " + expectedType + ", but got: " + cell.getCellType());
     }
 
-    private static int getNumericValue(double value) throws IOException {
-        if (value == (int) value) {
-            return (int) value;
+    private static long getNumericValue(double value) throws IOException {
+        if (value == (long) value) {
+            return (long) value;
         }
         throw new IOException("Expected int value, given Double");
     }

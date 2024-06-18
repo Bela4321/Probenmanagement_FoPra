@@ -17,10 +17,7 @@ import de.unimarburg.samplemanagement.utils.GENERAL_UTIL;
 import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 @Route("/edit_study")
@@ -38,7 +35,7 @@ public class EditStudy extends HorizontalLayout {
     public EditStudy(StudyService studyService, ClientStateService clientStateService) {
         this.studyService = studyService;
         this.clientStateService = clientStateService;
-        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getUserState().getSelectedStudy()));
+        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getClientState().getSelectedStudy()));
         addClassName("list-view");
         setSizeFull();
         VerticalLayout content = new VerticalLayout();

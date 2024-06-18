@@ -3,6 +3,7 @@ package de.unimarburg.samplemanagement.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
+@NoArgsConstructor
 @Table(name = "subject", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"alias", "study_id"})
 })
@@ -30,12 +32,5 @@ public class Subject {
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Sample> listOfSamples = new ArrayList<>();
 
-    // Constructors
-    public Subject() {
-    }
 
-    public Subject(Long id, List<Sample> listOfSamples) {
-        this.id = id;
-        this.listOfSamples = listOfSamples;
-    }
 }

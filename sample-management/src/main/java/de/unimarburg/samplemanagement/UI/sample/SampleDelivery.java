@@ -1,36 +1,45 @@
 package de.unimarburg.samplemanagement.UI.sample;
 
-import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import de.unimarburg.samplemanagement.UI.Main;
 import de.unimarburg.samplemanagement.service.ClientStateService;
 import de.unimarburg.samplemanagement.utils.ExcelParser;
 import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 import de.unimarburg.samplemanagement.utils.uploader.DownloadLinksArea;
 import de.unimarburg.samplemanagement.utils.uploader.ExcelUploader;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.vaadin.flow.router.RouterLink;
 
 import java.io.File;
 
 
 @Route("/SampleDelivery")
-public class SampleDelivery extends VerticalLayout {
+public class SampleDelivery extends HorizontalLayout {
+    ExcelParser excelParser;
 
     @Autowired
-    public SampleDelivery(ClientStateService clientStateService) {
+    public SampleDelivery(ClientStateService clientStateService, ExcelParser excelParser) {
+        this.excelParser = excelParser;
+        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getClientState().getSelectedStudy()));
+        if (clientStateService.getClientState().getSelectedStudy() == null) {
+            add("Please select a study first");
+            return;
+        }
+        // Set the content
+        add(getContent());
+    }
+
+    private VerticalLayout getContent() {
+        VerticalLayout body = new VerticalLayout();
         File uploadFolder = getUploadFolder();
         ExcelUploader uploadArea = new ExcelUploader(uploadFolder);
-        DownloadLinksArea linksArea = new DownloadLinksArea(uploadFolder);
+        DownloadLinksArea linksArea = new DownloadLinksArea(uploadFolder, excelParser);
         uploadArea.getUploadField().addSucceededListener(e -> {
             uploadArea.hideErrorField();
             linksArea.refreshFileLinks();
         });
-        add(uploadArea, linksArea);
-        //Add a button to call the readExcelFile on the uploadFolder
-        // Add a link to the main view
-        add(new RouterLink("Back to the main view", Main.class));
+        body.add(uploadArea, linksArea);
+        return body;
     }
     private static File getUploadFolder() {
         File folder = new File("uploaded-files");
@@ -39,7 +48,5 @@ public class SampleDelivery extends VerticalLayout {
         }
         return folder;
     }
-
-
 }
 

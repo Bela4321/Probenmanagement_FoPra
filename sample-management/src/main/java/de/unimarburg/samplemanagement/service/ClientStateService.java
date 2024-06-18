@@ -1,14 +1,23 @@
 package de.unimarburg.samplemanagement.service;
 
 import com.vaadin.flow.server.VaadinSession;
+import de.unimarburg.samplemanagement.model.Study;
+import de.unimarburg.samplemanagement.repository.StudyRepository;
 import de.unimarburg.samplemanagement.utils.ClientState;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ClientStateService {
     private static final String CLIENT_STATE_KEY = "clientState";
+    private final StudyRepository studyRepository;
 
-    public ClientState getUserState() {
+    @Autowired
+    public ClientStateService(StudyRepository studyRepository) {
+        this.studyRepository = studyRepository;
+    }
+
+    public ClientState getClientState() {
         if (VaadinSession.getCurrent() == null) {
             //empty state to avoid null pointer exceptions
             return new ClientState();
@@ -17,6 +26,10 @@ public class ClientStateService {
         if (clientState == null) {
             clientState = new ClientState();
             VaadinSession.getCurrent().setAttribute(CLIENT_STATE_KEY, clientState);
+        } else if (clientState.getSelectedStudy() != null) {
+            //reload study from database
+            Study study = studyRepository.findById(clientState.getSelectedStudy().getId()).orElse(null);
+            clientState.setSelectedStudy(study);
         }
         return clientState;
     }
