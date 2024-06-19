@@ -62,7 +62,12 @@ public class ManualSampleEditing extends HorizontalLayout {
         Grid.Column<Sample> typeColumn = sampleGrid.addColumn(Sample::getSample_type).setHeader("Sample Type").setSortable(true);
         Grid.Column<Sample> amountColumn = sampleGrid.addColumn(Sample::getSample_amount).setHeader("Sample Amount").setSortable(true);
         Grid.Column<Sample> dateColumn = sampleGrid.addColumn(Sample::getSampleDate).setHeader("Sample Date").setSortable(true).setRenderer(GENERAL_UTIL.renderDate());
-        Grid.Column<Sample> subjectIdColumn = sampleGrid.addColumn(sample -> sample.getSubject().getAlias()).setHeader("Subject Alias").setSortable(true);
+        Grid.Column<Sample> subjectIdColumn = sampleGrid.addColumn(sample -> {
+            if (sample.getSubject() == null) {
+                return null;
+            }
+            return sample.getSubject().getAlias();
+        }).setHeader("Subject Alias").setSortable(true);
         Grid.Column<Sample> coordinatesColumn = sampleGrid.addColumn(Sample::getCoordinates).setHeader("Coordinates").setSortable(true);
 
         // Create the editor and its binder
@@ -95,7 +100,16 @@ public class ManualSampleEditing extends HorizontalLayout {
         subjectIdField.setStep(1);
         binder.forField(subjectIdField)
                 .withConverter(new DoubleToLongConverter())
-                .bind(sample -> sample.getSubject().getAlias(), (sample, alias) -> sample.getSubject().setAlias(alias));
+                .bind(sample -> {
+                    if (sample.getSubject() == null) {
+                        return null;
+                    }
+                    return sample.getSubject().getAlias();
+                }, (sample, alias) -> {
+                    Subject subject = subjectRepository.getSubjectByIdAndStudy(alias, clientStateService.getClientState().getSelectedStudy()).orElse(new Subject(alias,clientStateService.getClientState().getSelectedStudy()));
+                    subjectRepository.save(subject);
+                    sample.setSubject(subject);
+                });
         subjectIdColumn.setEditorComponent(subjectIdField);
 
         TextField coordinatesField = new TextField();

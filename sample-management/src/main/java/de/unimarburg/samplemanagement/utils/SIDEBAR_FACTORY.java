@@ -34,8 +34,8 @@ public class SIDEBAR_FACTORY extends VerticalLayout {
             button.addClickListener(e-> UI.getCurrent().navigate(entry.getB()));
             sidebar.add(button);
         }
-
-
+        // set width of sidebar to max 25% of the screen
+        sidebar.getStyle().set("width", "25%");
         return sidebar;
     }
 }
