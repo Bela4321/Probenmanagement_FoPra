@@ -24,12 +24,12 @@ public class Main extends HorizontalLayout {
         button6.addClickListener(e-> UI.getCurrent().navigate("/Probe_Zuordnen"));
         Button button7 = new Button("Befund_erstellen");
         button7.addClickListener(e-> UI.getCurrent().navigate("/CreateReport"));
-        Button button10 = new Button("Search_with_Barcode_ID");
-        button10.addClickListener(e-> UI.getCurrent().navigate("/Search_with_Barcode_ID"));
+        Button button10 = new Button("Manage_Subjects");
+        button10.addClickListener(e-> UI.getCurrent().navigate("/Manage_Subjects"));
         Button button11 = new Button("Excel_Vorlage");
         button11.addClickListener(e-> UI.getCurrent().navigate("/Excel_Vorlage"));
-        Button button12 = new Button("Check_Barcode_Numbers");
-        button12.addClickListener(e-> UI.getCurrent().navigate("/Check_Barcode_Numbers"));
+        Button button12 = new Button("Manage_Samples");
+        button12.addClickListener(e-> UI.getCurrent().navigate("/Manage_Samples"));
         Button button13 = new Button("Analyseergebnisse eintragen");
         button13.addClickListener(e-> UI.getCurrent().navigate("/analysis_result"));
 
