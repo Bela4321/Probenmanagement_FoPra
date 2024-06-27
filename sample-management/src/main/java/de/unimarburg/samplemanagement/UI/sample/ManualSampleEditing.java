@@ -21,7 +21,6 @@ import de.unimarburg.samplemanagement.service.ClientStateService;
 import de.unimarburg.samplemanagement.utils.DoubleToLongConverter;
 import de.unimarburg.samplemanagement.utils.GENERAL_UTIL;
 import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
-import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -50,6 +49,25 @@ public class ManualSampleEditing extends HorizontalLayout {
         add(verticalLayout);
     }
 
+    private boolean isSampeValid(Sample selectedSample) {
+        if (selectedSample == null) {
+            return true;
+        }
+        if (selectedSample.getSample_barcode() == null || selectedSample.getSample_barcode().isBlank()) {
+            return false;
+        }
+        if (selectedSample.getSample_type() == null || selectedSample.getSample_type().isBlank()) {
+            return false;
+        }
+        if (selectedSample.getSample_amount() == null || selectedSample.getSample_amount().isBlank()) {
+            return false;
+        }
+        if (selectedSample.getSampleDate() == null) {
+            return false;
+        }
+        return true;
+    }
+
     private VerticalLayout getContent() {
         VerticalLayout body = new VerticalLayout();
         Grid<Sample> sampleGrid = new Grid<>();
@@ -62,7 +80,7 @@ public class ManualSampleEditing extends HorizontalLayout {
         Grid.Column<Sample> typeColumn = sampleGrid.addColumn(Sample::getSample_type).setHeader("Sample Type").setSortable(true);
         Grid.Column<Sample> amountColumn = sampleGrid.addColumn(Sample::getSample_amount).setHeader("Sample Amount").setSortable(true);
         Grid.Column<Sample> dateColumn = sampleGrid.addColumn(Sample::getSampleDate).setHeader("Sample Date").setSortable(true).setRenderer(GENERAL_UTIL.renderDate());
-        Grid.Column<Sample> subjectIdColumn = sampleGrid.addColumn(sample -> {
+        Grid.Column<Sample> subjectAliasColumn = sampleGrid.addColumn(sample -> {
             if (sample.getSubject() == null) {
                 return null;
             }
@@ -106,11 +124,21 @@ public class ManualSampleEditing extends HorizontalLayout {
                     }
                     return sample.getSubject().getAlias();
                 }, (sample, alias) -> {
-                    Subject subject = subjectRepository.getSubjectByIdAndStudy(alias, clientStateService.getClientState().getSelectedStudy()).orElse(new Subject(alias,clientStateService.getClientState().getSelectedStudy()));
-                    subjectRepository.save(subject);
+                    if (alias == null ){
+                        Notification.show("please specify corresponding subject alias");
+                        return;
+                    }
+                    Subject subject;
+                    Optional<Subject> subjectOpt = subjectRepository.getSubjectByAliasAndStudy(alias, clientStateService.getClientState().getSelectedStudy());
+                    if (subjectOpt.isPresent()){
+                        subject = subjectOpt.get();
+                    } else {
+                        subject = new Subject(alias,clientStateService.getClientState().getSelectedStudy());
+                        subject = subjectRepository.save(subject);
+                    }
                     sample.setSubject(subject);
                 });
-        subjectIdColumn.setEditorComponent(subjectIdField);
+        subjectAliasColumn.setEditorComponent(subjectIdField);
 
         TextField coordinatesField = new TextField();
         binder.bind(coordinatesField, Sample::getCoordinates, Sample::setCoordinates);
@@ -118,6 +146,14 @@ public class ManualSampleEditing extends HorizontalLayout {
 
         //buttons
         Button saveButton = new Button("Save", event -> {
+            Sample editedSample = new Sample();
+            if (!binder.writeBeanIfValid(editedSample)){
+                Notification.show("Please make a valid sample");
+            }
+            if (!isSampeValid(editedSample)){
+                Notification.show("Please make a valid sample");
+                return;
+            }
             editor.save();
         });
         saveButton.addClickShortcut(Key.ENTER);
@@ -146,7 +182,7 @@ public class ManualSampleEditing extends HorizontalLayout {
             Sample editedSample = event.getItem();
             try {
                 sampleRepository.save(editedSample);
-            } catch (ValidationException e){
+            } catch (Exception e){
                 Notification.show("Error saving item, please check if all necessary fields are filled in correctly");
                 editor.editItem(editedSample); // Reopen the editor
                 return;
@@ -159,7 +195,7 @@ public class ManualSampleEditing extends HorizontalLayout {
             //save currently edited item
             try {
                 editor.save();
-            } catch (ValidationException e) {
+            } catch (Exception e) {
                 Notification.show("Error saving item, changes are discarded");
                 if (editor.getItem().getId()==null){
                     samples.remove(editor.getItem());
@@ -175,6 +211,10 @@ public class ManualSampleEditing extends HorizontalLayout {
         });
 
         Button addButton = new Button("Add Sample", event -> {
+            if (sampleGrid.getEditor().isOpen()){
+                Notification.show("Please finish editing the current sample first");
+                return;
+            }
             Sample newSample = new Sample();
             newSample.setStudy(clientStateService.getClientState().getSelectedStudy());
             samples.add(0,newSample); // Add the new sample to the list
@@ -183,7 +223,7 @@ public class ManualSampleEditing extends HorizontalLayout {
             // save the old item
             try {
                 editor.save();
-            } catch (ValidationException e) {
+            } catch (Exception e) {
                 Notification.show("Error saving item, changes are discarded");
                 if (editor.getItem().getId()==null){
                     samples.remove(editor.getItem());
@@ -202,24 +242,6 @@ public class ManualSampleEditing extends HorizontalLayout {
         body.add(new HorizontalLayout(addButton, saveButton, discardButton));
         body.add(sampleGrid);
         return body;
-    }
-
-    private void setSubjectId(Sample sample, Long subjectId) {
-        if (subjectId == null) {
-            sample.setSubject(null);
-            return;
-        }
-        Optional<Subject> subject = subjectRepository.getSubjectByIdAndStudy(subjectId, clientStateService.getClientState().getSelectedStudy());
-        if (subject.isPresent()) {
-            sample.setSubject(subject.get());
-            return;
-        }
-        Subject subject1 = new Subject();
-        subject1.setAlias(subjectId);
-        subject1.setStudy(clientStateService.getClientState().getSelectedStudy());
-        subjectRepository.save(subject1);
-        sample.setSubject(subject1);
-
     }
 
 }

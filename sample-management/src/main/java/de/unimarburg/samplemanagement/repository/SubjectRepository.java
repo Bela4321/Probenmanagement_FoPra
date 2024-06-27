@@ -10,7 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
-    Optional<Subject> getSubjectByIdAndStudy(Long id, @NotNull Study study);
-
-    Subject findByAliasAndStudy(@NotNull Long alias, @NotNull Study study);
+    Optional<Subject> getSubjectByAliasAndStudy(@NotNull Long alias, @NotNull Study study);
 }
