@@ -13,10 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class ExcelParser {
@@ -77,9 +74,9 @@ public class ExcelParser {
             sample.setCoordinates(coordinates);
 
 
-            double idDouble = (Double) getCellValue(currentRow.getCell(1), cellType.NUMERIC);
-            long id = getNumericValue(idDouble);
-            Subject subject = getSubject(id, study);
+            double aliasDouble = (Double) getCellValue(currentRow.getCell(1), cellType.NUMERIC);
+            long alias = getNumericValue(aliasDouble);
+            Subject subject = getSubject(alias, study);
 
             subjectList.add(subject);
             sample.setSubject(subject);
@@ -111,16 +108,16 @@ public class ExcelParser {
         }
     }
 
-    private Subject getSubject(long id, Study study) {
-        Subject subject = subjectRepository.findByAliasAndStudy(id, study);
-        if (subject != null) {
-            return subject;
+    private Subject getSubject(long alias, Study study) {
+        Optional<Subject> subject = subjectRepository.getSubjectByAliasAndStudy(alias, study);
+        if (subject.isPresent()) {
+            return subject.get();
         }
-        subject = new Subject();
-        subject.setAlias(id);
-        subject.setStudy(study);
-        subject = subjectRepository.save(subject);
-        return subject;
+        Subject subjectNew = new Subject();
+        subjectNew.setAlias(alias);
+        subjectNew.setStudy(study);
+        subjectNew = subjectRepository.save(subjectNew);
+        return subjectNew;
     }
 
     public static Object getCellValue(Cell cell, cellType expectedType) throws IOException {
