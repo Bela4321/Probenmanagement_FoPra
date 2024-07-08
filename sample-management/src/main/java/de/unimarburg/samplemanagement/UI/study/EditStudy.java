@@ -151,7 +151,6 @@ public class EditStudy extends HorizontalLayout {
     }
 
     private void saveStudy(Study study,String studyname, LocalDate startdate, LocalDate enddate, String numberOfSubjects, String abnahmeZahl, String assay, String unit, String sender1, String sender2, String sender3, String sponsor, String remarks) {
-//save study to database
         study = updateStudy(study,studyname,startdate,enddate,numberOfSubjects,abnahmeZahl,assay,unit,sender1,sender2,sender3,sponsor,remarks);
         studyRepository.save(study);
         Notification.show("Study successfully stored");

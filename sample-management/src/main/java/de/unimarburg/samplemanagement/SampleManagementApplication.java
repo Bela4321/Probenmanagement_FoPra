@@ -33,13 +33,13 @@ public class SampleManagementApplication {
 
 			Study study1 = new Study();
 			study1.setStudyName("Sample Study 1");
-			study1.setStudyDate(new Date());
+			study1.setStartDate(new Date());
 			Study study2 = new Study();
 			study2.setStudyName("Sample Study 2");
-			study2.setStudyDate(new Date());
+			study2.setStartDate(new Date());
 			Study study3 = new Study();
 			study3.setStudyName("Sample Study 3");
-			study3.setStudyDate(new Date());
+			study3.setStartDate(new Date());
 			study1 = studyRepository.save(study1);
 			study2 = studyRepository.save(study2);
 			study3 = studyRepository.save(study3);

@@ -48,9 +48,7 @@ public class StudiesView extends HorizontalLayout {
 
         grid = new Grid<>();
         grid.setItems(studies);
-        grid.addColumn(Study::getStudyName).setHeader("Name");
-        grid.addColumn(Study::getStudyDate).setHeader("Date of creation");
-        grid.addColumn((study -> study.getListOfSamples().size())).setHeader("Number of samples");
+        configureGridColumns();
 
         //allow selection of a study
         grid.addItemClickListener(e->{
@@ -60,6 +58,23 @@ public class StudiesView extends HorizontalLayout {
 
         studyGrid = grid;
     }
+
+    private void configureGridColumns() {
+        grid.addColumn(Study::getStudyName).setHeader("Name").setAutoWidth(true);
+        grid.addColumn(Study::getStartDate).setHeader("Start Date").setAutoWidth(true);
+        grid.addColumn(Study::getEndDate).setHeader("End Date").setAutoWidth(true);
+        grid.addColumn(Study::getNumberOfSubjects).setHeader("Number Of Subjects").setAutoWidth(true);
+        grid.addColumn(Study::getAbnahmezahl).setHeader("AbnahmeZahl").setAutoWidth(true);
+        grid.addColumn(Study::getAssay).setHeader("Assay").setAutoWidth(true);
+        grid.addColumn(Study::getUnit).setHeader("Unit").setAutoWidth(true);
+        grid.addColumn(Study::getSender1).setHeader("Sender1").setAutoWidth(true);
+        grid.addColumn(Study::getSender2).setHeader("Sender2").setAutoWidth(true);
+        grid.addColumn(Study::getSender3).setHeader("Sender3").setAutoWidth(true);
+        grid.addColumn(Study::getSponsor).setHeader("Sponsor").setAutoWidth(true);
+        grid.addColumn(Study::getRemark).setHeader("Remarks").setAutoWidth(true);
+        grid.addColumn((study -> study.getListOfSamples().size())).setHeader("Number of samples").setAutoWidth(true);
+    }
+
     private HorizontalLayout getToolbar() {
         filterName.setPlaceholder("Filter by name...");
         filterName.setClearButtonVisible(true);
