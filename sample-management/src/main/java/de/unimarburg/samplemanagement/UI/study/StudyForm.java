@@ -17,8 +17,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class StudyForm extends FormLayout {
     BeanValidationBinder<Study> binder = new BeanValidationBinder<>(Study.class);
     TextField studyName = new TextField("Study Name");
-    //TextField studyDate = new TextField("Study Date");
-    DatePicker studyDate = new DatePicker("Startdatum");
+    DatePicker startDate = new DatePicker("Start Date");
+    TextField numberOfSubjects = new TextField("Number Of Subjects");
+    TextField abnahmezahl = new TextField("Abnahmezahl");
+    TextField assay = new TextField("Assay");
+    TextField unit = new TextField("Unit");
+    TextField sender1 = new TextField("Sender1");
+    TextField sender2 = new TextField("Sender2");
+    TextField sender3 = new TextField("Sender3");
+    TextField sponsor = new TextField("Sponsor");
+    TextField remark = new TextField("Remarks");
+    DatePicker endDate = new DatePicker("End Date");
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
@@ -29,7 +38,7 @@ public class StudyForm extends FormLayout {
         binder.bindInstanceFields(this);
         // Add a label to show the date format pattern
         add(studyName,
-                studyDate,
+                startDate,endDate,numberOfSubjects,abnahmezahl,assay,unit,sender1,sender2,sender3,sponsor,remark,
                 createButtonsLayout());
     }
     public void setStudy(Study study) {
