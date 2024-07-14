@@ -17,10 +17,13 @@ public class SIDEBAR_FACTORY extends VerticalLayout {
     public static VerticalLayout getSidebar(Study study) {
         VerticalLayout sidebar = new VerticalLayout();
         Button button1 = new Button("Home");
-        button1.addClickListener(e-> UI.getCurrent().navigate("/"));
+        button1.addClickListener(e -> UI.getCurrent().navigate("/"));
         Button button2 = new Button("Studies");
-        button2.addClickListener(e-> UI.getCurrent().navigate("/Studies"));
-        sidebar.add(button1, button2);
+        button2.addClickListener(e -> UI.getCurrent().navigate("/Studies"));
+        Button button3 = new Button("Samples");
+        button3.addClickListener(e -> UI.getCurrent().navigate("/samples"));
+
+        sidebar.add(button1, button2, button3);
         if (study == null) {
             return sidebar;
         }
