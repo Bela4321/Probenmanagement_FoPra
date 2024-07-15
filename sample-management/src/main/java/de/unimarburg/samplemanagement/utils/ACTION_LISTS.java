@@ -17,6 +17,7 @@ public class ACTION_LISTS {
         studyActions.add(new Pair<>("Probenanalyse eintragen/bearbeiten","EnterSampleAnalysis"));
         studyActions.add(new Pair<>("Probenanalysen anschauen","ViewSampleAnalysis"));
         studyActions.add(new Pair<>("Befund erstellen","CreateReport"));
+        studyActions.add(new Pair<>("Arbeitsplatzlisten generieren","CreateAnalysisReport"));
         return studyActions;
     }
 }
