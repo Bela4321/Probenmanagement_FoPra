@@ -32,7 +32,7 @@ public class SIDEBAR_FACTORY extends VerticalLayout {
         SideNavItem home = new SideNavItem("Home", Main.class, VaadinIcon.HOME.create());
         SideNavItem studies = new SideNavItem("Studies", StudiesView.class, VaadinIcon.BOOK.create());
         SideNavItem samples = new SideNavItem("Samples", SampleView.class, VaadinIcon.BARCODE.create());
-        genNav.addItem(home, studies);
+        genNav.addItem(home, studies, samples);
         if (study == null) {
             return genNav;
         }

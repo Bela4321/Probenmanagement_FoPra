@@ -1,5 +1,6 @@
 package de.unimarburg.samplemanagement.UI.sample;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
@@ -9,14 +10,17 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import de.unimarburg.samplemanagement.model.Sample;
 
+import de.unimarburg.samplemanagement.service.ClientStateService;
 import de.unimarburg.samplemanagement.service.SampleService;
+import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Route("/samples")
-public class SampleView extends VerticalLayout {
+public class SampleView extends HorizontalLayout {
 
     private final SampleService sampleService;
     private final Grid<Sample> grid = new Grid<>(Sample.class);
@@ -24,22 +28,32 @@ public class SampleView extends VerticalLayout {
     private final TextField barcodeFilter = new TextField();
     private final TextField studyNameFilter = new TextField();
     private final TextField subjectAliasFilter = new TextField();
+    private final ClientStateService clientStateService;
 
     @Autowired
-    public SampleView(SampleService sampleService) {
+    public SampleView(SampleService sampleService, ClientStateService clientStateService) {
         this.sampleService = sampleService;
-        addTitle();
-        addFilters();
-        createGrid();
+        this.clientStateService = clientStateService;
+        add(SIDEBAR_FACTORY.getSidebar(clientStateService.getClientState().getSelectedStudy()));
+        VerticalLayout content = getContent();
+        add(content);
+    }
+
+    private VerticalLayout getContent() {
+        VerticalLayout content = new VerticalLayout();
+        content.add(addTitle());
+        content.add(addFilters());
+        content.add(createGrid());
         updateGrid();
+        return content;
     }
 
-    private void addTitle() {
+    private Component addTitle() {
         H1 title = new H1("Probencheckliste");
-        add(title);
+        return title;
     }
 
-    private void addFilters() {
+    private Component addFilters() {
         barcodeFilter.setPlaceholder("Filter by Barcode...");
         studyNameFilter.setPlaceholder("Filter by Study Name...");
         subjectAliasFilter.setPlaceholder("Filter by Subject Alias...");
@@ -49,10 +63,10 @@ public class SampleView extends VerticalLayout {
         subjectAliasFilter.addValueChangeListener(e -> updateGrid());
 
         HorizontalLayout filters = new HorizontalLayout(barcodeFilter, studyNameFilter, subjectAliasFilter);
-        add(filters);
+        return filters;
     }
 
-    private void createGrid() {
+    private Component createGrid() {
         grid.removeAllColumns(); // Remove default columns
 
         grid.addColumn(Sample::getStudyName).setHeader("Study Name");
@@ -65,7 +79,15 @@ public class SampleView extends VerticalLayout {
         grid.addColumn(Sample::getNumberAnalyses).setHeader("Number of Analyses");
         grid.addColumn(Sample::getNumberFinishedAnalyses).setHeader("Number of Finished Analyses");
 
-        add(grid);
+        //on selection, jump to detailed showcase
+        grid.addAttachListener(e -> {
+            grid.addItemDoubleClickListener(event -> {
+                clientStateService.getClientState().setSelectedSample(event.getItem());
+                grid.getUI().ifPresent(ui -> ui.navigate("viewSingleSample"));
+            });
+        });
+
+        return grid;
     }
 
     private void updateGrid() {
