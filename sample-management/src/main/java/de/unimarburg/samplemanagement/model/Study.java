@@ -41,4 +41,8 @@ public class Study {
                 .flatMap(List::stream)
                 .toList();
     }
+
+    public String getName() {
+        return studyName;
+    }
 }

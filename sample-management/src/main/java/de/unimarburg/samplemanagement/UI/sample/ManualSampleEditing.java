@@ -80,6 +80,7 @@ public class ManualSampleEditing extends HorizontalLayout {
         Grid.Column<Sample> typeColumn = sampleGrid.addColumn(Sample::getSample_type).setHeader("Sample Type").setSortable(true);
         Grid.Column<Sample> amountColumn = sampleGrid.addColumn(Sample::getSample_amount).setHeader("Sample Amount").setSortable(true);
         Grid.Column<Sample> dateColumn = sampleGrid.addColumn(Sample::getSampleDate).setHeader("Sample Date").setSortable(true).setRenderer(GENERAL_UTIL.renderDate());
+        Grid.Column<Sample> checkedColumn = sampleGrid.addColumn(Sample::getChecked).setHeader("Validation").setSortable(true);
         Grid.Column<Sample> subjectAliasColumn = sampleGrid.addColumn(sample -> {
             if (sample.getSubject() == null) {
                 return null;

@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface SampleRepository extends JpaRepository<Sample, Long> {
     List<Sample> getSampleByStudyId(Long studyId);
+
 }

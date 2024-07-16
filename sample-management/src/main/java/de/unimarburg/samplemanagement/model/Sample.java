@@ -42,6 +42,29 @@ public class Sample {
     @OneToMany(mappedBy = "sample", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Analysis> listOfAnalysis;
 
+    private boolean checked; // Add this field
+
+    // Getter and Setter for checked field
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public boolean getChecked() {
+        return checked;
+    }
+
+    public String getStudyName() {
+        return study != null ? study.getName() : null;
+    }
+
+    public Long getSubjectAlias() {
+        return subject != null ? subject.getAlias() : null;
+    }
+
     /**
      * Set the subject and study of the sample
      * @param subject the subject to set (and its study)
@@ -49,6 +72,15 @@ public class Sample {
     public void setSubject(@NotNull Subject subject) {
         this.subject = subject;
         this.study = subject.getStudy();
+    }
+
+    public int getNumberFinishedAnalyses() {
+        return (int) listOfAnalysis.stream()
+                .filter(Analysis::isFinished)
+                .count();
+    }
+    public int getNumberAnalyses() {
+        return listOfAnalysis.size();
     }
 }
 

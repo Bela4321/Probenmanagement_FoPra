@@ -11,6 +11,7 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import de.unimarburg.samplemanagement.UI.Main;
 import de.unimarburg.samplemanagement.UI.sample.SampleDelivery;
+import de.unimarburg.samplemanagement.UI.sample.SampleView;
 import de.unimarburg.samplemanagement.UI.study.StudiesView;
 import de.unimarburg.samplemanagement.model.Study;
 import de.unimarburg.samplemanagement.utils.uploader.DownloadLinksArea;
@@ -25,37 +26,13 @@ import java.util.List;
 @Component
 public class SIDEBAR_FACTORY extends VerticalLayout {
 
-//    public static VerticalLayout getSidebar(Study study) {
-//        VerticalLayout sidebar = new VerticalLayout();
-//        Button button1 = new Button("Home");
-//        button1.addClickListener(e-> UI.getCurrent().navigate("/"));
-//        Button button2 = new Button("Studies");
-//        button2.addClickListener(e-> UI.getCurrent().navigate("/Studies"));
-//        sidebar.add(button1, button2);
-//        if (study == null) {
-//            return sidebar;
-//        }
-//        sidebar.add(new Text("--------------"));
-//        sidebar.add(new Text("Study: " + study.getStudyName()));
-//        sidebar.add(new Text("--------------"));
-//
-//        List<Pair<String, String>> studyActions = ACTION_LISTS.getStudySpecificActions();
-//        for (Pair<String, String> entry : studyActions) {
-//            Button button = new Button(entry.getA());
-//            button.addClickListener(e-> UI.getCurrent().navigate(entry.getB()));
-//            sidebar.add(button);
-//        }
-//        // set width of sidebar to max 25% of the screen
-//        sidebar.getStyle().set("width", "30%");
-//        return sidebar;
-//    }
-
     public static SideNav getSidebar(Study study) {
         SideNav genNav = new SideNav();
         genNav.setLabel("General");
         SideNavItem home = new SideNavItem("Home", Main.class, VaadinIcon.HOME.create());
         SideNavItem studies = new SideNavItem("Studies", StudiesView.class, VaadinIcon.BOOK.create());
-        genNav.addItem(home, studies);
+        SideNavItem samples = new SideNavItem("Samples", SampleView.class, VaadinIcon.BARCODE.create());
+        genNav.addItem(home, studies, samples);
         if (study == null) {
             return genNav;
         }
