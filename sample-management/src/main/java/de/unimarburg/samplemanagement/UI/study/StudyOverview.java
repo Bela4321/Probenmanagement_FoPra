@@ -63,7 +63,7 @@ public class StudyOverview extends HorizontalLayout {
     private Component getStudyActions(Study study) {
         List<Button> buttons = new ArrayList<>();
 
-        List<Pair<String, String>> studyActions = ACTION_LISTS.getStudySpecificActions();
+        List<Pair<String, Class>> studyActions = ACTION_LISTS.getStudySpecificActions();
 
         studyActions.forEach(pair->{
             Button button = new Button(pair.getA());
