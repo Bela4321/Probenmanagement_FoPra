@@ -73,5 +73,14 @@ public class Sample {
         this.subject = subject;
         this.study = subject.getStudy();
     }
+
+    public int getNumberFinishedAnalyses() {
+        return (int) listOfAnalysis.stream()
+                .filter(Analysis::isFinished)
+                .count();
+    }
+    public int getNumberAnalyses() {
+        return listOfAnalysis.size();
+    }
 }
 

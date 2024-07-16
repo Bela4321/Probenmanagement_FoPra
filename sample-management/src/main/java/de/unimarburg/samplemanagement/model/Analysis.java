@@ -39,4 +39,8 @@ public class Analysis {
         this.analysisType = analysisType;
         this.sample = sample;
     }
+
+    public boolean isFinished() {
+        return analysisResult != null && !analysisResult.isEmpty();
+    }
 }

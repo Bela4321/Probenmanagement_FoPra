@@ -11,6 +11,7 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import de.unimarburg.samplemanagement.UI.Main;
 import de.unimarburg.samplemanagement.UI.sample.SampleDelivery;
+import de.unimarburg.samplemanagement.UI.sample.SampleView;
 import de.unimarburg.samplemanagement.UI.study.StudiesView;
 import de.unimarburg.samplemanagement.model.Study;
 import de.unimarburg.samplemanagement.utils.uploader.DownloadLinksArea;

@@ -61,15 +61,9 @@ public class SampleView extends VerticalLayout {
         grid.addColumn(Sample::getCoordinates).setHeader("Coordinates");
         grid.addColumn(Sample::getSample_type).setHeader("Sample Type");
 
-        grid.addComponentColumn(sample -> {
-            Checkbox checkbox = new Checkbox();
-            checkbox.setValue(sample.isChecked());
-            checkbox.addValueChangeListener(event -> {
-                sample.setChecked(event.getValue());
-                sampleService.save(sample); // Save the updated sample
-            });
-            return checkbox;
-        }).setHeader("Verified");
+        // see metadata about analysis
+        grid.addColumn(Sample::getNumberAnalyses).setHeader("Number of Analyses");
+        grid.addColumn(Sample::getNumberFinishedAnalyses).setHeader("Number of Finished Analyses");
 
         add(grid);
     }
