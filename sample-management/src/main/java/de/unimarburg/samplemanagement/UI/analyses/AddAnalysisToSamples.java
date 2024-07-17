@@ -4,15 +4,18 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.Route;
-import de.unimarburg.samplemanagement.model.Analysis;
-import de.unimarburg.samplemanagement.model.AnalysisType;
-import de.unimarburg.samplemanagement.model.Sample;
-import de.unimarburg.samplemanagement.model.Study;
+import de.unimarburg.samplemanagement.model.*;
 import de.unimarburg.samplemanagement.repository.SampleRepository;
 import de.unimarburg.samplemanagement.service.ClientStateService;
+import de.unimarburg.samplemanagement.utils.DISPLAY_UTILS;
 import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Route("/AddAnalysisToSample")
 public class AddAnalysisToSamples extends HorizontalLayout {
@@ -60,6 +63,44 @@ public class AddAnalysisToSamples extends HorizontalLayout {
             }).setHeader(analysisType.getAnalysisName());
         }
         body.add(sampleGrid);
+
+        //dropdown filter for deliveries
+        HorizontalLayout filterLayout = new HorizontalLayout();
+        Select<SampleDelivery> deliveryFilter = new Select<>();
+        deliveryFilter.setLabel("Filter by Delivery");
+        deliveryFilter.setItems(study.getSampleDeliveryList());
+        deliveryFilter.setEmptySelectionAllowed(true);
+        deliveryFilter.setRenderer(new TextRenderer<>(sampleDelivery -> String.valueOf(sampleDelivery.getRunningNumber())));
+        deliveryFilter.addValueChangeListener(e -> {
+            if (e.getValue() != null) {
+                sampleGrid.setItems(e.getValue().getSamples());
+            } else {
+                sampleGrid.setItems(study.getListOfSamples());
+            }
+        });
+        filterLayout.add(deliveryFilter);
+
+        //add-all buttons
+        List<Button> add_all_buttons = new ArrayList<>();
+        for (AnalysisType analysisType :study.getAnalysisTypes()) {
+            Button button = new Button("Add all " + analysisType.getAnalysisName());
+            button.addClickListener(e -> {
+                for (Sample sample : study.getListOfSamples()) {
+                    if (deliveryFilter.getValue() == null || deliveryFilter.getValue().getSamples().contains(sample)) {
+                        if (sample.getListOfAnalysis().stream().noneMatch(a -> a.getAnalysisType().getId().equals(analysisType.getId()))) {
+                            sample.getListOfAnalysis().add(new Analysis(analysisType, sample));
+                            sampleRepository.save(sample);
+                        }
+                    }
+                }
+                sampleGrid.getDataProvider().refreshAll();
+            });
+            add_all_buttons.add(button);
+        }
+        filterLayout.add(DISPLAY_UTILS.getBoxAlignment(add_all_buttons.toArray(new Button[0])));
+
+
+        body.add(filterLayout);
 
         return body;
     }

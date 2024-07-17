@@ -42,9 +42,9 @@ public class DetailedSingleSampleView extends HorizontalLayout {
         grid.addColumn(Sample::getSubjectAlias).setHeader("Subject Alias");
         grid.addColumn(Sample::getSample_barcode).setHeader("Barcode");
         grid.addColumn(Sample::getSampleDate).setHeader("Sample Date");
+        grid.addColumn(sample -> sample.getSampleDelivery().getRunningNumber()).setHeader("Sample Delivery Running Number");
         grid.addColumn(Sample::getSample_type).setHeader("Sample Type");
         grid.addColumn(Sample::getSample_amount).setHeader("Sample Amount");
-        grid.addColumn(Sample::getChecked).setHeader("Arrival Checked");
         grid.addColumn(Sample::getCoordinates).setHeader("Coordinates");
         for (int i = 0; i<selectedSample.getListOfAnalysis().size(); i++){
             AnalysisType analysisType = selectedSample.getListOfAnalysis().get(i).getAnalysisType();

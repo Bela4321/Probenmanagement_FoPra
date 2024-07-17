@@ -20,6 +20,9 @@ public class Subject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Setter for alias
+    @Setter
+    @Getter
     @NotNull
     private Long alias;
 
@@ -31,15 +34,6 @@ public class Subject {
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Sample> listOfSamples = new ArrayList<>();
-
-    public Long getAlias() {
-        return alias;
-    }
-
-    // Setter for alias
-    public void setAlias(Long alias) {
-        this.alias = alias;
-    }
 
     public Subject(Long alias, Study study) {
         this.alias = alias;

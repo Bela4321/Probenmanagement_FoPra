@@ -5,15 +5,17 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import java.util.List;
+
 public class DISPLAY_UTILS {
 
     private static final Double DEFAULT_RATIO = 16./9;
 
-    public static Component geBoxAlignment(Component... components) {
-        return geBoxAlignment(DEFAULT_RATIO, components);
+    public static Component getBoxAlignment(Component... components) {
+        return getBoxAlignment(DEFAULT_RATIO, components);
     }
 
-    public static Component geBoxAlignment(Double ratio, Component... components) {
+    public static Component getBoxAlignment(Double ratio, Component... components) {
         int items = components.length;
         int height = (int) Math.ceil(Math.sqrt(items/(1+ratio)));
         int width =  (int) Math.ceil(items /(double) height);
