@@ -30,6 +30,9 @@ public class Study {
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Subject> listOfSubjects;
 
+    @OneToMany(mappedBy = "study", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<SampleDelivery> sampleDeliveryList;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @UniqueElements
     private List<AnalysisType> analysisTypes;

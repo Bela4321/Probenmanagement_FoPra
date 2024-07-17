@@ -28,7 +28,8 @@ public class SampleManagementApplication {
 								  SampleRepository sampleRepository,
 								  AnalysisRepository analysisRepository,
 								  AnalysisTypeRepository analysisTypeRepository,
-								  SubjectRepository subjectRepository) {
+								  SubjectRepository subjectRepository,
+								  SampleDeliveryRepository sampleDeliveryRepository) {
 		return (args) -> {
 
 			Study study1 = new Study();
@@ -90,8 +91,28 @@ public class SampleManagementApplication {
 			study2.setListOfSubjects(Arrays.asList(subject2));
 			study3.setListOfSubjects(Arrays.asList(subject3, subject4, subject5));
 
+
+			SampleDelivery sampleDelivery1 = new SampleDelivery();
+			sampleDelivery1.setDeliveryDate(new Date());
+			sampleDelivery1.setStudy(study1);
+			SampleDelivery sampleDelivery2 = new SampleDelivery();
+			sampleDelivery2.setDeliveryDate(new Date());
+			sampleDelivery2.setStudy(study2);
+			SampleDelivery sampleDelivery3 = new SampleDelivery();
+			sampleDelivery3.setDeliveryDate(new Date());
+			sampleDelivery3.setStudy(study3);
+
+			study1.setSampleDeliveryList(Arrays.asList(sampleDelivery1));
+			study2.setSampleDeliveryList(Arrays.asList(sampleDelivery2));
+			study3.setSampleDeliveryList(Arrays.asList(sampleDelivery3));
+
+			sampleDelivery1 = sampleDeliveryRepository.save(sampleDelivery1);
+			sampleDelivery2 = sampleDeliveryRepository.save(sampleDelivery2);
+			sampleDelivery3 = sampleDeliveryRepository.save(sampleDelivery3);
+
 			Sample sample1 = new Sample();
 			sample1.setSubject(subject);
+			sample1.setSampleDelivery(sampleDelivery1);
 			sample1.setCoordinates("0,0");
 			sample1.setVisits(1);
 			sample1.setSampleDate(new Date());
@@ -100,6 +121,7 @@ public class SampleManagementApplication {
 			sample1.setSample_type("plasma");
 			Sample sample2 = new Sample();
 			sample2.setSubject(subject);
+			sample2.setSampleDelivery(sampleDelivery1);
 			sample2.setCoordinates("1,1");
 			sample2.setVisits(2);
 			sample2.setSampleDate(new Date());
@@ -108,6 +130,7 @@ public class SampleManagementApplication {
 			sample2.setSample_type("serum");
 			Sample sample3 = new Sample();
 			sample3.setSubject(subject2);
+			sample3.setSampleDelivery(sampleDelivery2);
 			sample3.setCoordinates("5,2");
 			sample3.setVisits(7);
 			sample3.setSampleDate(new Date());
@@ -116,6 +139,7 @@ public class SampleManagementApplication {
 			sample3.setSample_type("plasma");
 			Sample sample4 = new Sample();
 			sample4.setSubject(subject3);
+			sample4.setSampleDelivery(sampleDelivery3);
 			sample4.setCoordinates("1,1");
 			sample4.setVisits(2);
 			sample4.setSampleDate(new Date());
@@ -124,6 +148,7 @@ public class SampleManagementApplication {
 			sample4.setSample_type("serum");
 			Sample sample5 = new Sample();
 			sample5.setSubject(subject3);
+			sample5.setSampleDelivery(sampleDelivery3);
 			sample5.setCoordinates("5,0");
 			sample5.setVisits(5);
 			sample5.setSampleDate(new Date());
@@ -132,6 +157,7 @@ public class SampleManagementApplication {
 			sample5.setSample_type("blood");
 			Sample sample6 = new Sample();
 			sample6.setSubject(subject4);
+			sample6.setSampleDelivery(sampleDelivery3);
 			sample6.setCoordinates("1,1");
 			sample6.setVisits(2);
 			sample6.setSampleDate(new Date());
@@ -155,6 +181,10 @@ public class SampleManagementApplication {
 			subject2.setListOfSamples(Arrays.asList(sample3));
 			subject3.setListOfSamples(Arrays.asList(sample4, sample5));
 			subject4.setListOfSamples(Arrays.asList(sample6));
+
+			sampleDelivery1.setSamples(Arrays.asList(sample1, sample2));
+			sampleDelivery2.setSamples(Arrays.asList(sample3));
+			sampleDelivery3.setSamples(Arrays.asList(sample4, sample5, sample6));
 
 			Analysis analysis1 = new Analysis();
 			analysis1.setSample(sample1);

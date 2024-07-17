@@ -51,6 +51,7 @@ public class StudiesView extends HorizontalLayout {
         grid.addColumn(Study::getStudyName).setHeader("Name");
         grid.addColumn(Study::getStudyDate).setHeader("Date of creation");
         grid.addColumn((study -> study.getListOfSamples().size())).setHeader("Number of samples");
+        grid.addColumn(study -> study.getSampleDeliveryList().size()).setHeader("Number of Sample deliveries");
 
         //allow selection of a study
         grid.addItemClickListener(e->{

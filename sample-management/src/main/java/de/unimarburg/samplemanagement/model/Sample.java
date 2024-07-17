@@ -32,6 +32,11 @@ public class Sample {
     @NotNull
     private Study study; // Change here to relate to Study
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "sample_delivery_id", referencedColumnName = "id")
+    @NotNull
+    private SampleDelivery sampleDelivery;
+
     private String coordinates;
     private int visits;
     private Date sampleDate;
@@ -41,21 +46,6 @@ public class Sample {
 
     @OneToMany(mappedBy = "sample", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Analysis> listOfAnalysis;
-
-    private boolean checked; // Add this field
-
-    // Getter and Setter for checked field
-    public boolean isChecked() {
-        return checked;
-    }
-
-    public void setChecked(boolean checked) {
-        this.checked = checked;
-    }
-
-    public boolean getChecked() {
-        return checked;
-    }
 
     public String getStudyName() {
         return study != null ? study.getName() : null;
