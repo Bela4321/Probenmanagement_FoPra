@@ -32,5 +32,7 @@ public class AnalysisType {
         }
         return false;
     }
+
+
 }
 
