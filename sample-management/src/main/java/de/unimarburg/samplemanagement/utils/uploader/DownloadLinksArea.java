@@ -1,5 +1,6 @@
 package de.unimarburg.samplemanagement.utils.uploader;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H4;
@@ -58,7 +59,11 @@ public class DownloadLinksArea extends VerticalLayout {
                 excelParser.readExcelFile(getStream(selectedFile));
             } catch (IOException ex) {
                 Notification.show("Error processing file: " + ex.getMessage());
+                return;
             }
+            Notification.show("File processed successfully");
+            //Navigate to veriufication
+            UI.getCurrent().navigate("VerifySampleDelivery");
         }));
         add(fileGrid, horizontalLayout);
     }
