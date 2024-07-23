@@ -20,6 +20,9 @@ public class Subject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Setter for alias
+    @Setter
+    @Getter
     @NotNull
     private Long alias;
 

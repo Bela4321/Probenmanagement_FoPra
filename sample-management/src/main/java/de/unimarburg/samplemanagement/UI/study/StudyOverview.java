@@ -51,7 +51,7 @@ public class StudyOverview extends HorizontalLayout {
         int numberOfAnalysesCompleted = study.getListOfSamples().stream().map(Sample::getListOfAnalysis).flatMap(List::stream).filter(a->!(a.getAnalysisResult()==null||a.getAnalysisResult().isBlank())).toArray().length;
         int numberOfTotalAnalyses = study.getListOfSamples().stream().map(Sample::getListOfAnalysis).flatMap(List::stream).toArray().length;
 
-        return DISPLAY_UTILS.geBoxAlignment(
+        return DISPLAY_UTILS.getBoxAlignment(
                 new Text("Study Date: "+studyDate+"\t"),
                 new Text("Number of Samples: "+numberOfSamples+"\t"),
                 new Text("Number of Subjects: "+numberofSubjects+"\t"),
@@ -63,7 +63,7 @@ public class StudyOverview extends HorizontalLayout {
     private Component getStudyActions(Study study) {
         List<Button> buttons = new ArrayList<>();
 
-        List<Pair<String, String>> studyActions = ACTION_LISTS.getStudySpecificActions();
+        List<Pair<String, Class>> studyActions = ACTION_LISTS.getStudySpecificActions();
 
         studyActions.forEach(pair->{
             Button button = new Button(pair.getA());
@@ -71,6 +71,6 @@ public class StudyOverview extends HorizontalLayout {
             buttons.add(button);
         });
 
-        return DISPLAY_UTILS.geBoxAlignment(buttons.toArray(new Button[0]));
+        return DISPLAY_UTILS.getBoxAlignment(buttons.toArray(new Button[0]));
     }
 }
