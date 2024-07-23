@@ -1,9 +1,6 @@
 package de.unimarburg.samplemanagement.utils;
 
-import de.unimarburg.samplemanagement.UI.analyses.AddAnalysisToSamples;
-import de.unimarburg.samplemanagement.UI.analyses.AddAnalysisToStudy;
-import de.unimarburg.samplemanagement.UI.analyses.AnalysisResultView;
-import de.unimarburg.samplemanagement.UI.analyses.InputAnalysisResult;
+import de.unimarburg.samplemanagement.UI.analyses.*;
 import de.unimarburg.samplemanagement.UI.sample.ManualSampleEditing;
 import de.unimarburg.samplemanagement.UI.sample.SampleDelivery;
 import de.unimarburg.samplemanagement.UI.study.CreateStudyReport;
@@ -20,7 +17,7 @@ public class ACTION_LISTS {
         studyActions.add(new Pair<>("Manuelle Probenbearbeitung", ManualSampleEditing.class));
         studyActions.add(new Pair<>("Analyse zu Studie hinzufügen", AddAnalysisToStudy.class));
         studyActions.add(new Pair<>("Analyse zu Proben hinzufügen", AddAnalysisToSamples.class));
-        studyActions.add(new Pair<>("Arbeitsplatzliste erstellen", CreateStudyReport.class));
+        studyActions.add(new Pair<>("Arbeitsplatzliste erstellen", CreateAnalysisReport.class));
         studyActions.add(new Pair<>("Probenanalyse eintragen/bearbeiten", InputAnalysisResult.class));
         studyActions.add(new Pair<>("Probenanalysen anschauen", AnalysisResultView.class));
         studyActions.add(new Pair<>("Befund erstellen", CreateStudyReport.class));
