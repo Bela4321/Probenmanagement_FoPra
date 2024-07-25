@@ -227,9 +227,9 @@ public class CreateAnalysisReport extends HorizontalLayout {
 
 
     private String generateProtocolName(RadioButtonGroup<String> radioButtonGroup, HorizontalLayout textFieldsLayout, int i) {
-        return date.toString() +
+        return date.toString() + "_" +
                 Optional.ofNullable(radioButtonGroup.getValue()).orElse("") + "_" +
-                Optional.ofNullable(((TextField) textFieldsLayout.getComponentAt(1)).getValue()).orElse("") + i + "_" +
+                Optional.ofNullable(((TextField) textFieldsLayout.getComponentAt(1)).getValue()).orElse("") + "_" + i + "_" +
                 Optional.ofNullable(((TextField) textFieldsLayout.getComponentAt(0)).getValue()).orElse("");
     }
 

@@ -30,6 +30,7 @@ public class ExcelTemplateFiller {
             sheet.getRow(2).getCell(5).setCellValue(study.getStudyName());
             sheet.getRow(4).getCell(3).setCellValue(date);
             sheet.getRow(5).getCell(3).setCellValue(data.get("operatorName"));
+            sheet.getRow(6).getCell(3).setCellValue(data.get("protocolName"));
 
 
             sheet.getRow(7).getCell(1).setCellValue(data.get("freeTextField"));
