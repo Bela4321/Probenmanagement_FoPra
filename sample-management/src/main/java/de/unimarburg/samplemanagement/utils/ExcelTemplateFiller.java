@@ -19,7 +19,7 @@ import java.util.Optional;
 
 public class ExcelTemplateFiller {
 
-    public static void fillTemplate(InputStream templateInputStream, String outputPath, Map<String, String> data, ArrayList<String> barcodes, Study study, LocalDate date) {
+    public static void fillTemplate(InputStream templateInputStream, String outputPath, Map<String, String> data, ArrayList<Sample> samples, Study study, LocalDate date) {
         try (XSSFWorkbook workbook = new XSSFWorkbook(templateInputStream);
              FileOutputStream os = new FileOutputStream(outputPath)) {
 
@@ -48,6 +48,12 @@ public class ExcelTemplateFiller {
             CellStyle sourceCellStyle4 = sheet.getRow(11).getCell(4).getCellStyle();
             CellStyle sourceCellStyle5 = sheet.getRow(11).getCell(5).getCellStyle();
             CellStyle sourceCellStyle6 = sheet.getRow(11).getCell(6).getCellStyle();
+
+            //Extracring Barcodes
+            ArrayList<String> barcodes = new ArrayList<>();
+            for (Sample sample:samples) {
+                barcodes.add(sample.getSample_barcode());
+            }
 
             int count = 1;
             for (String barcode:barcodes) {
