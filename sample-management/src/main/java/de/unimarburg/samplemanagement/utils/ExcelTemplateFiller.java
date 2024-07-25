@@ -111,7 +111,6 @@ public class ExcelTemplateFiller {
 
             // Write changes to the output file
             workbook.write(os);
-            System.out.println("Template filled and saved to: " + outputPath);
         } catch (Exception e) {
             e.printStackTrace();
         }

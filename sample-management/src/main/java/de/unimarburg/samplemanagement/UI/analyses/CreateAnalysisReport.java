@@ -5,6 +5,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -36,6 +37,7 @@ public class CreateAnalysisReport extends HorizontalLayout {
     private LocalDate date;
 
     Anchor downloadLink = new Anchor("", "Download Arbeitsplatzliste");
+    Div wrapperDiv = new Div(downloadLink);
 
 
     @Autowired
@@ -94,8 +96,11 @@ public class CreateAnalysisReport extends HorizontalLayout {
         Button createReportButton = createReportButton(body, datePicker, radioButtonGroup, textFieldsLayout);
         body.add(createReportButton);
 
-        body.add(downloadLink);
-        downloadLink.setVisible(false);
+        wrapperDiv.addClickListener(event -> {
+            wrapperDiv.setVisible(false);
+        });
+        body.add(wrapperDiv);
+        wrapperDiv.setVisible(false);
 
         return body;
     }
@@ -168,28 +173,26 @@ public class CreateAnalysisReport extends HorizontalLayout {
 
             date = datePicker.getValue();
             ArrayList<Sample> sampleList = new ArrayList<>();
+            ArrayList<Sample> selectedSampleCopy = new ArrayList<>(selectedSampleBarcodes);
 
             IntegerField maxPerTableField = (IntegerField) textFieldsLayout.getComponentAt(4);
             int maxPerTable = Optional.ofNullable(maxPerTableField.getValue()).orElse(1000);
-            int samplesCount = selectedSampleBarcodes.size();
+            int samplesCount = selectedSampleCopy.size();
             int tables = (samplesCount + maxPerTable - 1) / maxPerTable;  // Calculate number of tables
+            int plateNrRead = Optional.ofNullable(((IntegerField) textFieldsLayout.getComponentAt(2)).getValue()).orElse(1);
 
             for (int i = 1; i <= tables; i++) {
-                System.out.println(i);
-
                 sampleList.clear();
-                String protocolName = generateProtocolName(radioButtonGroup, textFieldsLayout, i);
-                int plateNrRead = Optional.ofNullable(((IntegerField) textFieldsLayout.getComponentAt(2)).getValue()).orElse(1);
+
                 int plateNr = plateNrRead + i - 1;
+                String protocolName = generateProtocolName(radioButtonGroup, textFieldsLayout, plateNr);
                 Map<String, String> data = collectData(radioButtonGroup, textFieldsLayout, protocolName, plateNr);
 
                 // Move elements from selectedSampleBarcodes to sampleList in batches
-                int elementsToMove = Math.min(maxPerTable, selectedSampleBarcodes.size());
-                System.out.println("to move: " + elementsToMove);
+                int elementsToMove = Math.min(maxPerTable, selectedSampleCopy.size());
 
                 for (int j = 0; j < elementsToMove; j++) {
-                    System.out.println("Add: " + j);
-                    sampleList.add(selectedSampleBarcodes.remove(0)); // Remove from selectedSampleBarcodes and add to sampleList
+                    sampleList.add(selectedSampleCopy.remove(0)); // Remove from selectedSampleBarcodes and add to sampleList
                 }
 
                 ByteArrayInputStream byteArrayInputStream = createExcelFile(data, sampleList);
@@ -214,7 +217,7 @@ public class CreateAnalysisReport extends HorizontalLayout {
 
             downloadLink.setHref(resource);
             downloadLink.getElement().setAttribute("download", true);
-            downloadLink.setVisible(true);
+            wrapperDiv.setVisible(true);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -226,9 +229,8 @@ public class CreateAnalysisReport extends HorizontalLayout {
     private String generateProtocolName(RadioButtonGroup<String> radioButtonGroup, HorizontalLayout textFieldsLayout, int i) {
         return date.toString() +
                 Optional.ofNullable(radioButtonGroup.getValue()).orElse("") + "_" +
-                Optional.ofNullable(((TextField) textFieldsLayout.getComponentAt(1)).getValue()).orElse("") + "_" +
-                Optional.ofNullable(((IntegerField) textFieldsLayout.getComponentAt(2)).getValue()).orElse(1) + "_" +
-                Optional.ofNullable(((TextField) textFieldsLayout.getComponentAt(0)).getValue()).orElse("") + "_" + i;
+                Optional.ofNullable(((TextField) textFieldsLayout.getComponentAt(1)).getValue()).orElse("") + i + "_" +
+                Optional.ofNullable(((TextField) textFieldsLayout.getComponentAt(0)).getValue()).orElse("");
     }
 
     private Map<String, String> collectData(RadioButtonGroup<String> radioButtonGroup, HorizontalLayout textFieldsLayout, String protocolName, Integer plateNr) {
