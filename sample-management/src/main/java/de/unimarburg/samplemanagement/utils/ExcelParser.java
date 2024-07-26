@@ -1,11 +1,14 @@
 package de.unimarburg.samplemanagement.utils;
 
 import de.unimarburg.samplemanagement.model.Sample;
+import de.unimarburg.samplemanagement.model.SampleDelivery;
 import de.unimarburg.samplemanagement.model.Study;
 import de.unimarburg.samplemanagement.model.Subject;
+import de.unimarburg.samplemanagement.repository.SampleDeliveryRepository;
 import de.unimarburg.samplemanagement.repository.SampleRepository;
 import de.unimarburg.samplemanagement.repository.StudyRepository;
 import de.unimarburg.samplemanagement.repository.SubjectRepository;
+import de.unimarburg.samplemanagement.service.ClientStateService;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +21,17 @@ import java.util.*;
 @Component
 public class ExcelParser {
 
-    @Autowired
-    private SampleRepository sampleRepository;
-    @Autowired
+    private SampleDeliveryRepository sampleDeliveryRepository;
     private SubjectRepository subjectRepository;
-    @Autowired
     private StudyRepository studyRepository;
+    private ClientStateService clientStateService;
 
-    public ExcelParser(SampleRepository sampleRepository, SubjectRepository subjectRepository, StudyRepository studyRepository) {
-        this.sampleRepository = sampleRepository;
+    @Autowired
+    public ExcelParser(SampleDeliveryRepository sampleDeliveryRepository, SubjectRepository subjectRepository, StudyRepository studyRepository, ClientStateService clientStateService) {
+        this.sampleDeliveryRepository = sampleDeliveryRepository;
         this.subjectRepository = subjectRepository;
         this.studyRepository = studyRepository;
+        this.clientStateService = clientStateService;
     }
 
     public enum cellType {
@@ -42,7 +45,6 @@ public class ExcelParser {
         Iterator<Row> iterator = sheet.iterator();
 
         String studyName;
-        List<Sample> sampleList = new ArrayList<>();
         List<Subject> subjectList = new ArrayList<>();
 
         // Reading first line
@@ -61,6 +63,13 @@ public class ExcelParser {
             throw new IOException("Empty Excel File");
         }
         Study study = studyRepository.findByStudyName(studyName);
+        // is this the currently selected study?
+        Study selectedStudy = clientStateService.getClientState().getSelectedStudy();
+        if (selectedStudy != null && !selectedStudy.getStudyName().equals(studyName)) {
+            throw new IOException("Selected study does not match the study in the file");
+        }
+        SampleDelivery sampleDelivery = new SampleDelivery();
+        sampleDelivery.setStudy(study);
         if (study == null) {
             throw new IOException("Study not found");
         }
@@ -97,15 +106,15 @@ public class ExcelParser {
             String barcode = (String) getCellValue(currentRow.getCell(6), cellType.STRING);
             sample.setSample_barcode(barcode);
 
-            sampleList.add(sample);
+            sample.setStudy(study);
+
+            sampleDelivery.addSample(sample);
         }
         workbook.close();
         inputStream.close();
 
-        for (Sample sample : sampleList) {
-            sample.setStudy(study);
-            sampleRepository.save(sample);
-        }
+        sampleDeliveryRepository.save(sampleDelivery);
+
     }
 
     private Subject getSubject(long alias, Study study) {

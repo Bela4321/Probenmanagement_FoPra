@@ -13,7 +13,9 @@ import com.vaadin.flow.shared.Registration;
 import de.unimarburg.samplemanagement.model.Study;
 import de.unimarburg.samplemanagement.repository.StudyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class StudyForm extends FormLayout {
     BeanValidationBinder<Study> binder = new BeanValidationBinder<>(Study.class);
     TextField studyName = new TextField("Study Name");

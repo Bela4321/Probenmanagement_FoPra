@@ -52,7 +52,7 @@ public class InputAnalysisResult extends HorizontalLayout{
             });
             return button;
         }).toList();
-        body.add(DISPLAY_UTILS.geBoxAlignment(analysisSelectionButtons.toArray(new Button[0])));
+        body.add(DISPLAY_UTILS.getBoxAlignment(analysisSelectionButtons.toArray(new Button[0])));
         return body;
     }
 

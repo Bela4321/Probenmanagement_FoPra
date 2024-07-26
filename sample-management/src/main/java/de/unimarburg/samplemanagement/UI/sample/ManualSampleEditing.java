@@ -14,6 +14,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.LocalDateToDateConverter;
 import com.vaadin.flow.router.Route;
 import de.unimarburg.samplemanagement.model.Sample;
+import de.unimarburg.samplemanagement.model.SampleDelivery;
 import de.unimarburg.samplemanagement.model.Subject;
 import de.unimarburg.samplemanagement.repository.SampleRepository;
 import de.unimarburg.samplemanagement.repository.SubjectRepository;
@@ -80,6 +81,13 @@ public class ManualSampleEditing extends HorizontalLayout {
         Grid.Column<Sample> typeColumn = sampleGrid.addColumn(Sample::getSample_type).setHeader("Sample Type").setSortable(true);
         Grid.Column<Sample> amountColumn = sampleGrid.addColumn(Sample::getSample_amount).setHeader("Sample Amount").setSortable(true);
         Grid.Column<Sample> dateColumn = sampleGrid.addColumn(Sample::getSampleDate).setHeader("Sample Date").setSortable(true).setRenderer(GENERAL_UTIL.renderDate());
+        Grid.Column<Sample> sampleDelivery = sampleGrid.addColumn(sample -> {
+            SampleDelivery sampleDelivery1 = sample.getSampleDelivery();
+            if (sampleDelivery1 == null) {
+                return null;
+            }
+            return sample.getSampleDelivery().getRunningNumber();
+        }).setHeader("Sample Delivery").setSortable(true);
         Grid.Column<Sample> subjectAliasColumn = sampleGrid.addColumn(sample -> {
             if (sample.getSubject() == null) {
                 return null;
@@ -112,6 +120,28 @@ public class ManualSampleEditing extends HorizontalLayout {
                 .withConverter(new LocalDateToDateConverter())
                 .bind(Sample::getSampleDate, Sample::setSampleDate);
         dateColumn.setEditorComponent(dateField);
+
+        NumberField sampleDeliveryField = new NumberField();
+        sampleDeliveryField.setMin(0);
+        sampleDeliveryField.setStep(1);
+        binder.forField(sampleDeliveryField)
+                .withConverter(new DoubleToLongConverter())
+                .bind(sample -> {
+                    if (sample.getSampleDelivery() == null) {
+                        return null;
+                    }
+                    return (long) sample.getSampleDelivery().getRunningNumber();
+                }, (sample, runningNumber) -> {
+                    if (runningNumber == null || runningNumber<0 || runningNumber>=clientStateService.getClientState().getSelectedStudy().getSampleDeliveryList().size()){
+                        Notification.show("please specify a valid sample delivery running number (between 0 and "+(clientStateService.getClientState().getSelectedStudy().getSampleDeliveryList().size()-1)+")");
+                        editor.cancel();
+                        return;
+                    }
+                    SampleDelivery sampleDeliveryForRunningNumber = clientStateService.getClientState().getSelectedStudy().getSampleDeliveryList().get(runningNumber.intValue());
+                    sample.setSampleDelivery(sampleDeliveryForRunningNumber);
+                    sampleDeliveryForRunningNumber.getSamples().add(sample);
+                });
+        sampleDelivery.setEditorComponent(sampleDeliveryField);
 
         NumberField subjectIdField = new NumberField();
         subjectIdField.setMin(0);

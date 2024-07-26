@@ -32,6 +32,11 @@ public class Sample {
     @NotNull
     private Study study; // Change here to relate to Study
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "sample_delivery_id", referencedColumnName = "id")
+    @NotNull
+    private SampleDelivery sampleDelivery;
+
     private String coordinates;
     private int visits;
     private Date sampleDate;
@@ -42,6 +47,14 @@ public class Sample {
     @OneToMany(mappedBy = "sample", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Analysis> listOfAnalysis;
 
+    public String getStudyName() {
+        return study != null ? study.getName() : null;
+    }
+
+    public Long getSubjectAlias() {
+        return subject != null ? subject.getAlias() : null;
+    }
+
     /**
      * Set the subject and study of the sample
      * @param subject the subject to set (and its study)
@@ -49,6 +62,15 @@ public class Sample {
     public void setSubject(@NotNull Subject subject) {
         this.subject = subject;
         this.study = subject.getStudy();
+    }
+
+    public int getNumberFinishedAnalyses() {
+        return (int) listOfAnalysis.stream()
+                .filter(Analysis::isFinished)
+                .count();
+    }
+    public int getNumberAnalyses() {
+        return listOfAnalysis.size();
     }
 }
 

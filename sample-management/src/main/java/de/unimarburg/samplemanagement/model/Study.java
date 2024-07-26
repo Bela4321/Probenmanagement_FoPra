@@ -41,6 +41,9 @@ public class Study {
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Subject> listOfSubjects;
 
+    @OneToMany(mappedBy = "study", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<SampleDelivery> sampleDeliveryList;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @UniqueElements
     private List<AnalysisType> analysisTypes;
@@ -53,5 +56,9 @@ public class Study {
                 .map(Subject::getListOfSamples)
                 .flatMap(List::stream)
                 .toList();
+    }
+
+    public String getName() {
+        return studyName;
     }
 }

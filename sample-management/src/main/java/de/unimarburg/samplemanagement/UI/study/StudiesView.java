@@ -49,7 +49,6 @@ public class StudiesView extends HorizontalLayout {
         grid = new Grid<>();
         grid.setItems(studies);
         configureGridColumns();
-
         //allow selection of a study
         grid.addItemClickListener(e->{
             clientStateService.getClientState().setSelectedStudy(e.getItem());
