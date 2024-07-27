@@ -103,7 +103,14 @@ public class ExcelParser {
             String sampleType = (String) getCellValue(currentRow.getCell(5), cellType.STRING);
             sample.setSample_type(sampleType);
 
-            String barcode = (String) getCellValue(currentRow.getCell(6), cellType.STRING);
+            String barcode = "";
+            try {
+                barcode = (String) getCellValue(currentRow.getCell(6), cellType.STRING);
+            } catch (IOException e) {
+                Double barcodeDouble = (Double) getCellValue(currentRow.getCell(6), cellType.NUMERIC);
+                barcode = String.valueOf(barcodeDouble).split("\\.")[0];
+            }
+
             sample.setSample_barcode(barcode);
 
             sample.setStudy(study);

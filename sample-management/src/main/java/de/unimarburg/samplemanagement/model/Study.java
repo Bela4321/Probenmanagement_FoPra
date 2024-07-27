@@ -6,8 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.UniqueElements;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Getter
@@ -55,7 +57,7 @@ public class Study {
         return listOfSubjects.stream()
                 .map(Subject::getListOfSamples)
                 .flatMap(List::stream)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public String getName() {
