@@ -63,7 +63,11 @@ public class VerifySampleDelivery extends HorizontalLayout {
     }
 
     private void changeSampleDeliveryofGrid() {
-        this.sampleList = sampleDelivery.getSamples();
+        if (sampleDelivery == null) {
+            this.sampleList = study.getListOfSamples();
+        } else {
+            this.sampleList = sampleDelivery.getSamples();
+        }
         sampleList.sort(Comparator.comparing(Sample::getCoordinates));
         sampleGrid.setItems(sampleList);
         //highlight first sample
