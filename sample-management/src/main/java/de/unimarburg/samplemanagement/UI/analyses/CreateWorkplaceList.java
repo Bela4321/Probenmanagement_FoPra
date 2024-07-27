@@ -30,8 +30,8 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 
-@Route("/CreateAnalysisReport")
-public class CreateAnalysisReport extends HorizontalLayout {
+@Route("/CreateWorkplaceList")
+public class CreateWorkplaceList extends HorizontalLayout {
     private final ClientStateService clientStateService;
     private final ArrayList<Sample> selectedSampleBarcodes = new ArrayList<>();
     private LocalDate date;
@@ -41,7 +41,7 @@ public class CreateAnalysisReport extends HorizontalLayout {
 
 
     @Autowired
-    public CreateAnalysisReport(ClientStateService clientStateService) {
+    public CreateWorkplaceList(ClientStateService clientStateService) {
         this.clientStateService = clientStateService;
         add(SIDEBAR_FACTORY.getSidebar(clientStateService.getClientState().getSelectedStudy()));
         add(loadData());

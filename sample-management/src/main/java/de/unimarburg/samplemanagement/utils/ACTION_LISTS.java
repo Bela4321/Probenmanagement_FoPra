@@ -17,7 +17,7 @@ public class ACTION_LISTS {
         studyActions.add(new Pair<>("Manuelle Probenbearbeitung", ManualSampleEditing.class));
         studyActions.add(new Pair<>("Analyse zu Studie hinzufügen", AddAnalysisToStudy.class));
         studyActions.add(new Pair<>("Analyse zu Proben hinzufügen", AddAnalysisToSamples.class));
-        studyActions.add(new Pair<>("Arbeitsplatzliste erstellen", CreateAnalysisReport.class));
+        studyActions.add(new Pair<>("Arbeitsplatzliste erstellen", CreateWorkplaceList.class));
         studyActions.add(new Pair<>("Probenanalyse eintragen/bearbeiten", InputAnalysisResult.class));
         studyActions.add(new Pair<>("Probenanalysen anschauen", AnalysisResultView.class));
         studyActions.add(new Pair<>("Befund erstellen", CreateStudyReport.class));
