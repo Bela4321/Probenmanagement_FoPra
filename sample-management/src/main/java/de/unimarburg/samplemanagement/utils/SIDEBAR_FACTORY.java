@@ -10,6 +10,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import de.unimarburg.samplemanagement.UI.Main;
+import de.unimarburg.samplemanagement.UI.general_info.EditAdresses;
 import de.unimarburg.samplemanagement.UI.sample.SampleDelivery;
 import de.unimarburg.samplemanagement.UI.sample.SampleView;
 import de.unimarburg.samplemanagement.UI.study.StudiesView;
@@ -32,7 +33,8 @@ public class SIDEBAR_FACTORY extends VerticalLayout {
         SideNavItem home = new SideNavItem("Home", Main.class, VaadinIcon.HOME.create());
         SideNavItem studies = new SideNavItem("Studies", StudiesView.class, VaadinIcon.BOOK.create());
         SideNavItem samples = new SideNavItem("Samples", SampleView.class, VaadinIcon.BARCODE.create());
-        genNav.addItem(home, studies, samples);
+        SideNavItem editAddress = new SideNavItem("Change Address", EditAdresses.class, VaadinIcon.MAILBOX.create());
+        genNav.addItem(home, studies, samples, editAddress);
         if (study == null) {
             return genNav;
         }
