@@ -55,7 +55,7 @@ public class EditStudy extends HorizontalLayout {
         grid.addColumn(Study::getStudyName).setHeader("Name").setAutoWidth(true);
         grid.addColumn(Study::getStartDate).setHeader("Start Date").setAutoWidth(true);
         grid.addColumn(Study::getEndDate).setHeader("End Date").setAutoWidth(true);
-        grid.addColumn(Study::getNumberOfSubjects).setHeader("Number Of Subjects").setAutoWidth(true);
+        grid.addColumn((study -> study.getListOfSubjects().size())).setHeader("Number Of Subjects").setAutoWidth(true);
         grid.addColumn(Study::getAbnahmezahl).setHeader("AbnahmeZahl").setAutoWidth(true);
         grid.addColumn(Study::getAssay).setHeader("Assay").setAutoWidth(true);
         grid.addColumn(Study::getUnit).setHeader("Unit").setAutoWidth(true);
@@ -96,7 +96,7 @@ public class EditStudy extends HorizontalLayout {
         String studyName = event.getSource().studyName.getValue();
         LocalDate startDate = event.getSource().startDate.getValue();
         LocalDate endDate = event.getSource().endDate.getValue();
-        String numberOfSubjects = event.getSource().numberOfSubjects.getValue();
+
         String abnahmezahl = event.getSource().abnahmezahl.getValue();
         String assay = event.getSource().assay.getValue();
         String unit = event.getSource().unit.getValue();
@@ -105,7 +105,7 @@ public class EditStudy extends HorizontalLayout {
         String sender3 = event.getSource().sender3.getValue();
         String sponsor = event.getSource().sponsor.getValue();
         String remarks = event.getSource().remark.getValue();
-        saveStudy(updatedStudy,studyName,startDate,endDate,numberOfSubjects,abnahmezahl,assay,unit,sender1,sender2,sender3,sponsor,remarks);
+        saveStudy(updatedStudy,studyName,startDate,endDate,abnahmezahl,assay,unit,sender1,sender2,sender3,sponsor,remarks);
         updateList();
         closeEditor();
     }
@@ -150,13 +150,13 @@ public class EditStudy extends HorizontalLayout {
         grid.setItems(studies);
     }
 
-    private void saveStudy(Study study,String studyname, LocalDate startdate, LocalDate enddate, String numberOfSubjects, String abnahmeZahl, String assay, String unit, String sender1, String sender2, String sender3, String sponsor, String remarks) {
-        study = updateStudy(study,studyname,startdate,enddate,numberOfSubjects,abnahmeZahl,assay,unit,sender1,sender2,sender3,sponsor,remarks);
+    private void saveStudy(Study study,String studyname, LocalDate startdate, LocalDate enddate,  String abnahmeZahl, String assay, String unit, String sender1, String sender2, String sender3, String sponsor, String remarks) {
+        study = updateStudy(study,studyname,startdate,enddate,abnahmeZahl,assay,unit,sender1,sender2,sender3,sponsor,remarks);
         studyRepository.save(study);
         Notification.show("Study successfully stored");
     }
 
-    private Study updateStudy(Study study,String studyname, LocalDate startdate, LocalDate enddate, String numberOfSubjects, String abnahmeZahl, String assay, String unit, String sender1, String sender2, String sender3, String sponsor, String remarks) {
+    private Study updateStudy(Study study,String studyname, LocalDate startdate, LocalDate enddate, String abnahmeZahl, String assay, String unit, String sender1, String sender2, String sender3, String sponsor, String remarks) {
         study.setStudyName(studyname);
         study.setStartDate(GENERAL_UTIL.convertToDate(startdate));
         study.setEndDate(GENERAL_UTIL.convertToDate(enddate));
@@ -168,7 +168,6 @@ public class EditStudy extends HorizontalLayout {
         study.setSender1(sender1);
         study.setSender2(sender2);
         study.setSender3(sender3);
-        study.setNumberOfSubjects(numberOfSubjects);
         return study;
     }
 }

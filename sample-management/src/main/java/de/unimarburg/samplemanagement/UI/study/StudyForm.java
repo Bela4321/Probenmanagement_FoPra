@@ -20,7 +20,7 @@ public class StudyForm extends FormLayout {
     BeanValidationBinder<Study> binder = new BeanValidationBinder<>(Study.class);
     TextField studyName = new TextField("Study Name");
     DatePicker startDate = new DatePicker("Start Date");
-    TextField numberOfSubjects = new TextField("Number Of Subjects");
+
     TextField abnahmezahl = new TextField("Abnahmezahl");
     TextField assay = new TextField("Assay");
     TextField unit = new TextField("Unit");
@@ -40,7 +40,7 @@ public class StudyForm extends FormLayout {
         binder.bindInstanceFields(this);
         // Add a label to show the date format pattern
         add(studyName,
-                startDate,endDate,numberOfSubjects,abnahmezahl,assay,unit,sender1,sender2,sender3,sponsor,remark,
+                startDate,endDate,abnahmezahl,assay,unit,sender1,sender2,sender3,sponsor,remark,
                 createButtonsLayout());
     }
     public void setStudy(Study study) {
