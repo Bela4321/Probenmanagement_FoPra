@@ -56,9 +56,8 @@ public class EditStudy extends HorizontalLayout {
         grid.addColumn(Study::getStartDate).setHeader("Start Date").setAutoWidth(true);
         grid.addColumn(Study::getEndDate).setHeader("End Date").setAutoWidth(true);
         grid.addColumn((study -> study.getListOfSubjects().size())).setHeader("Number Of Subjects").setAutoWidth(true);
-        grid.addColumn(Study::getAbnahmezahl).setHeader("AbnahmeZahl").setAutoWidth(true);
-        grid.addColumn(Study::getAssay).setHeader("Assay").setAutoWidth(true);
-        grid.addColumn(Study::getUnit).setHeader("Unit").setAutoWidth(true);
+        grid.addColumn(Study::getExpectedNumberOfSubjects).setHeader("Expected Number Of Subjects").setAutoWidth(true);
+        grid.addColumn(Study::getExpectedNumberOfSampeDeliveries).setHeader("Expected Number Of Sample Deliveries").setAutoWidth(true);
         grid.addColumn(Study::getSender1).setHeader("Sender1").setAutoWidth(true);
         grid.addColumn(Study::getSender2).setHeader("Sender2").setAutoWidth(true);
         grid.addColumn(Study::getSender3).setHeader("Sender3").setAutoWidth(true);
@@ -96,16 +95,17 @@ public class EditStudy extends HorizontalLayout {
         String studyName = event.getSource().studyName.getValue();
         LocalDate startDate = event.getSource().startDate.getValue();
         LocalDate endDate = event.getSource().endDate.getValue();
-
-        String abnahmezahl = event.getSource().abnahmezahl.getValue();
-        String assay = event.getSource().assay.getValue();
-        String unit = event.getSource().unit.getValue();
+        String numberOfSubjects = event.getSource().expectedNumberOfSubjects.getValue();
+        String abnahmezahl = event.getSource().expectedNumberOfSampleDeliveries.getValue();
         String sender1 = event.getSource().sender1.getValue();
         String sender2 = event.getSource().sender2.getValue();
         String sender3 = event.getSource().sender3.getValue();
         String sponsor = event.getSource().sponsor.getValue();
         String remarks = event.getSource().remark.getValue();
-        saveStudy(updatedStudy,studyName,startDate,endDate,abnahmezahl,assay,unit,sender1,sender2,sender3,sponsor,remarks);
+
+
+
+        saveStudy(updatedStudy,studyName,startDate,endDate,numberOfSubjects,abnahmezahl,sender1,sender2,sender3,sponsor,remarks);
         updateList();
         closeEditor();
     }
@@ -150,24 +150,26 @@ public class EditStudy extends HorizontalLayout {
         grid.setItems(studies);
     }
 
-    private void saveStudy(Study study,String studyname, LocalDate startdate, LocalDate enddate,  String abnahmeZahl, String assay, String unit, String sender1, String sender2, String sender3, String sponsor, String remarks) {
-        study = updateStudy(study,studyname,startdate,enddate,abnahmeZahl,assay,unit,sender1,sender2,sender3,sponsor,remarks);
+
+    private void saveStudy(Study study,String studyname, LocalDate startdate, LocalDate enddate, String numberOfSubjects, String abnahmeZahl, String sender1, String sender2, String sender3, String sponsor, String remarks) {
+        study = updateStudy(study,studyname,startdate,enddate,numberOfSubjects,abnahmeZahl,sender1,sender2,sender3,sponsor,remarks);
         studyRepository.save(study);
         Notification.show("Study successfully stored");
     }
 
-    private Study updateStudy(Study study,String studyname, LocalDate startdate, LocalDate enddate, String abnahmeZahl, String assay, String unit, String sender1, String sender2, String sender3, String sponsor, String remarks) {
+
+    private Study updateStudy(Study study,String studyname, LocalDate startdate, LocalDate enddate, String numberOfSubjects, String abnahmeZahl, String sender1, String sender2, String sender3, String sponsor, String remarks) {
+
         study.setStudyName(studyname);
         study.setStartDate(GENERAL_UTIL.convertToDate(startdate));
         study.setEndDate(GENERAL_UTIL.convertToDate(enddate));
-        study.setAssay(assay);
-        study.setAbnahmezahl(abnahmeZahl);
+        study.setExpectedNumberOfSampeDeliveries(abnahmeZahl);
         study.setRemark(remarks);
-        study.setUnit(unit);
         study.setSponsor(sponsor);
         study.setSender1(sender1);
         study.setSender2(sender2);
         study.setSender3(sender3);
+        study.setExpectedNumberOfSubjects(numberOfSubjects);
         return study;
     }
 }
