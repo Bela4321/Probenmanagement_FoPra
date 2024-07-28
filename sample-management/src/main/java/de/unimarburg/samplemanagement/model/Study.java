@@ -1,7 +1,6 @@
 package de.unimarburg.samplemanagement.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,9 +24,19 @@ public class Study {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String studyName;
+    private String expectedNumberOfSubjects;
+    private String expectedNumberOfSampeDeliveries;
+    private String sender1;
+    private String sender2;
+    private String sender3;
+    private String sponsor;
+    private String remark;
 
     @Temporal(TemporalType.DATE)
-    private Date studyDate;
+    private Date startDate;
+
+    @Temporal(TemporalType.DATE)
+    private Date endDate;
 
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Subject> listOfSubjects;
@@ -38,6 +47,11 @@ public class Study {
     @ManyToMany(fetch = FetchType.EAGER)
     @UniqueElements
     private List<AnalysisType> analysisTypes;
+
+
+    public int getNumberOfSubjects() {
+        return listOfSubjects.size();
+    }
 
 
     public List<Sample> getListOfSamples() {
