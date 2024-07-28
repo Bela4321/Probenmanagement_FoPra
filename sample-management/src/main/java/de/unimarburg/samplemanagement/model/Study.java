@@ -24,10 +24,8 @@ public class Study {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String studyName;
-    private String numberOfSubjects;
-    private String abnahmezahl;
-    private String assay;
-    private String unit;
+    private String expectedNumberOfSubjects;
+    private String expectedNumberOfSampeDeliveries;
     private String sender1;
     private String sender2;
     private String sender3;
@@ -51,6 +49,9 @@ public class Study {
     private List<AnalysisType> analysisTypes;
 
 
+    public int getNumberOfSubjects() {
+        return listOfSubjects.size();
+    }
 
 
     public List<Sample> getListOfSamples() {
