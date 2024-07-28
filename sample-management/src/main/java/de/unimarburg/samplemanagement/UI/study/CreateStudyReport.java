@@ -404,7 +404,7 @@ public class CreateStudyReport extends HorizontalLayout {
         document.add(new Paragraph("\n"));
 
         // Add "Study: " followed by StudyName and studyDate
-        Paragraph studyDetails = new Paragraph("Study: " + study.getStudyName() + ", " + study.getStudyDate().toString())
+        Paragraph studyDetails = new Paragraph("Study: " + study.getStudyName() + ", " + study.getStartDate().toString()+"-"+study.getEndDate().toString())
                 .setFont(calibriFont)
                 .setFontSize(11);
         document.add(studyDetails);
