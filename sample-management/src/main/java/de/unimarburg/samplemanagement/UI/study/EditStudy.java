@@ -55,6 +55,7 @@ public class EditStudy extends HorizontalLayout {
         grid.addColumn(Study::getStudyName).setHeader("Name").setAutoWidth(true);
         grid.addColumn(Study::getStartDate).setHeader("Start Date").setAutoWidth(true);
         grid.addColumn(Study::getEndDate).setHeader("End Date").setAutoWidth(true);
+        grid.addColumn((study -> study.getListOfSubjects().size())).setHeader("Number Of Subjects").setAutoWidth(true);
         grid.addColumn(Study::getExpectedNumberOfSubjects).setHeader("Expected Number Of Subjects").setAutoWidth(true);
         grid.addColumn(Study::getExpectedNumberOfSampeDeliveries).setHeader("Expected Number Of Sample Deliveries").setAutoWidth(true);
         grid.addColumn(Study::getSender1).setHeader("Sender1").setAutoWidth(true);
@@ -101,6 +102,9 @@ public class EditStudy extends HorizontalLayout {
         String sender3 = event.getSource().sender3.getValue();
         String sponsor = event.getSource().sponsor.getValue();
         String remarks = event.getSource().remark.getValue();
+
+
+
         saveStudy(updatedStudy,studyName,startDate,endDate,numberOfSubjects,abnahmezahl,sender1,sender2,sender3,sponsor,remarks);
         updateList();
         closeEditor();
@@ -146,13 +150,16 @@ public class EditStudy extends HorizontalLayout {
         grid.setItems(studies);
     }
 
+
     private void saveStudy(Study study,String studyname, LocalDate startdate, LocalDate enddate, String numberOfSubjects, String abnahmeZahl, String sender1, String sender2, String sender3, String sponsor, String remarks) {
         study = updateStudy(study,studyname,startdate,enddate,numberOfSubjects,abnahmeZahl,sender1,sender2,sender3,sponsor,remarks);
         studyRepository.save(study);
         Notification.show("Study successfully stored");
     }
 
+
     private Study updateStudy(Study study,String studyname, LocalDate startdate, LocalDate enddate, String numberOfSubjects, String abnahmeZahl, String sender1, String sender2, String sender3, String sponsor, String remarks) {
+
         study.setStudyName(studyname);
         study.setStartDate(GENERAL_UTIL.convertToDate(startdate));
         study.setEndDate(GENERAL_UTIL.convertToDate(enddate));

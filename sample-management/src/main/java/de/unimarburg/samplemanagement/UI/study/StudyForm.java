@@ -22,6 +22,7 @@ public class StudyForm extends FormLayout {
     DatePicker startDate = new DatePicker("Start Date");
     TextField expectedNumberOfSubjects = new TextField("Expected Number Of Subjects");
     TextField expectedNumberOfSampleDeliveries = new TextField("Expected Number Of Sample Deliveries");
+
     TextField sender1 = new TextField("Sender1");
     TextField sender2 = new TextField("Sender2");
     TextField sender3 = new TextField("Sender3");
