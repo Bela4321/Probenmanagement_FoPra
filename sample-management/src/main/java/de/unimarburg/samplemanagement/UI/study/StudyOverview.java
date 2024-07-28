@@ -45,7 +45,7 @@ public class StudyOverview extends HorizontalLayout {
 
     private Component getStudyStats(Study study) {
         //get Facts about the study
-        Date studyDate = study.getStudyDate();
+        Date studyDate = study.getStartDate();
         int numberOfSamples = study.getListOfSamples().size();
         int numberofSubjects = study.getListOfSamples().stream().map(Sample::getSubject).distinct().toArray().length;
         int numberOfAnalysesCompleted = study.getListOfSamples().stream().map(Sample::getListOfAnalysis).flatMap(List::stream).filter(a->!(a.getAnalysisResult()==null||a.getAnalysisResult().isBlank())).toArray().length;

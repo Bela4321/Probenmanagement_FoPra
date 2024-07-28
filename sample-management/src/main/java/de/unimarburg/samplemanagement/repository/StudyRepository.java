@@ -14,7 +14,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     @Query("select c from Study c " +
             "where lower(c.studyName) like lower(concat('%', :searchTerm, '%'))")
     List<Study> searchName(@Param("searchTerm") String searchTerm);
-    @Query(value = "SELECT * FROM Study c WHERE TO_CHAR(c.study_Date, 'YYYY-MM-DD HH24:MI:SS') LIKE CONCAT('%', :searchTerm, '%')", nativeQuery = true)
+    @Query(value = "SELECT * FROM Study c WHERE TO_CHAR(c.start_Date, 'YYYY-MM-DD HH24:MI:SS') LIKE CONCAT('%', :searchTerm, '%')", nativeQuery = true)
     List<Study> searchDate(@Param("searchTerm") String searchTerm);
 
     @Query(value = "SELECT * FROM Study c WHERE " +
