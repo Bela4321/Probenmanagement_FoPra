@@ -5,14 +5,19 @@ import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.io.source.ByteArrayOutputStream;
+import com.itextpdf.kernel.events.Event;
+import com.itextpdf.kernel.events.IEventHandler;
+import com.itextpdf.kernel.events.PdfDocumentEvent;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.kernel.pdf.canvas.draw.SolidLine;
 import com.itextpdf.kernel.pdf.xobject.PdfFormXObject;
+import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.property.HorizontalAlignment;
@@ -29,6 +34,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
@@ -263,6 +269,28 @@ public class CreateStudyReport extends HorizontalLayout {
         }
     }*/
 
+    public class HeaderFooterHandler implements IEventHandler {
+        protected Image logo;
+
+        public HeaderFooterHandler(Image logo) {
+            this.logo = logo;
+        }
+
+        @Override
+        public void handleEvent(Event event) {
+            PdfDocumentEvent docEvent = (PdfDocumentEvent) event;
+            PdfDocument pdfDoc = docEvent.getDocument();
+            PdfCanvas pdfCanvas = new PdfCanvas(docEvent.getPage());
+            Canvas canvas = new Canvas(pdfCanvas, pdfDoc, pdfDoc.getDefaultPageSize());
+
+            // Add the logo
+            logo.setFixedPosition((pdfDoc.getDefaultPageSize().getWidth() - logo.getImageScaledWidth()) / 2,
+                    pdfDoc.getDefaultPageSize().getTop() - logo.getImageScaledHeight() - 10);
+            canvas.add(logo);
+            canvas.close();
+        }
+    }
+
     private void generatePdf(String dest) throws IOException, URISyntaxException {
         PdfWriter writer = new PdfWriter(dest);
         PdfDocument pdfDoc = new PdfDocument(writer);
@@ -274,15 +302,13 @@ public class CreateStudyReport extends HorizontalLayout {
         PdfFont calibriFont = PdfFontFactory.createFont(calibriFontPath, PdfEncodings.IDENTITY_H, true);
         PdfFont calibriBoldFont = PdfFontFactory.createFont(calibriFontPath, PdfEncodings.IDENTITY_H, true);
 
-        // Add the logo
-        try {
-            String logoPath = Paths.get(getClass().getClassLoader().getResource("uni-logo.png").toURI()).toString();
-            ImageData logoImageData = ImageDataFactory.create(logoPath);
-            Image logoImage = new Image(logoImageData).scaleToFit(100, 100).setHorizontalAlignment(HorizontalAlignment.CENTER);
-            document.add(logoImage);
-        } catch (Exception e) {
-            Notification.show("Error loading logo: " + e.getMessage());
-        }
+        // Load the logo
+        String logoPath = Paths.get(getClass().getClassLoader().getResource("uni-logo.png").toURI()).toString();
+        ImageData logoImageData = ImageDataFactory.create(logoPath);
+        Image logoImage = new Image(logoImageData).scaleToFit(100, 100).setHorizontalAlignment(HorizontalAlignment.CENTER);
+
+        // Set the header handler
+        pdfDoc.addEventHandler(PdfDocumentEvent.END_PAGE, new HeaderFooterHandler(logoImage));
 
         // Set the default font for the document
         document.setFont(calibriFont);
@@ -383,11 +409,26 @@ public class CreateStudyReport extends HorizontalLayout {
                 .setFontSize(11);
         document.add(studyDetails);
 
+
+        // Add fields for details to the study (handwritten by user)
+        document.add(new Paragraph("\n"));
+        document.add(new Paragraph("Methodenvalidierung: ").setBold());
+        document.add(new Paragraph("\n"));
+        document.add(new Paragraph("Qualitätskontrolle: ").setBold());
+        document.add(new Paragraph("\n"));
+        document.add(new Paragraph("Bemerkungen: ").setBold());
+        document.add(new Paragraph("\n"));
+
+
         // Add spacing after study details
         document.add(new Paragraph("\n"));
         document.add(new Paragraph("The results can be found on the following page(s).").setBold());
         document.add(new Paragraph("\n"));
         document.add(new Paragraph("The test report may not be reproduced without the written consent of the laboratory.").setBold());
+
+        // Add a page break here to start the table on a new page
+        document.add(new AreaBreak());
+
 
         // Create the table with appropriate number of columns, including the numbering column
         float[] tableColumnWidths = new float[selectedAnalysisTypes.size() + 2]; // +2 for numbering and sample ID
@@ -419,6 +460,7 @@ public class CreateStudyReport extends HorizontalLayout {
         }
 
         // Add the table normally to follow the flow of the document
+        document.add(new Paragraph("Results: ").setBold());
         document.add(table);
         document.add(new Paragraph("\n"));
 
