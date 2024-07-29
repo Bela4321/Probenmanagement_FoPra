@@ -213,7 +213,7 @@ public class ExcelParser {
         System.out.println("Analsis name is : " + analysename);
         selectedAnalysisType = study.getAnalysisTypes().stream().filter(analysis -> analysis.getAnalysisName().equals(analysename)).findFirst().get();
         int startRow = 11;
-        Map<String,Double> map = new HashMap<>();
+        Map<String,String> map = new HashMap<>();
         for (int i = startRow; i <= sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
             if (row != null) {
@@ -227,7 +227,7 @@ public class ExcelParser {
                     barcode = String.valueOf(barcodeDouble).split("\\.")[0];
                 }
                 System.out.println("before map");
-                map.put(barcode, (Double) getCellValue(row.getCell(6),cellType.NUMERIC ));
+                map.put(barcode, String.valueOf(row.getCell(6)));
             }
         }
         map.forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));
@@ -235,7 +235,7 @@ public class ExcelParser {
                 .flatMap(sample -> sample.getListOfAnalysis().stream())
                 .filter(analysis -> analysis.getAnalysisType().getId().equals(selectedAnalysisType.getId()))
                 .toList();
-        for (Map.Entry<String, Double> entry : map.entrySet()){
+        for (Map.Entry<String, String> entry : map.entrySet()){
             String barcode = entry.getKey();
             Analysis analysis = findCorrectAnalysis(relevantAnalyses,barcode);
             analysis.setAnalysisResult(String.valueOf(map.get(barcode)));
