@@ -8,13 +8,19 @@ import com.vaadin.flow.data.renderer.Rendering;
 import com.vaadin.flow.dom.Element;
 import de.unimarburg.samplemanagement.model.Analysis;
 import de.unimarburg.samplemanagement.model.Sample;
+import de.unimarburg.samplemanagement.repository.AddressStoreRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
+@Component
 public class GENERAL_UTIL {
+    @Autowired
+    private static AddressStoreRepository addressStoreRepository;
 
     public static String getAnalysisForSample(Sample sample, Long analysisTypeID) {
         try {
@@ -29,6 +35,9 @@ public class GENERAL_UTIL {
     }
 
     public static Date convertToDate(LocalDate localDate) {
+        if (localDate == null) {
+            return null;
+        }
         // Convert LocalDate to an Instant
         Instant instant = localDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
 

@@ -66,4 +66,8 @@ public class Study {
     public String getName() {
         return studyName;
     }
+    public List<AnalysisType> getAnalysisTypes() {
+        return analysisTypes;
+    }
+
 }
