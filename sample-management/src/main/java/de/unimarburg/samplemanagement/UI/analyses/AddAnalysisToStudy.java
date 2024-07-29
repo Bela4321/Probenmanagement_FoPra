@@ -24,6 +24,7 @@ public class AddAnalysisToStudy extends HorizontalLayout {
     private final StudyRepository studyRepository;
     ClientStateService clientStateService;
     Study study;
+    Grid<AnalysisType> analysisTypeGrid;
 
     @Autowired
     public AddAnalysisToStudy(ClientStateService clientStateService, AnalysisTypeRepository analysisTypeRepository, StudyRepository studyRepository) {
@@ -60,23 +61,16 @@ public class AddAnalysisToStudy extends HorizontalLayout {
             study.getAnalysisTypes().add(analysisType);
 
             studyRepository.save(study);
+            analysisTypeGrid.setItems(analysisTypeRepository.findAll());
             Notification.show("Analysis Type added successfully");
+
         });
         addAnalysis.add(analysisName,analysisDescription, addAnalysisButton);
         body.add(addAnalysis);
         body.add(new Text("--------------------------"));
-        //add previously used analysis
-        List<AnalysisType> unusedAnalysisTypes = analysisTypeRepository.findAll();
-        for (AnalysisType usedAnalysis : study.getAnalysisTypes()) {
-            for (AnalysisType item : unusedAnalysisTypes) {
-                if (item.getId().equals(usedAnalysis.getId())) {
-                    unusedAnalysisTypes.remove(item);
-                    break;
-                }
-            }
-        }
-        Grid<AnalysisType> analysisTypeGrid = new Grid<>();
-        analysisTypeGrid.setItems(unusedAnalysisTypes);
+
+        analysisTypeGrid = new Grid<>();
+        analysisTypeGrid.setItems(analysisTypeRepository.findAll());
         analysisTypeGrid.addColumn(AnalysisType::getAnalysisName).setHeader("Analysis Name");
         analysisTypeGrid.addColumn(AnalysisType::getAnalysisDescription).setHeader("Analysis Description");
         analysisTypeGrid.addComponentColumn(analysisType -> {
@@ -84,9 +78,15 @@ public class AddAnalysisToStudy extends HorizontalLayout {
             button.addClickListener(buttonClickEvent -> {
                 study.getAnalysisTypes().add(analysisType);
                 studyRepository.save(study);
+                buttonClickEvent.getSource().setEnabled(false);
+                buttonClickEvent.getSource().setText("already added");
                 Notification.show("Analysis Type added successfully");
             });
-            button.setDisableOnClick(true);
+            //disable button if analysis type is already in study
+            if (study.getAnalysisTypes().contains(analysisType)) {
+                button.setEnabled(false);
+                button.setText("already added");
+            }
             return button;
         }).setHeader("Add Analysis");
         body.add(analysisTypeGrid);
