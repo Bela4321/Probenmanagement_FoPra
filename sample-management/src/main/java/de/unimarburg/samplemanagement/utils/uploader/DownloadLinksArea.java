@@ -56,6 +56,7 @@ public class DownloadLinksArea extends VerticalLayout {
                 return;
             }
             try {
+                //If current site is /EnterSampleAnalysis then call readAnalysislFile method
                 excelParser.readExcelFile(getStream(selectedFile));
             } catch (IOException ex) {
                 Notification.show("Error processing file: " + ex.getMessage());

@@ -1,6 +1,7 @@
 package de.unimarburg.samplemanagement.UI.analyses;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
@@ -14,10 +15,23 @@ import de.unimarburg.samplemanagement.model.Study;
 import de.unimarburg.samplemanagement.repository.SampleRepository;
 import de.unimarburg.samplemanagement.service.ClientStateService;
 import de.unimarburg.samplemanagement.utils.DISPLAY_UTILS;
+import de.unimarburg.samplemanagement.utils.ExcelParser;
 import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
+import de.unimarburg.samplemanagement.utils.uploader.DownloadLinksArea;
+import de.unimarburg.samplemanagement.utils.uploader.ExcelUploader;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+
+import static de.unimarburg.samplemanagement.utils.ExcelParser.getCellValue;
 
 @Route("/EnterSampleAnalysis")
 public class InputAnalysisResult extends HorizontalLayout{
@@ -25,6 +39,8 @@ public class InputAnalysisResult extends HorizontalLayout{
     private ClientStateService clientStateService;
     private Study study;
     private AnalysisType selectedAnalysisType = null;
+    ExcelParser excelParser;
+
 
 
     @Autowired
@@ -42,13 +58,32 @@ public class InputAnalysisResult extends HorizontalLayout{
 
     private VerticalLayout loadContent() {
         VerticalLayout body = new VerticalLayout();
+        File uploadFolder = getUploadFolder();
+        ExcelUploader uploadArea = new ExcelUploader(uploadFolder);
+        DownloadLinksArea linksArea = new DownloadLinksArea(uploadFolder, excelParser);
+        Button processFileButton = new Button("Process Data");
+        processFileButton.addClickListener(e -> {
+            //Get uploaded file
+            File selectedFile = uploadFolder.listFiles()[0];
+            if (selectedFile == null) {
+                Notification.show("No file uploaded");
+                return;
+            }
+                try {
+                    readAnalysisFile(new FileInputStream(selectedFile));
+                } catch (IOException ex) {
+                    Notification.show("Error processing file: " + ex.getMessage());
+                    return;
+                }
+
+            });
         List<Button> analysisSelectionButtons = study.getAnalysisTypes().stream()
                 .map(analysisType -> {
             Button button = new Button(analysisType.getAnalysisName());
             button.addClickListener(e -> {
                 selectedAnalysisType = analysisType;
                 body.removeAll();
-                body.add(loadAnalysisTypeContent());
+                body.add(loadAnalysisTypeContent(), uploadArea, processFileButton);
             });
             return button;
         }).toList();
@@ -90,6 +125,36 @@ public class InputAnalysisResult extends HorizontalLayout{
         analysis.setAnalysisResult(value);
         sampleRepository.save(analysis.getSample());
         Notification.show("Ergebnis gespeichert");
+    }
+
+
+
+    private static File getUploadFolder() {
+        File folder = new File("uploaded-files");
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+        return folder;
+    }
+
+    public void readAnalysisFile(FileInputStream inputStream) throws IOException {
+
+        Workbook workbook = new XSSFWorkbook(inputStream);
+        Sheet sheet = workbook.getSheetAt(0);
+        Iterator<Row> iterator  = sheet.iterator();
+        //Save the information to the Analysis for every row (sample) in the excel file
+        while (iterator.hasNext()) {
+            Row currentRow = iterator.next();
+            for (Analysis analysis : study.getListOfSamples().stream()
+                    .flatMap(sample -> sample.getListOfAnalysis().stream())
+                    .toList()) {
+                if (analysis.getSample().getSample_barcode().equals(getCellValue(currentRow.getCell(1), ExcelParser.cellType.STRING))) {
+                    analysis.setAnalysisResult((String) getCellValue(currentRow.getCell(4), ExcelParser.cellType.STRING));
+                    sampleRepository.save(analysis.getSample());
+                    Notification.show("Ergebnis gespeichert");
+                }
+            }
+        }
     }
 
 }
