@@ -61,6 +61,8 @@ public class Study {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+
+
     public String getName() {
         return studyName;
     }
