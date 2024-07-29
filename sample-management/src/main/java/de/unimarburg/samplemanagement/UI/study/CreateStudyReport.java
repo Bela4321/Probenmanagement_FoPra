@@ -302,12 +302,11 @@ public class CreateStudyReport extends HorizontalLayout {
 
         // Add "Analytical methods: " followed by AnalysisTypeName for selected checkboxes
         StringBuilder methods = new StringBuilder("Analytical methods: ");
-        List<AnalysisType> selectedAnalysisTypes = new ArrayList<>();
-        for (AnalysisType analysisType : study.getAnalysisTypes()) {
-            if (analysisCheckboxMap.getOrDefault(analysisType.getId(), false)) {
-                selectedAnalysisTypes.add(analysisType);
-                methods.append(analysisType.getAnalysisName()).append(", ");
-            }
+        List<AnalysisType> selectedAnalysisTypes = analysisCheckboxMap.keySet().stream()
+                .filter(analysisCheckboxMap::get)
+                .toList();
+        for (AnalysisType analysisType : selectedAnalysisTypes) {
+            methods.append(analysisType.getAnalysisName()).append(", ");
         }
         if (methods.length() > 0) {
             methods.setLength(methods.length() - 2); // Remove the last comma and space
