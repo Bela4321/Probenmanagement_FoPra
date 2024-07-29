@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.shared.Registration;
@@ -22,10 +23,10 @@ public class StudyForm extends FormLayout {
     DatePicker startDate = new DatePicker("Start Date");
     TextField expectedNumberOfSubjects = new TextField("Expected Number Of Subjects");
     TextField expectedNumberOfSampleDeliveries = new TextField("Expected Number Of Sample Deliveries");
-    TextField sender1 = new TextField("Sender1");
-    TextField sender2 = new TextField("Sender2");
-    TextField sender3 = new TextField("Sender3");
-    TextField sponsor = new TextField("Sponsor");
+    TextArea sender1 = new TextArea("Sender1");
+    TextArea sender2 = new TextArea("Sender2");
+    TextArea sender3 = new TextArea("Sender3");
+    TextArea sponsor = new TextArea("Sponsor");
     TextField remark = new TextField("Remarks");
     DatePicker endDate = new DatePicker("End Date");
     Button save = new Button("Save");
@@ -51,7 +52,6 @@ public class StudyForm extends FormLayout {
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
-        save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
         save.addClickListener(event -> validateAndSave());
         delete.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));

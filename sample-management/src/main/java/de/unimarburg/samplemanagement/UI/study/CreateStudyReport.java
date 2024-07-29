@@ -1,10 +1,8 @@
 package de.unimarburg.samplemanagement.UI.study;
 
-import com.itextpdf.io.codec.Base64;
 import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.itextpdf.kernel.events.Event;
 import com.itextpdf.kernel.events.IEventHandler;
 import com.itextpdf.kernel.events.PdfDocumentEvent;
@@ -12,36 +10,28 @@ import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.kernel.pdf.canvas.draw.SolidLine;
-import com.itextpdf.kernel.pdf.xobject.PdfFormXObject;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Page;
-import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
-import de.unimarburg.samplemanagement.model.AnalysisType;
-import de.unimarburg.samplemanagement.model.Sample;
-import de.unimarburg.samplemanagement.model.Study;
+import de.unimarburg.samplemanagement.model.*;
+import de.unimarburg.samplemanagement.repository.AddressStoreRepository;
+import de.unimarburg.samplemanagement.repository.ReportAuthorRepository;
 import de.unimarburg.samplemanagement.service.ClientStateService;
 import de.unimarburg.samplemanagement.utils.GENERAL_UTIL;
 import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
@@ -49,34 +39,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 @Route("/CreateReport")
 public class CreateStudyReport extends HorizontalLayout {
 
+    private final AddressStoreRepository addressStoreRepository;
+    private final ReportAuthorRepository reportAuthorRepository;
     private Study study;
-    private Map<Long, Boolean> analysisCheckboxMap = new HashMap<>();
+    private Map<AnalysisType, Boolean> analysisCheckboxMap = new HashMap<>();
+    private Map<SampleDelivery, Boolean> sampleDeliveriesCheckboxMap = new HashMap<>();
+    Grid<Sample> sampleGrid;
     private ClientStateService clientStateService;
-    private List<String[]> senders = new ArrayList<>();
-    private String recipientAddress;
-    private TextArea recipientAddressField;
+    private List<ReportAuthor> reportAuthors = new ArrayList<>();
     private Button printPdfButton;
-    private Button saveButton;
-    private Button editButton;
 
     private Anchor downloadLink;
 
     @Autowired
-    public CreateStudyReport(ClientStateService clientStateService) {
+    public CreateStudyReport(ClientStateService clientStateService, AddressStoreRepository addressStoreRepository, ReportAuthorRepository reportAuthorRepository) {
         this.clientStateService = clientStateService;
+        this.reportAuthorRepository = reportAuthorRepository;
+        this.addressStoreRepository = addressStoreRepository;
         add(SIDEBAR_FACTORY.getSidebar(clientStateService.getClientState().getSelectedStudy()));
         if (clientStateService == null || clientStateService.getClientState().getSelectedStudy() == null) {
             add("Bitte eine Studie auswählen");
@@ -94,7 +83,7 @@ public class CreateStudyReport extends HorizontalLayout {
         VerticalLayout body = new VerticalLayout();
         List<Sample> samples = study.getListOfSamples();
 
-        Grid<Sample> sampleGrid = new Grid<>();
+        sampleGrid = new Grid<>();
 
         sampleGrid.addColumn(Sample::getSample_barcode).setHeader("Sample Barcode");
 
@@ -111,9 +100,8 @@ public class CreateStudyReport extends HorizontalLayout {
         }
 
         body.add(sampleGrid);
-        sampleGrid.setItems(samples);
 
-        body.add("Parameter für den Ergebnisreport auswählen: ");
+        body.add("Select Analysis for report:");
 
         // Add horizontal layout underneath the grid
         HorizontalLayout analysisSelection = new HorizontalLayout();
@@ -122,75 +110,66 @@ public class CreateStudyReport extends HorizontalLayout {
             Div labelDiv = new Div(analysisType.getAnalysisName());
 
             // Initialize checkbox value and store it in the map
-            analysisCheckboxMap.put(analysisType.getId(), checkbox.getValue());
+            analysisCheckboxMap.put(analysisType, checkbox.getValue());
 
             checkbox.addValueChangeListener(event -> {
                 // Update the checkbox value in the map
-                analysisCheckboxMap.put(analysisType.getId(), event.getValue());
+                analysisCheckboxMap.put(analysisType, event.getValue());
             });
             analysisSelection.add(checkbox, labelDiv);
         }
         body.add(analysisSelection);
 
-        Button addSenderButton = new Button("Add Sender Details");
-        addSenderButton.addClickListener(event -> openSenderDialog());
-        body.add(addSenderButton);
+        body.add("Select deliveries for report:");
+        HorizontalLayout sampleDeliverySelection = new HorizontalLayout();
+        List<SampleDelivery> sampleDeliveries = study.getSampleDeliveryList();
+        sampleDeliveries.   sort(Comparator.comparing(SampleDelivery::getRunningNumber, Comparator.reverseOrder()));
+        for (SampleDelivery sampleDelivery : sampleDeliveries) {
+            Checkbox checkbox = new Checkbox();
+            Div labelDiv = new Div("Delivery " + sampleDelivery.getRunningNumber());
 
-        recipientAddressField = new TextArea("Recipient Address");
-        recipientAddressField.setWidthFull();
-        recipientAddressField.setHeight("150px");
-        recipientAddressField.addValueChangeListener(event -> saveButton.setEnabled(!recipientAddressField.getValue().trim().isEmpty()));
-        body.add(recipientAddressField);
+            // Initialize checkbox value and store it in the map
+            sampleDeliveriesCheckboxMap.put(sampleDelivery, checkbox.getValue());
 
-        saveButton = new Button("Save");
-        saveButton.addClickListener(event -> {
-            recipientAddress = recipientAddressField.getValue();
-            recipientAddressField.setReadOnly(true);
-            saveButton.setEnabled(false);
-            editButton.setEnabled(true);
-            checkEnablePrintButton();
-        });
-        saveButton.setEnabled(false);
-        body.add(saveButton);
+            checkbox.addValueChangeListener(event -> {
+                // Update the checkbox value in the map
+                sampleDeliveriesCheckboxMap.put(sampleDelivery, event.getValue());
+                updateSampleGrid(sampleDeliveries.stream().filter(sampleDeliveriesCheckboxMap::get).toList());
+            });
+            sampleDeliverySelection.add(checkbox, labelDiv);
+        }
+        body.add(sampleDeliverySelection);
 
-        editButton = new Button("Edit");
-        editButton.addClickListener(event -> openEditDialog());
-        editButton.setEnabled(false);
-        body.add(editButton);
+        reportAuthors = reportAuthorRepository.findAll();
 
-        printPdfButton = new Button("Bericht Erstellen");
-        printPdfButton.setEnabled(false);
+        printPdfButton = new Button("Create Report");
         printPdfButton.addClickListener(event -> {
-            if (validateInputs()) {
-                try {
-                    // Generate the PDF file
-                    String dest = "study_report.pdf";
-                    generatePdf(dest);
+            try {
+                // Generate the PDF file
+                String dest = "study_report.pdf";
+                generatePdf(dest);
 
-                    // Create a StreamResource for downloading the generated PDF
-                    StreamResource resource = new StreamResource("study_report.pdf", () -> {
-                        try {
-                            return new ByteArrayInputStream(java.nio.file.Files.readAllBytes(Paths.get(dest)));
-                        } catch (IOException e) {
-                            Notification.show("Error generating PDF: " + e.getMessage());
-                            return null;
-                        }
-                    });
-
-                    // Add the download link to the UI
-                    if (downloadLink != null) {
-                        remove(downloadLink);
+                // Create a StreamResource for downloading the generated PDF
+                StreamResource resource = new StreamResource("study_report.pdf", () -> {
+                    try {
+                        return new ByteArrayInputStream(java.nio.file.Files.readAllBytes(Paths.get(dest)));
+                    } catch (Exception e) {
+                        Notification.show("Error generating PDF: " + e.getMessage());
+                        return null;
                     }
-                    downloadLink = new Anchor(resource, "");
-                    downloadLink.getElement().setAttribute("download", true);
-                    Button downloadButton = new Button("Download PDF");
-                    downloadLink.add(downloadButton);
-                    body.add(downloadLink);
-                } catch (IOException | URISyntaxException e) {
-                    Notification.show("Error generating PDF: " + e.getMessage());
+                });
+
+                // Add the download link to the UI
+                if (downloadLink != null) {
+                    remove(downloadLink);
                 }
-            } else {
-                Notification.show("Please fill in all required fields.");
+                downloadLink = new Anchor(resource, "");
+                downloadLink.getElement().setAttribute("download", true);
+                Button downloadButton = new Button("Download PDF");
+                downloadLink.add(downloadButton);
+                body.add(downloadLink);
+            } catch (Exception e) {
+                Notification.show("Error generating PDF: " + e.getMessage());
             }
         });
         body.add(printPdfButton);
@@ -199,75 +178,13 @@ public class CreateStudyReport extends HorizontalLayout {
     }
 
 
-    private void openEditDialog() {
-        Dialog dialog = new Dialog();
-        FormLayout formLayout = new FormLayout();
-        TextArea editRecipientAddressField = new TextArea("Recipient Address");
-        editRecipientAddressField.setWidth("400px");
-        editRecipientAddressField.setHeight("400px");
-        editRecipientAddressField.setWidthFull();
-        editRecipientAddressField.setHeight("150px");
-        editRecipientAddressField.setValue(recipientAddress);
-
-        Button saveEditButton = new Button("Save", e -> {
-            recipientAddress = editRecipientAddressField.getValue();
-            recipientAddressField.setValue(recipientAddress);
-            recipientAddressField.setReadOnly(true);
-            saveButton.setEnabled(false);
-            editButton.setEnabled(true);
-            checkEnablePrintButton();
-            dialog.close();
-        });
-
-        formLayout.add(editRecipientAddressField, saveEditButton);
-        dialog.add(formLayout);
-        dialog.open();
-    }
-
-    private void openSenderDialog() {
-        Dialog dialog = new Dialog();
-        FormLayout formLayout = new FormLayout();
-        TextField nameField = new TextField("Name");
-        TextField positionField = new TextField("Position");
-        Button addButton = new Button("Add Sender", e -> {
-            senders.add(new String[]{nameField.getValue(), positionField.getValue()});
-            dialog.close();
-            checkEnablePrintButton();
-        });
-        formLayout.add(nameField, positionField, addButton);
-        dialog.add(formLayout);
-        dialog.open();
-    }
-
-    private boolean validateInputs() {
-        recipientAddress = recipientAddressField.getValue();
-        return !recipientAddress.isEmpty() && !senders.isEmpty();
-    }
-
-    private void checkEnablePrintButton() {
-        printPdfButton.setEnabled(validateInputs());
-    }
-
-    /*private void openFileChooser() {
-        UI.getCurrent().getPage().executeJs(
-                "var input = document.createElement('input'); " +
-                        "input.type = 'file'; " +
-                        "input.accept = '.pdf'; " +
-                        "input.onchange = function(event) { " +
-                        "  var file = event.target.files[0]; " +
-                        "  $0.$server.handleFileSelection(file.name); " +
-                        "}; " +
-                        "input.click();", getElement());
-    }
-
-    public void handleFileSelection(String filePath) {
-        try {
-            generatePdf(filePath);
-            Notification.show("PDF generated successfully at " + filePath);
-        } catch (Exception e) {
-            Notification.show("Error generating PDF: " + e.getMessage());
+    private void updateSampleGrid(List<SampleDelivery> sampleDeliveries) {
+        List<Sample> samples = new ArrayList<>();
+        for (SampleDelivery sampleDelivery : sampleDeliveries) {
+            samples.addAll(sampleDelivery.getSamples());
         }
-    }*/
+        sampleGrid.setItems(samples);
+    }
 
     public class HeaderFooterHandler implements IEventHandler {
         protected Image logo;
@@ -334,13 +251,13 @@ public class CreateStudyReport extends HorizontalLayout {
         senderTable.setWidth(UnitValue.createPercentValue(100));
 
         // Add sender details and fixed address
-        for (int i = 0; i < senders.size(); i++) {
-            String[] sender = senders.get(i);
-            senderTable.addCell(new Cell().add(new Paragraph(sender[0]).setFont(calibriBoldFont).setFontSize(11)).setBold().setBorder(null));
-            senderTable.addCell(new Cell().add(new Paragraph(sender[1]).setFont(calibriBoldFont).setFontSize(11)).setBorder(null));
+        for (int i = 0; i < reportAuthors.size(); i++) {
+            ReportAuthor reportAuthor = reportAuthors.get(i);
+            senderTable.addCell(new Cell().add(new Paragraph(reportAuthor.getName()).setFont(calibriBoldFont).setFontSize(11)).setBold().setBorder(null));
+            senderTable.addCell(new Cell().add(new Paragraph(reportAuthor.getTitle()).setFont(calibriBoldFont).setFontSize(11)).setBorder(null));
 
             if (i == 0) {
-                senderTable.addCell(new Cell(senders.size(), 1).add(new Paragraph("Hans-Meerwein Straße 2\n35043 Marburg, Germany\nPhone: ++ 49 6421 28-65158\nE-Mail: immunmonitoring.labor@uni-marburg.de")
+                senderTable.addCell(new Cell(reportAuthors.size(), 1).add(new Paragraph(addressStoreRepository.getOwnAddress())
                                 .setFont(calibriFont)
                                 .setFontSize(11))
                         .setBorder(null));
@@ -352,8 +269,8 @@ public class CreateStudyReport extends HorizontalLayout {
         // Add a horizontal line separator
         document.add(new LineSeparator(new SolidLine()));
 
-        // Add recipient address
-        Paragraph recipient = new Paragraph("Recipient Address:\n" + recipientAddress)
+        // Add recipient addresses
+        Paragraph recipient = new Paragraph("Recipient Address:\n" + study.getSponsor())
                 .setFont(calibriFont)
                 .setFontSize(11);
         document.add(recipient);

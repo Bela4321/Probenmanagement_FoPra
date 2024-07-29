@@ -55,8 +55,8 @@ public class EditStudy extends HorizontalLayout {
         grid.addColumn(Study::getStudyName).setHeader("Name").setAutoWidth(true);
         grid.addColumn(Study::getStartDate).setHeader("Start Date").setAutoWidth(true);
         grid.addColumn(Study::getEndDate).setHeader("End Date").setAutoWidth(true);
-        grid.addColumn(Study::getExpectedNumberOfSubjects).setHeader("Expected Number Of Subjects").setAutoWidth(true);
-        grid.addColumn(Study::getExpectedNumberOfSampeDeliveries).setHeader("Expected Number Of Sample Deliveries").setAutoWidth(true);
+        grid.addColumn(study->study.getNumberOfSubjects()+"/"+study.getExpectedNumberOfSubjects()).setHeader("Expected Number Of Subjects").setAutoWidth(true);
+        grid.addColumn(study-> study.getSampleDeliveryList().size()+"/"+study.getExpectedNumberOfSampeDeliveries()).setHeader("Number Of Sample Deliveries").setAutoWidth(true);
         grid.addColumn(Study::getSender1).setHeader("Sender1").setAutoWidth(true);
         grid.addColumn(Study::getSender2).setHeader("Sender2").setAutoWidth(true);
         grid.addColumn(Study::getSender3).setHeader("Sender3").setAutoWidth(true);

@@ -29,7 +29,7 @@ public class SampleManagementApplication {
 								  AnalysisRepository analysisRepository,
 								  AnalysisTypeRepository analysisTypeRepository,
 								  SubjectRepository subjectRepository,
-								  SampleDeliveryRepository sampleDeliveryRepository) {
+								  SampleDeliveryRepository sampleDeliveryRepository, AddressStoreRepository addressStoreRepository, ReportAuthorRepository reportAuthorRepository) {
 		return (args) -> {
 
 			Study study1 = new Study();
@@ -281,6 +281,20 @@ public class SampleManagementApplication {
 			study1 = studyRepository.save(study1);
 			study2 = studyRepository.save(study2);
 			study3 = studyRepository.save(study3);
+
+			addressStoreRepository.setOwnAddress(" Hans-Meerwein Straße 2 \n" +
+					"35043 Marburg, Germany \n" +
+					"Phone: ++ 49 6421 28-65158 \n" +
+					"E-Mail: immunmonitoring.labor@uni-marburg.de");
+
+			ReportAuthor author1 = new ReportAuthor();
+			author1.setName("Prof. Dr. Stephan Becker");
+			author1.setTitle("Director Institute of Virology");
+			ReportAuthor author2 = new ReportAuthor();
+			author2.setName("Dr. Verena Krähling");
+			author2.setTitle("Laboratory Management");
+			reportAuthorRepository.save(author1);
+			reportAuthorRepository.save(author2);
 		};
 	}
 }
