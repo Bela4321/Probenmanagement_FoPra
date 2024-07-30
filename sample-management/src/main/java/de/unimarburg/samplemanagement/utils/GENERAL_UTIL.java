@@ -30,7 +30,7 @@ public class GENERAL_UTIL {
                     .findFirst()
                     .orElse("");
         } catch (Exception e) {
-            return "Kein Analyseergebnis vorhanden";
+            return "N/A";
         }
     }
 

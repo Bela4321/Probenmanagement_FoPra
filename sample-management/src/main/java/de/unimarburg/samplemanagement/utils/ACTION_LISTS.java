@@ -3,6 +3,7 @@ package de.unimarburg.samplemanagement.utils;
 import de.unimarburg.samplemanagement.UI.analyses.*;
 import de.unimarburg.samplemanagement.UI.sample.ManualSampleEditing;
 import de.unimarburg.samplemanagement.UI.sample.SampleDelivery;
+import de.unimarburg.samplemanagement.UI.sample.VerifySampleDelivery;
 import de.unimarburg.samplemanagement.UI.study.CreateStudyReport;
 import oshi.util.tuples.Pair;
 
@@ -14,6 +15,7 @@ public class ACTION_LISTS {
     public static List<Pair<String, Class>> getStudySpecificActions() {
         List<Pair<String, Class>> studyActions = new ArrayList<>();
         studyActions.add(new Pair<>("Probenlieferung", SampleDelivery.class));
+        studyActions.add(new Pair<>("Probenlieferung verifizieren", VerifySampleDelivery.class));
         studyActions.add(new Pair<>("Manuelle Probenbearbeitung", ManualSampleEditing.class));
         studyActions.add(new Pair<>("Analyse zu Studie hinzufügen", AddAnalysisToStudy.class));
         studyActions.add(new Pair<>("Analyse zu Proben hinzufügen", AddAnalysisToSamples.class));
