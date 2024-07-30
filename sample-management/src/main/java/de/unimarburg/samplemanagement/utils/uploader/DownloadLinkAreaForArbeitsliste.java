@@ -61,7 +61,7 @@ public class DownloadLinkAreaForArbeitsliste extends VerticalLayout {
             }
             Notification.show("Results are read Successfully");
             //Navigate to veriufication
-            UI.getCurrent().navigate("/");
+            UI.getCurrent().navigate("ViewSampleAnalysis");
         }));
         add(fileGrid, horizontalLayout);
     }

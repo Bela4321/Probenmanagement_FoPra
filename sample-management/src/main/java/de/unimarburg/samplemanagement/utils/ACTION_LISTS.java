@@ -23,7 +23,7 @@ public class ACTION_LISTS {
         studyActions.add(new Pair<>("Probenanalyse eintragen/bearbeiten", InputAnalysisResult.class));
         studyActions.add(new Pair<>("Probenanalysen anschauen", AnalysisResultView.class));
         studyActions.add(new Pair<>("Befund erstellen", CreateStudyReport.class));
-        studyActions.add(new Pair<>("Analyseergebnisse von Arbeitsplatsliste", ReadResults.class));
+        studyActions.add(new Pair<>("AnalyseErgebnisse Hochladen", ReadResults.class));
         return studyActions;
     }
 }
