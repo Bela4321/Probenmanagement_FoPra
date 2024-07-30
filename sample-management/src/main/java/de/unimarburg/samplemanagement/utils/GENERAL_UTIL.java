@@ -6,12 +6,17 @@ import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.data.renderer.Rendering;
 import com.vaadin.flow.dom.Element;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.ast.Node;
+import com.vladsch.flexmark.util.data.MutableDataSet;
 import de.unimarburg.samplemanagement.model.Analysis;
 import de.unimarburg.samplemanagement.model.Sample;
 import de.unimarburg.samplemanagement.repository.AddressStoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -54,5 +59,28 @@ public class GENERAL_UTIL {
 
     public static Renderer<Sample> renderDate() {
         return new LocalDateRenderer<>(sample -> convertToLocalDate(sample.getSampleDate()), "dd.MM.yyyy");
+    }
+
+
+    public static String readFileToString(String resourcename) {
+        //get resource
+        URL mdUrl = GENERAL_UTIL.class.getClassLoader().getResource(resourcename);
+        if (mdUrl == null) {
+            return "couldn't load "+resourcename;
+        }
+        try {
+            return new String(mdUrl.openStream().readAllBytes());
+        } catch (Exception e) {
+            return "couldn't load "+resourcename;
+        }
+    }
+
+    public static String markdownToHtml(String markdown) {
+        MutableDataSet options = new MutableDataSet();
+        Parser parser = Parser.builder(options).build();
+        HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+
+        Node document = parser.parse(markdown);
+        return renderer.render(document);
     }
 }
