@@ -40,8 +40,9 @@ public class EditAddresses extends HorizontalLayout {
         // change address
         VerticalLayout addressEditor = new VerticalLayout();
         addressEditor.add(new Text("This is our current Address"));
+        addressEditor.setWidthFull();
         TextArea addressField = new TextArea();
-        addressField.setWidth("auto");
+        addressField.setWidth("400px");
         String ownAddress = addressStoreRepository.getOwnAddress();
 
         addressField.setValue(ownAddress);
@@ -90,3 +91,4 @@ public class EditAddresses extends HorizontalLayout {
         return horizontalLayout;
     }
 }
+
