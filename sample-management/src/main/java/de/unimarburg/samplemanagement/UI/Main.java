@@ -27,6 +27,7 @@ public class Main extends HorizontalLayout {
         datenschutzerklaerungButton.addClickListener(e -> {
             getUI().ifPresent(ui -> ui.navigate("datenschutzerklaerung"));
         });
+        verticalLayout.add(impressumButton, datenschutzerklaerungButton);
         add(verticalLayout);
     }
 }
