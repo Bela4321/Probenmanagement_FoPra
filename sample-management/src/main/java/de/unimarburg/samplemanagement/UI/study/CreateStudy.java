@@ -1,14 +1,17 @@
 package de.unimarburg.samplemanagement.UI.study;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import de.unimarburg.samplemanagement.model.Study;
 import de.unimarburg.samplemanagement.repository.StudyRepository;
+import de.unimarburg.samplemanagement.utils.DISPLAY_UTILS;
 import de.unimarburg.samplemanagement.utils.GENERAL_UTIL;
 import de.unimarburg.samplemanagement.utils.SIDEBAR_FACTORY;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +31,13 @@ public class CreateStudy extends HorizontalLayout {
         VerticalLayout vl = new VerticalLayout();
         TextField studyname = new TextField("Study Name");
         TextField numberOfSubjects = new TextField("Expected Number Of Subjects");
+        numberOfSubjects.setWidth("300px");
         TextField abnahmezahl = new TextField("Expected Number of Sample Deliveries");
-        TextField sender1 = new TextField("Sender1");
-        TextField sender2 = new TextField("Sender2");
-        TextField sender3 = new TextField("Sender3");
-        TextField sponsor = new TextField("Sponsor");
+        abnahmezahl.setWidth("300px");
+        TextArea sender1 = new TextArea("Sender1");
+        TextArea sender2 = new TextArea("Sender2");
+        TextArea sender3 = new TextArea("Sender3");
+        TextArea sponsor = new TextArea("Sponsor");
         TextField remark = new TextField("Remarks");
         DatePicker startdate = new DatePicker("Start Date");
         DatePicker enddate = new DatePicker("End Date");
@@ -48,8 +53,11 @@ public class CreateStudy extends HorizontalLayout {
             saveStudy(studyname.getValue(),startdate.getValue(),enddate.getValue(),numberOfSubjects.getValue(),
                     abnahmezahl.getValue(), sender1.getValue(), sender2.getValue(),
                     sender3.getValue(), sponsor.getValue(), remark.getValue());
+            // navigate to study view
+            save.getUI().ifPresent(ui -> ui.navigate("Studies"));
         });
-        vl.add(studyname,startdate,enddate,numberOfSubjects,abnahmezahl,sender1,sender2,sender3,sponsor,remark,save);
+        Component gridLayout = DISPLAY_UTILS.getBoxAlignment(3./4,studyname,startdate,enddate,numberOfSubjects,abnahmezahl,sender1,sender2,sender3,sponsor,remark);
+        vl.add(gridLayout,save);
         add(vl);
     }
 

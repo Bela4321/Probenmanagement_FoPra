@@ -30,6 +30,7 @@ public class ExcelTemplateFiller {
             sheet.getRow(2).getCell(5).setCellValue(study.getStudyName());
             sheet.getRow(4).getCell(3).setCellValue(date);
             sheet.getRow(5).getCell(3).setCellValue(data.get("operatorName"));
+            sheet.getRow(5).getCell(5).setCellValue(data.get("calculatorName"));
             sheet.getRow(6).getCell(3).setCellValue(data.get("protocolName"));
 
 
@@ -38,7 +39,6 @@ public class ExcelTemplateFiller {
 
             sheet.getRow(3).getCell(5).setCellValue(data.get("assay"));
             sheet.getRow(8).getCell(6).setCellValue(data.get("assay"));
-            sheet.getRow(10).getCell(6).setCellValue(data.get("dilution"));
 
 
             //Copying Styles

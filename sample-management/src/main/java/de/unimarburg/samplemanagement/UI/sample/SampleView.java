@@ -69,15 +69,15 @@ public class SampleView extends HorizontalLayout {
     private Component createGrid() {
         grid.removeAllColumns(); // Remove default columns
 
-        grid.addColumn(Sample::getStudyName).setHeader("Study Name");
-        grid.addColumn(sample -> sample.getSubjectAlias() != null ? sample.getSubjectAlias().toString() : "").setHeader("Subject Alias");
-        grid.addColumn(Sample::getSample_barcode).setHeader("Sample Barcode");
-        grid.addColumn(Sample::getCoordinates).setHeader("Coordinates");
-        grid.addColumn(Sample::getSample_type).setHeader("Sample Type");
+        grid.addColumn(Sample::getStudyName).setHeader("Study Name").isSortable();
+        grid.addColumn(sample -> sample.getSubjectAlias() != null ? sample.getSubjectAlias().toString() : "").setHeader("Subject Alias").isSortable();
+        grid.addColumn(Sample::getSample_barcode).setHeader("Sample Barcode").isSortable();
+        grid.addColumn(Sample::getCoordinates).setHeader("Coordinates").isSortable();
+        grid.addColumn(Sample::getSample_type).setHeader("Sample Type").isSortable();
 
         // see metadata about analysis
-        grid.addColumn(Sample::getNumberAnalyses).setHeader("Number of Analyses");
-        grid.addColumn(Sample::getNumberFinishedAnalyses).setHeader("Number of Finished Analyses");
+        grid.addColumn(Sample::getNumberAnalyses).setHeader("Number of Analyses").isSortable();
+        grid.addColumn(Sample::getNumberFinishedAnalyses).setHeader("Number of Finished Analyses").isSortable();
 
         //on selection, jump to detailed showcase
         grid.addAttachListener(e -> {
@@ -86,7 +86,6 @@ public class SampleView extends HorizontalLayout {
                 grid.getUI().ifPresent(ui -> ui.navigate("viewSingleSample"));
             });
         });
-
         return grid;
     }
 

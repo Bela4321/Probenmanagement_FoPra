@@ -36,6 +36,17 @@ public class AddAnalysisToSamples extends HorizontalLayout {
         add(loadContent());
     }
 
+    private void setButtonAddMode(Button button) {
+        button.setText("Add");
+        //set colour
+        button.getStyle().set("background-color", "green");
+    }
+    private void setButtonRemoveMode(Button button) {
+        button.setText("Remove");
+        //set colour
+        button.getStyle().set("background-color", "red");
+    }
+
     private VerticalLayout loadContent() {
         VerticalLayout body = new VerticalLayout();
         Grid<Sample> sampleGrid = new Grid<>();
@@ -49,16 +60,30 @@ public class AddAnalysisToSamples extends HorizontalLayout {
         //add checkbox for each analysis type
         for (AnalysisType analysisType :study.getAnalysisTypes()) {
             sampleGrid.addComponentColumn(sample -> {
-                Button button = new Button("Add");
-                button.addClickListener(e -> {
-                    sample.getListOfAnalysis().add(new Analysis(analysisType, sample));
-                    sampleRepository.save(sample);
-                });
+                Button button = new Button("");
                 if (sample.getListOfAnalysis().stream().anyMatch(a -> a.getAnalysisType().getId().equals(analysisType.getId()))) {
-                    button.setEnabled(false);
+                    setButtonAddMode(button);
                 } else {
-                    button.setDisableOnClick(true);
+                    setButtonRemoveMode(button);
                 }
+
+                button.addClickListener(e -> {
+                    //is text add or remove
+                    if (button.getText().equals("Add")) {
+                        sample.getListOfAnalysis().add(new Analysis(analysisType, sample));
+                        sampleRepository.save(sample);
+
+                        setButtonRemoveMode(button);
+                    } else if (button.getText().equals("Remove")) {
+                        //remove analysis from sample
+                        sample.getListOfAnalysis().removeIf(a -> a.getAnalysisType().getId().equals(analysisType.getId()));
+                        sampleRepository.save(sample);
+
+                        setButtonAddMode(button);
+                    } else {
+                        throw new RuntimeException("Button text is neither Add nor Remove");
+                    }
+                });
                 return button;
             }).setHeader(analysisType.getAnalysisName());
         }
