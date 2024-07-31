@@ -62,7 +62,6 @@ public class StudiesView extends HorizontalLayout {
         grid.addColumn(Study::getStudyName).setHeader("Name").setAutoWidth(true);
         grid.addColumn(Study::getStartDate).setHeader("Start Date").setAutoWidth(true);
         grid.addColumn(Study::getEndDate).setHeader("End Date").setAutoWidth(true);
-        grid.addColumn((study -> study.getListOfSubjects().size())).setHeader("Number Of Subjects").setAutoWidth(true);
         grid.addColumn(study->study.getNumberOfSubjects()+"/"+study.getExpectedNumberOfSubjects()).setHeader("Expected Number Of Subjects").setAutoWidth(true);
         grid.addColumn(study-> study.getSampleDeliveryList().size()+"/"+study.getExpectedNumberOfSampeDeliveries()).setHeader("Number Of Sample Deliveries").setAutoWidth(true);
         grid.addColumn(Study::getSender1).setHeader("Sender1").setAutoWidth(true);

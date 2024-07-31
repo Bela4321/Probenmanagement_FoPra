@@ -24,7 +24,7 @@ public class SIDEBAR_FACTORY extends VerticalLayout {
         SideNavItem home = new SideNavItem("Home", Main.class, VaadinIcon.HOME.create());
         SideNavItem studies = new SideNavItem("Studies", StudiesView.class, VaadinIcon.BOOK.create());
         SideNavItem samples = new SideNavItem("Samples", SampleView.class, VaadinIcon.BARCODE.create());
-        SideNavItem editAddress = new SideNavItem("Change Address", EditAddresses.class, VaadinIcon.MAILBOX.create());
+        SideNavItem editAddress = new SideNavItem("Base-data", EditAddresses.class, VaadinIcon.MAILBOX.create());
         genNav.addItem(home, studies, samples, editAddress);
         if (study == null) {
             return genNav;

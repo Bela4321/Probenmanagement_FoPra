@@ -41,6 +41,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -123,10 +124,12 @@ public class CreateStudyReport extends HorizontalLayout {
         body.add("Select deliveries for report:");
         HorizontalLayout sampleDeliverySelection = new HorizontalLayout();
         List<SampleDelivery> sampleDeliveries = study.getSampleDeliveryList();
-        sampleDeliveries.   sort(Comparator.comparing(SampleDelivery::getRunningNumber, Comparator.reverseOrder()));
+        sampleDeliveries.sort(Comparator.comparing(SampleDelivery::getRunningNumber));
         for (SampleDelivery sampleDelivery : sampleDeliveries) {
             Checkbox checkbox = new Checkbox();
-            Div labelDiv = new Div("Delivery " + sampleDelivery.getRunningNumber());
+            Div labelRunningNumber = new Div("Delivery " + sampleDelivery.getRunningNumber());
+            Div labelDate = new Div(new SimpleDateFormat("dd.MM.yyyy").format(sampleDelivery.getDeliveryDate()));
+            VerticalLayout labelLayout = new VerticalLayout(checkbox,labelRunningNumber,labelDate);
 
             // Initialize checkbox value and store it in the map
             sampleDeliveriesCheckboxMap.put(sampleDelivery, checkbox.getValue());
@@ -136,7 +139,7 @@ public class CreateStudyReport extends HorizontalLayout {
                 sampleDeliveriesCheckboxMap.put(sampleDelivery, event.getValue());
                 updateSampleGrid(sampleDeliveries.stream().filter(sampleDeliveriesCheckboxMap::get).toList());
             });
-            sampleDeliverySelection.add(checkbox, labelDiv);
+            sampleDeliverySelection.add(labelLayout);
         }
         body.add(sampleDeliverySelection);
 

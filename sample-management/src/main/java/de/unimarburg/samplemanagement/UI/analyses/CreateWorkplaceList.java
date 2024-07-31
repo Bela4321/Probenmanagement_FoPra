@@ -143,13 +143,13 @@ public class CreateWorkplaceList extends HorizontalLayout {
         HorizontalLayout textFieldsLayout = new HorizontalLayout();
         IntegerField maxProListeField = new IntegerField("Max. pro Liste");
         maxProListeField.setMin(1);
-        IntegerField assayNrField = new IntegerField("Plate/Assay-ID Nr.");
+        IntegerField assayNrField = new IntegerField("First Plate ID");
+        assayNrField.setValue(1);
         assayNrField.setMin(1);
         textFieldsLayout.add(
                 new TextField("Operator Name/Kürzel"),
-                new TextField("Freitext (Plate/Assay-ID etc.)"),
+                new TextField("Final Calculation by"),
                 assayNrField,
-                new TextField("Verdünnung"),
                 maxProListeField
         );
         return textFieldsLayout;
@@ -175,7 +175,7 @@ public class CreateWorkplaceList extends HorizontalLayout {
             ArrayList<Sample> sampleList = new ArrayList<>();
             ArrayList<Sample> selectedSampleCopy = new ArrayList<>(selectedSampleBarcodes);
 
-            IntegerField maxPerTableField = (IntegerField) textFieldsLayout.getComponentAt(4);
+            IntegerField maxPerTableField = (IntegerField) textFieldsLayout.getComponentAt(3);
             int maxPerTable = Optional.ofNullable(maxPerTableField.getValue()).orElse(1000);
             int samplesCount = selectedSampleCopy.size();
             int tables = (samplesCount + maxPerTable - 1) / maxPerTable;  // Calculate number of tables
@@ -229,18 +229,18 @@ public class CreateWorkplaceList extends HorizontalLayout {
     private String generateProtocolName(RadioButtonGroup<String> radioButtonGroup, HorizontalLayout textFieldsLayout, int i) {
         return date.toString() + "_" +
                 Optional.ofNullable(radioButtonGroup.getValue()).orElse("") + "_" +
-                Optional.ofNullable(((TextField) textFieldsLayout.getComponentAt(1)).getValue()).orElse("") + "_" + i + "_" +
+                "Plate ID" + "_" + i + "_" +
                 Optional.ofNullable(((TextField) textFieldsLayout.getComponentAt(0)).getValue()).orElse("");
     }
 
     private Map<String, String> collectData(RadioButtonGroup<String> radioButtonGroup, HorizontalLayout textFieldsLayout, String protocolName, Integer plateNr) {
         return Map.of(
                 "operatorName", Optional.ofNullable(((TextField) textFieldsLayout.getComponentAt(0)).getValue()).orElse(""),
+                "calculatorName" , Optional.ofNullable(((TextField) textFieldsLayout.getComponentAt(1)).getValue()).orElse(""),
                 "freeTextField", Optional.ofNullable(((TextField) textFieldsLayout.getComponentAt(1)).getValue()).orElse(""),
                 "nr", plateNr.toString(),
                 "assay", Optional.ofNullable(radioButtonGroup.getValue()).orElse(""),
-                "dilution", Optional.ofNullable(((TextField) textFieldsLayout.getComponentAt(3)).getValue()).orElse(""),
-                "maxProListe", Optional.ofNullable(((IntegerField) textFieldsLayout.getComponentAt(4)).getValue()).map(String::valueOf).orElse(""),
+                "maxProListe", Optional.ofNullable(((IntegerField) textFieldsLayout.getComponentAt(3)).getValue()).map(String::valueOf).orElse(""),
                 "protocolName", protocolName
         );
     }

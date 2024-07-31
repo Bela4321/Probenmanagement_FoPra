@@ -66,6 +66,7 @@ public class ExcelParser {
             throw new IOException("Selected study does not match the study in the file");
         }
         SampleDelivery sampleDelivery = new SampleDelivery();
+        sampleDelivery.setDeliveryDate(new Date());
         sampleDelivery.setStudy(study);
         if (study == null) {
             throw new IOException("Study not found");
