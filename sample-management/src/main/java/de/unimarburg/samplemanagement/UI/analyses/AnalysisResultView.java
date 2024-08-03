@@ -33,7 +33,7 @@ public class AnalysisResultView extends HorizontalLayout {
         Study study = clientStateService.getClientState().getSelectedStudy();
 
         if (study == null) {
-            body.add("Bitte eine Studie auswählen");
+            add("Please select a Study");
             return body;
         }
 

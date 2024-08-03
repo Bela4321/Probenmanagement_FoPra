@@ -19,11 +19,11 @@ public class Main extends HorizontalLayout {
         add(SIDEBAR_FACTORY.getSidebar(null));
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.add(new Text("Welcome to the Sample Management System\nSelect an option from the sidebar to get started :)"));
-        Button impressumButton = new Button("Impressum");
+        Button impressumButton = new Button("Imprint");
         impressumButton.addClickListener(e -> {
             getUI().ifPresent(ui -> ui.navigate("impressum"));
         });
-        Button datenschutzerklaerungButton = new Button("Datenschutzerklärung");
+        Button datenschutzerklaerungButton = new Button("Privacy Policy");
         datenschutzerklaerungButton.addClickListener(e -> {
             getUI().ifPresent(ui -> ui.navigate("datenschutzerklaerung"));
         });

@@ -36,7 +36,7 @@ public class CreateWorkplaceList extends HorizontalLayout {
     private final ArrayList<Sample> selectedSampleBarcodes = new ArrayList<>();
     private LocalDate date;
 
-    Anchor downloadLink = new Anchor("", "Download Arbeitsplatzliste");
+    Anchor downloadLink = new Anchor("", "Download Workplace Lists");
     Div wrapperDiv = new Div(downloadLink);
 
 
@@ -53,7 +53,7 @@ public class CreateWorkplaceList extends HorizontalLayout {
         Study study = clientStateService.getClientState().getSelectedStudy();
 
         if (study == null) {
-            body.add("Bitte eine Studie auswählen");
+            add("Please select a Study");
             return body;
         }
 
@@ -134,20 +134,20 @@ public class CreateWorkplaceList extends HorizontalLayout {
     }
 
     private DatePicker createDatePicker() {
-        DatePicker datePicker = new DatePicker("Datum");
+        DatePicker datePicker = new DatePicker("Date");
         datePicker.setValue(LocalDate.now());
         return datePicker;
     }
 
     private HorizontalLayout createTextFieldsLayout() {
         HorizontalLayout textFieldsLayout = new HorizontalLayout();
-        IntegerField maxProListeField = new IntegerField("Max. pro Liste");
+        IntegerField maxProListeField = new IntegerField("Max. per List");
         maxProListeField.setMin(1);
         IntegerField assayNrField = new IntegerField("First Plate ID");
         assayNrField.setValue(1);
         assayNrField.setMin(1);
         textFieldsLayout.add(
-                new TextField("Operator Name/Kürzel"),
+                new TextField("Operator Name"),
                 new TextField("Final Calculation by"),
                 assayNrField,
                 maxProListeField
@@ -156,7 +156,7 @@ public class CreateWorkplaceList extends HorizontalLayout {
     }
 
     private Button createReportButton(VerticalLayout body, DatePicker datePicker, RadioButtonGroup<String> radioButtonGroup, HorizontalLayout textFieldsLayout) {
-        Button createReportButton = new Button("Arbeitsplatzlisten erstellen");
+        Button createReportButton = new Button("Generate Workplace Lists");
 
         createReportButton.addClickListener(event -> generateReport(body, datePicker, radioButtonGroup, textFieldsLayout));
 
