@@ -67,27 +67,27 @@ To start using the sample management system, follow these steps:
     
 3. Follow the on-screen instructions to begin managing your samples.
 
-##Imprint
-Institut für Virologie Marburg
-Immunmonitoring Labor
-Hans-Meerwein-Straße 2
-35043 Marburg
+## Imprint
+Institut für Virologie Marburg<br />
+Immunmonitoring Labor<br />
+Hans-Meerwein-Straße 2<br />
+35043 Marburg<br />
 
-Institutsleitung: Prof. Dr. Stephan Becker
-Laborleitung: Dr. Verena Krähling
+Institutsleitung: Prof. Dr. Stephan Becker<br />
+Laborleitung: Dr. Verena Krähling<br />
 
 Kontakt:
-Internet: https://www.uni-marburg.de/de/fb20/bereiche/ziei/virologie
-Telefon: ++49 (0)6421 2865158
-Email: immunmonitoring.labor@uni-marburg.de
+Internet: https://www.uni-marburg.de/de/fb20/bereiche/ziei/virologie<br />
+Telefon: ++49 (0)6421 2865158<br />
+Email: immunmonitoring.labor@uni-marburg.de<br />
 
 Gestaltung & technische Realisierung:
-Bela Schinke: bela.schinke@gmail.com
-David Meyer:
-David Riemer: david.riemer07@gmail.com
-Edbert Faustine:
-Sayedfarhad Emami Dehcheshmeh:
-Mohsen Saleki:
+Bela Schinke: bela.schinke@gmail.com<br />
+David Meyer:<br />
+David Riemer: david.riemer07@gmail.com<br />
+Edbert Faustine:<br />
+Sayedfarhad Emami Dehcheshmeh:<br />
+Mohsen Saleki:<br />
 
 ## License
 
