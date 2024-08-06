@@ -34,7 +34,7 @@ public class InputAnalysisResult extends HorizontalLayout{
         add(SIDEBAR_FACTORY.getSidebar(clientStateService.getClientState().getSelectedStudy()));
         study = clientStateService.getClientState().getSelectedStudy();
         if (clientStateService.getClientState().getSelectedStudy() == null) {
-            add("Bitte eine Studie auswählen");
+            add("Please select a Study");
             return;
         }
         add(loadContent());
@@ -89,7 +89,7 @@ public class InputAnalysisResult extends HorizontalLayout{
     private void saveNewAnalysisResult(Analysis analysis, String value) {
         analysis.setAnalysisResult(value);
         sampleRepository.save(analysis.getSample());
-        Notification.show("Ergebnis gespeichert");
+        Notification.show("Result Saved");
     }
 
 }

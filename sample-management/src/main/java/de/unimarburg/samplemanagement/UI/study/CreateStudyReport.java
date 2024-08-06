@@ -69,12 +69,12 @@ public class CreateStudyReport extends HorizontalLayout {
         this.addressStoreRepository = addressStoreRepository;
         add(SIDEBAR_FACTORY.getSidebar(clientStateService.getClientState().getSelectedStudy()));
         if (clientStateService == null || clientStateService.getClientState().getSelectedStudy() == null) {
-            add("Bitte eine Studie auswählen");
+            add("Please select a Study");
             return;
         }
         this.study = clientStateService.getClientState().getSelectedStudy();
         if (study == null) {
-            add("Bitte eine Studie auswählen");
+            add("Please select a Study");
             return;
         }
         add(loadContent());
@@ -92,7 +92,7 @@ public class CreateStudyReport extends HorizontalLayout {
 
         // Add columns for each unique analysis
         if (uniqueAnalysisTypes.isEmpty()) {
-            body.add("Keine Analysen vorhanden für Studie: " + study.getStudyName());
+            body.add("No Analyses available for Study: " + study.getStudyName());
             return body;
         }
         for (AnalysisType analysisType : uniqueAnalysisTypes) {

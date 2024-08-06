@@ -67,12 +67,12 @@ public class CreateStudy extends HorizontalLayout {
                            String remarks) {
         //save study to database
         if (studyRepository.existsByStudyName(studyname)) {
-            Notification.show("Studienname existiert bereits!, bitte wählen Sie einen anderen Namen");
+            Notification.show("Study Name already exists. Please choose another Name.");
             return;
         }
         Study study = createStudy(studyname, startdate, enddate, numberOfSubjects, abnahmeZahl, sender1, sender2, sender3, sponsor, remarks);
         studyRepository.save(study);
-        Notification.show("Studie erfolgreich gespeichert");
+        Notification.show("Study saved successfully");
     }
 
     private Study createStudy(String studyname, LocalDate startdate, LocalDate enddate, String numberOfSubjects, String abnahmeZahl, String sender1, String sender2, String sender3, String sponsor, String remarks) {

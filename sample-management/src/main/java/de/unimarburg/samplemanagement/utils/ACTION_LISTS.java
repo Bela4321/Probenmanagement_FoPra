@@ -14,16 +14,16 @@ public class ACTION_LISTS {
 
     public static List<Pair<String, Class>> getStudySpecificActions() {
         List<Pair<String, Class>> studyActions = new ArrayList<>();
-        studyActions.add(new Pair<>("Probenlieferung", SampleDelivery.class));
-        studyActions.add(new Pair<>("Probenlieferung verifizieren", VerifySampleDelivery.class));
-        studyActions.add(new Pair<>("Manuelle Probenbearbeitung", ManualSampleEditing.class));
-        studyActions.add(new Pair<>("Analyse zu Studie hinzufügen", AddAnalysisToStudy.class));
-        studyActions.add(new Pair<>("Analyse zu Proben hinzufügen", AddAnalysisToSamples.class));
-        studyActions.add(new Pair<>("Arbeitsplatzliste erstellen", CreateWorkplaceList.class));
-        studyActions.add(new Pair<>("Probenanalyse eintragen/bearbeiten", InputAnalysisResult.class));
-        studyActions.add(new Pair<>("Probenanalysen anschauen", AnalysisResultView.class));
-        studyActions.add(new Pair<>("Befund erstellen", CreateStudyReport.class));
-        studyActions.add(new Pair<>("AnalyseErgebnisse Hochladen", ReadResults.class));
+        studyActions.add(new Pair<>("Sample Delivery", SampleDelivery.class));
+        studyActions.add(new Pair<>("Verify Sample Delivery", VerifySampleDelivery.class));
+        studyActions.add(new Pair<>("Edit Samples", ManualSampleEditing.class));
+        studyActions.add(new Pair<>("Add Analysis to Study", AddAnalysisToStudy.class));
+        studyActions.add(new Pair<>("Add Analysis to Samples", AddAnalysisToSamples.class));
+        studyActions.add(new Pair<>("Create Workplace Lists", CreateWorkplaceList.class));
+        studyActions.add(new Pair<>("Input/Edit Analysis Results", InputAnalysisResult.class));
+        studyActions.add(new Pair<>("View Sample Analysis", AnalysisResultView.class));
+        studyActions.add(new Pair<>("Create Study Report", CreateStudyReport.class));
+        studyActions.add(new Pair<>("Upload Analysis Results", ReadResults.class));
         return studyActions;
     }
 }
