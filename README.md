@@ -91,4 +91,4 @@ Mohsen Saleki:<br />
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/Bela4321/Probenmanagement_FoPra/blob/AddREADME/LICENSE) file for more details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/Bela4321/Probenmanagement_FoPra/blob/main/LICENSE) file for more details.
