@@ -49,7 +49,7 @@ public class SampleView extends HorizontalLayout {
     }
 
     private Component addTitle() {
-        H1 title = new H1("Probencheckliste");
+        H1 title = new H1("Sample Checklist");
         return title;
     }
 

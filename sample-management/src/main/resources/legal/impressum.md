@@ -13,7 +13,7 @@ Email: immunmonitoring.labor@uni-marburg.de
 
 ## Gestaltung & technische Realisierung:
 Bela Schinke: bela.schinke@gmail.com  
-David Meyer:  
+David Meyer: davmeyer99@gmail.com  
 David Riemer:  
 Edbert Faustine:  
 Sayedfarhad Emami Dehcheshmeh:  

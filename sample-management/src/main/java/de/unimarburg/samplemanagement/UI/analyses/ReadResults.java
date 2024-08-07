@@ -30,7 +30,7 @@ public class ReadResults extends HorizontalLayout {
             add(SIDEBAR_FACTORY.getSidebar(clientStateService.getClientState().getSelectedStudy()));
             study = clientStateService.getClientState().getSelectedStudy();
             if (clientStateService.getClientState().getSelectedStudy() == null) {
-                add("Bitte eine Studie auswählen");
+                add("Please select a Study");
                 return;
             }
             add(loadContent());

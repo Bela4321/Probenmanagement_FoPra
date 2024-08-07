@@ -34,7 +34,7 @@ public class AddAnalysisToStudy extends HorizontalLayout {
         study = clientStateService.getClientState().getSelectedStudy();
         add(SIDEBAR_FACTORY.getSidebar(clientStateService.getClientState().getSelectedStudy()));
         if (clientStateService.getClientState().getSelectedStudy()== null) {
-            add("Bitte eine Studie auswählen");
+            add("Please select a Study");
             return;
         }
 
